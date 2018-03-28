@@ -7,14 +7,14 @@ import {each} from 'lodash';
 import {Coin, Wallet, Networking, HD, Utils} from './';
 
 const coins = [
-    // {
-    //     coin: Coin.makeCoin(Coin.Unit.ETHt),
-    //     address: '0x6a42b86469B9c3Df1e1De589bd1741B81a5A5fAF'
-    // },
     {
-        coin: Coin.makeCoin(Coin.Unit.BTC),
-        address: '15Wmq5V7ojGWCTWtjdWKsJCQB29gTB6VMa'
+        coin: Coin.makeCoin(Coin.Unit.ETHt),
+        address: '0x6a42b86469B9c3Df1e1De589bd1741B81a5A5fAF'
     },
+    // {
+    //     coin: Coin.makeCoin(Coin.Unit.BTC),
+    //     address: '15Wmq5V7ojGWCTWtjdWKsJCQB29gTB6VMa'
+    // },
     // {
     //     coin: Coin.makeCoin(Coin.Unit.BTCt),
     //     address: 'mm5GgtNrzXKE7y8LZhtdvX6uhuTmWL12eZ'
@@ -24,8 +24,8 @@ const coins = [
 const oldSeed = 'honey relief scale kite dose lyrics they middle globe exhaust smooth galaxy ' +
     'horror ensure grape way gift embody spring cupboard horror hurt image swift';
 
-// const mnemonicSeed = 'flag output rich laptop hub lift list scout enjoy topic sister lab';
-const mnemonicSeed = 'flag output rich laptop hub lift list horror enjoy topic sister lab';
+const mnemonicSeed = 'flag output rich laptop hub lift list scout enjoy topic sister lab';
+// const mnemonicSeed = 'flag output rich laptop hub lift list horror enjoy topic sister lab';
 const bufferSeed = BIP39.mnemonicToSeed(mnemonicSeed);
 
 
@@ -55,6 +55,15 @@ function onWdCreated(wdProvider: Wallet.Provider.WDProvider) {
             console.log('');
         });
     };
+
+    each(wdProvider.address.list(), (addr: Wallet.Entity.WalletAddress) => {
+        console.log(
+            "Address: %s / Index: %s / Type: %s",
+            addr.address,
+            addr.index,
+            addr.type
+        );
+    });
 
     console.log('Addrs: ');
     each(balance.addrBalances, (balance: Wallet.Entity.Balance, addr: string) => {
@@ -122,8 +131,8 @@ function onWdCreated(wdProvider: Wallet.Provider.WDProvider) {
 
 
 coins.forEach((coinInfo) => {
-    const walletGenerator = new Wallet.Generator.WDGenerator(coinInfo.coin, bufferSeed);
+    const walletGenerator = Wallet.Generator.createGenerator(coinInfo.coin, bufferSeed);
     walletGenerator
-        .generate()
+        .fill()
         .then(onWdCreated.bind({coinInfo}));
 });
