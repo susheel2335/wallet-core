@@ -12,6 +12,6 @@ function createGenerator(coin: Coin.CoinInterface, seed: Buffer): IWDGenerator {
 }
 
 export {
-    WDGenerator,
+    IWDGenerator,
     createGenerator
 }

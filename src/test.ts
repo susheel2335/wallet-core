@@ -7,17 +7,25 @@ import {each} from 'lodash';
 import {Coin, Wallet, Networking, HD, Utils} from './';
 
 const coins = [
-    {
-        coin: Coin.makeCoin(Coin.Unit.ETHt),
-        address: '0x6a42b86469B9c3Df1e1De589bd1741B81a5A5fAF'
-    },
+    // {
+    //     coin: Coin.makeCoin(Coin.Unit.ETHt),
+    //     address: '0x6a42b86469B9c3Df1e1De589bd1741B81a5A5fAF'
+    // },
     // {
     //     coin: Coin.makeCoin(Coin.Unit.BTC),
     //     address: '15Wmq5V7ojGWCTWtjdWKsJCQB29gTB6VMa'
     // },
+    {
+        coin: Coin.makeCoin(Coin.Unit.BTCt),
+        address: 'mm5GgtNrzXKE7y8LZhtdvX6uhuTmWL12eZ'
+    },
     // {
-    //     coin: Coin.makeCoin(Coin.Unit.BTCt),
-    //     address: 'mm5GgtNrzXKE7y8LZhtdvX6uhuTmWL12eZ'
+    //     coin: Coin.makeCoin(Coin.Unit.DASH),
+    //     address: 'XdYysbHbuV9tMg31NvE7DnzoySvoeZGmor'
+    // },
+    // {
+    //     coin: Coin.makeCoin(Coin.Unit.DASHt),
+    //     address: 'yjYxawxUJCDVmKKkKTCVbkT6ca2zWL28vz'
     // }
 ];
 
@@ -106,7 +114,7 @@ function onWdCreated(wdProvider: Wallet.Provider.WDProvider) {
 
 
     const resolveFee = (fee: BigNumber) => {
-        console.log("Fee: ", fee.toNumber());
+        console.log("Fee: ", fee.toFixed());
     };
 
     try {
@@ -114,7 +122,7 @@ function onWdCreated(wdProvider: Wallet.Provider.WDProvider) {
             .calculateFee(
                 new BigNumber(0.5),
                 this.coinInfo.coin.getKeyFormat().parseAddress(this.coinInfo.address),
-                Coin.FeeTypes.High
+                Coin.FeeTypes.Low
             )
             .then(resolveFee)
             .catch(error => {
