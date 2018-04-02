@@ -25,7 +25,10 @@ export class InsightTrackerProvider extends TrackerClient<InsightNetworkClient> 
     }
 
     createSocketConnection() {
-        this.socket = io.connect(this.networkClient.getWSUrl(), {
+
+        const url = this.networkClient.getWSUrl();
+
+        this.socket = io.connect(url, {
             timeout: 1000,
             autoConnect: false,
             rejectUnauthorized: true,
@@ -33,21 +36,21 @@ export class InsightTrackerProvider extends TrackerClient<InsightNetworkClient> 
         });
 
         this.socket.on('connect', () => {
-            console.log('Socket connected!');
+            console.log(url, 'Socket connected!');
 
             setTimeout(this.fireConnect.bind(this), 500);
         });
 
         this.socket.on('error', (error) => {
             console.error(error);
-            console.log('Socket connection error');
+            console.log(url, 'Socket connection error');
             this.fireConnectionError(error);
 
             this.reconnectSocket();
         });
 
         this.socket.on('connect_timeout', (timeout) => {
-            console.log('Socket connection timeout');
+            console.log(url, 'Socket connection timeout');
 
             this.reconnectSocket();
         });
