@@ -77,7 +77,7 @@ AdapterMap[Coin.Unit.DASH] = [{
     type: AdapterType.INSIGHT,
     options: {
         url: 'https://dash-bitcore1.trezor.io/api',
-        wsUrl: 'wss://dash-bitcore1.trezor.io/'
+        wsUrl: 'https://dash-bitcore1.trezor.io/'
     }
 }, {
     type: AdapterType.INSIGHT,
@@ -92,7 +92,7 @@ AdapterMap[Coin.Unit.DASHt] = [{
     type: AdapterType.INSIGHT,
     options: {
         url: 'https://testnet-insight.dashevo.org/insight-api-dash',
-        wsUrl: 'wss://testnet-insight.dashevo.org/'
+        wsUrl: 'https://testnet-insight.dashevo.org/'
     }
 }];
 
