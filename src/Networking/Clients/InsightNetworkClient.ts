@@ -85,9 +85,6 @@ export default class InsightNetworkClient extends NetworkClient {
     }
 
     getFeesPerKB(): Promise<Dictionary<BigNumber>> {
-        (this.coin as BIPGenericCoin).lowFeePerByte;
-        (this.coin as BIPGenericCoin).highFeePerByte
-
         const resolveFeePerByte = (data, index, defaultFeeProp: string): BigNumber => {
             if (data[index] > 0) {
                 return new BigNumber(data[index]).div(1024).round(8);
