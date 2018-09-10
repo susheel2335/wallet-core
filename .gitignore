@@ -1,5 +1,5 @@
 typings
-dist
+lib
 node_modules
 package-lock.json
 *.tgz
@@ -38,3 +38,4 @@ Temporary Items
 yarn-error.log
 yarn.lock
 .npmrc
+/coverage/
