@@ -49,7 +49,9 @@ export class InsightNetworkClient extends NetworkClient {
         };
 
         try {
-            const data = await this.sendRequest('/utils/estimatefee?nbBlocks=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16');
+            const data = await this.sendRequest(
+                '/utils/estimatefee?nbBlocks=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16'
+            );
 
             return {
                 low: resolveFeePerByte(data, 12, 'lowFeePerByte'),
