@@ -20,5 +20,5 @@ export function getAccountHDPath(coinType: number, accountIndex: number): string
 
 
 export function getHDPathFromAccount(addressType: AddressType = AddressType.RECEIVE, index: number = 0): string {
-    return `m/${addressType}/${index}`;
+    return `${addressType}/${index}`;
 }

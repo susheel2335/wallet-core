@@ -1,69 +1,49 @@
-import WIF from 'wif';
-import BigInteger from 'bigi';
-import { HDNode, ECPair } from 'bitcoinjs-lib';
+import BIP32 from 'bip32';
 
 export interface NodeInterface {
-
     getPublicKey(): Buffer
-
     getPrivateKey(): Buffer
-
     derive(index: number, hardened?: boolean): NodeInterface
-
     derivePath(path: string): NodeInterface
-
 }
 
 export class BasicNode implements NodeInterface {
 
     /**
-     * @deprecated
      * @use BIP32 library insteadof BitcoinJS.HDNode to move BitcoinJS 4.0.0
      *
      * import bip32 from 'bip32';
      **/
-    private hdNode: HDNode;
+    private bip32: BIP32.BIP32;
 
-    public constructor(pi: BigInteger, chainCode: Buffer) {
-        this.hdNode = new HDNode(
-            new ECPair(pi, null, { compressed: true }),
-            chainCode,
-        );
-    }
+    public constructor(node: BIP32.BIP32) {
 
-    public static fromBitcoinJsHDNode(hdNode: HDNode): BasicNode {
-        return new BasicNode((hdNode.keyPair as any).d, (hdNode as any).chainCode);
+        this.bip32 = node
     }
 
     public static fromSeedBuffer(seed: Buffer): BasicNode {
-        return BasicNode.fromBitcoinJsHDNode(HDNode.fromSeedBuffer(seed));
-    }
-
-    public getECKeyPair(): ECPair {
-        return this.hdNode.keyPair;
+        return new BasicNode(BIP32.fromSeed(seed))
     }
 
     public getPublicKey(): Buffer {
-        return this.hdNode.getPublicKeyBuffer();
+        return this.bip32.publicKey
     }
 
     public getPrivateKey(): Buffer {
-        let wif: WIF.WIF = WIF.decode(this.hdNode.keyPair.toWIF());
-
-        return wif.privateKey;
+        return this.bip32.privateKey
     }
 
     public derive(index: number, hardened?: boolean): NodeInterface {
         let derivedNode = hardened ?
-            this.hdNode.deriveHardened(index) :
-            this.hdNode.derive(index);
+            this.bip32.deriveHardened(index) :
+            this.bip32.derive(index);
 
-        return BasicNode.fromBitcoinJsHDNode(derivedNode);
+        return new BasicNode(derivedNode);
     }
 
     public derivePath(path: string): NodeInterface {
-        let derivedNode = this.hdNode.derivePath(path);
+        let derivedNode = this.bip32.derivePath(path);
 
-        return BasicNode.fromBitcoinJsHDNode(derivedNode);
+        return new BasicNode(derivedNode);
     }
 }
