@@ -7,10 +7,10 @@ export class BIPWalletGenerator extends WDGenerator {
     protected readonly limiter: Bottleneck;
 
 
-    public constructor(coin: Coin.CoinInterface, seed: Buffer) {
-        super(coin, seed);
+    public constructor(coin: Coin.CoinInterface, seed: Buffer, option: any = {}) {
+        super(coin, seed, option);
 
-        this.limiter = new Bottleneck(1, 100);
+        this.limiter = new Bottleneck(1, option.addressTime || 100);
     }
 
 
@@ -40,12 +40,14 @@ export class BIPWalletGenerator extends WDGenerator {
     public async bulkAddrGenerate(addressType: HD.BIP44.AddressType): Promise<void> {
         const addrs: string[] = await this.deriveAddresses(Constants.MIN_ADDRESS_COUNT, addressType);
 
+        console.log(addrs);
+
         const txs: Wallet.Entity.WalletTransaction[] = await this.extractAddrsTxs(addrs);
         this.fillAddrsTxs(txs);
 
         const pureAddrCount = this.wdProvider.address.pureAddrCount(addressType);
         if (pureAddrCount < Constants.MIN_ADDRESS_COUNT) {
-            this.bulkAddrGenerate(addressType);
+            await this.bulkAddrGenerate(addressType);
         }
     }
 

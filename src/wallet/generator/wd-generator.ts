@@ -13,7 +13,7 @@ export abstract class WDGenerator implements WDGeneratorInterface {
     protected readonly seed: Buffer;
     protected readonly wdProvider: Provider.WDProvider;
 
-    public constructor(coin: Coin.CoinInterface, seed: Buffer) {
+    public constructor(coin: Coin.CoinInterface, seed: Buffer, options: any = {}) {
         this.coin = coin;
         this.seed = seed;
 

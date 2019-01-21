@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 
-const constants = {
+export default {
     ETHERSCAN_API_KEY: 'PY4P1BMTRKT3E2J1IQGVEFVVNGZ5FTSUMG',
 
     MIN_ADDRESS_COUNT: 10,
@@ -18,5 +18,3 @@ const constants = {
 
     MIN_GAS_LIMIT: new BigNumber(54000),
 };
-
-export default constants;

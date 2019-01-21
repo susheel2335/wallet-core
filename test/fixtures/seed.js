@@ -1,8 +1,9 @@
 var BIP39 = require('bip39');
 
-var mnemonicSeed = 'flag output rich laptop hub lift list scout enjoy topic sister lab';
-var seed = BIP39.mnemonicToSeed(mnemonicSeed);
+var phrase = 'flag output rich laptop hub lift list scout enjoy topic sister lab';
+var seed = BIP39.mnemonicToSeed(phrase);
 
 module.exports = {
-    seed: seed
+    phrase: phrase,
+    seed: seed,
 };

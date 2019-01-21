@@ -1,7 +1,7 @@
 import { forEach } from 'lodash';
 import { EventEmitter } from 'events';
 import { Coin, Networking } from '../../';
-import { Entity } from '../';
+import * as Entity from '../entity';
 
 import { Destructable } from '../../utils';
 import { BalanceCalculator } from './providers/balance-calculator';
