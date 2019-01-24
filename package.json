@@ -1,6 +1,6 @@
 {
     "name": "@berrywallet/core",
-    "version": "0.4.5",
+    "version": "0.4.6",
     "description": "Berrywallet main Core for work with common cryptocurrencies like Bitcoin, Ethereum, Dash, Litecoin",
     "keywords": [
         "bip32",
