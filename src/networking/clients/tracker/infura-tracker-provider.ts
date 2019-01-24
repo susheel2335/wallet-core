@@ -39,12 +39,11 @@ export class InfuraTrackerProvider extends TrackerClient<InfuraNetworkClient> {
             this.fireDisconnect();
         }
 
-        setTimeout(() => {
-            this.startBlockTracking();
-        }, RECONNECT_TIMEOUT);
+        setTimeout(this.startBlockTracking.bind(this), RECONNECT_TIMEOUT);
 
         throw error;
     };
+
 
     protected startBlockTracking() {
         this.enableBlockTracking = true;
@@ -55,6 +54,7 @@ export class InfuraTrackerProvider extends TrackerClient<InfuraNetworkClient> {
             this.trackLastOrNextBlock();
         }, NEW_BLOCK_CHECK_TIMEOUT);
     }
+
 
     protected fireNewBlock(block: Wallet.Entity.Block): boolean {
         this.currentBlockHeight = block.height;
@@ -114,7 +114,9 @@ export class InfuraTrackerProvider extends TrackerClient<InfuraNetworkClient> {
         }
 
         try {
-            const block: Wallet.Entity.Block | undefined = await this.networkClient.getBlockByNumber(blockHeight);
+            const block: Wallet.Entity.Block | undefined
+                = await this.networkClient.getBlockByNumber(blockHeight);
+
             this.activateConnection();
 
             if (!block) {

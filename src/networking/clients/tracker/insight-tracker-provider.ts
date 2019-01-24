@@ -9,7 +9,7 @@ const io = require('socket.io-client');
 export class InsightTrackerProvider extends TrackerClient<InsightNetworkClient> {
 
     public socket: SocketIOClient.Socket;
-    public connected: boolean;
+    public connected: boolean = false;
     public enableReconnect: boolean = true;
     public debug: any;
 
@@ -19,14 +19,10 @@ export class InsightTrackerProvider extends TrackerClient<InsightNetworkClient> 
     public constructor(networkClient: InsightNetworkClient) {
         super(networkClient);
 
-        this.connected = false;
-
         const wsUrl = parseUrl(this.networkClient.getWSUrl());
         this.debug = Debug.create('SOCKET:' + wsUrl.host);
 
-        setTimeout(() => {
-            this.createSocketConnection();
-        }, 1);
+        setTimeout(this.createSocketConnection.bind(this), 5);
     }
 
     public destruct() {
@@ -52,7 +48,11 @@ export class InsightTrackerProvider extends TrackerClient<InsightNetworkClient> 
         this.socket.on('connect', () => {
             this.debug('Socket connected!');
 
-            setTimeout(this.fireConnect.bind(this), 500);
+            setTimeout(() => {
+                if (this.connected) {
+                    this.fireConnect();
+                }
+            }, 350);
         });
 
         this.socket.on('block', this.onHandleBlock);
@@ -91,10 +91,9 @@ export class InsightTrackerProvider extends TrackerClient<InsightNetworkClient> 
         }
         this.debug('Start reconnecting...');
 
-        setTimeout(() => {
-            this.createSocketConnection();
-        }, 2000);
+        setTimeout(this.createSocketConnection.bind(this), 2000);
     }
+
 
     protected fireConnect(): boolean {
         if (!this.socket) {

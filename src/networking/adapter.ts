@@ -25,10 +25,7 @@ AdapterMap[Coin.Unit.BTC] = [
         type: AdapterType.BLOCKBOOK,
         url: 'https://btc-bitcore1.trezor.io/api',
         wsUrl: 'wss://btc-bitcore1.trezor.io',
-    }, {
-        type: AdapterType.INSIGHT,
-        url: 'https://localbitcoinschain.com/api',
-    },
+    }
 ];
 
 // Bitcoin Testnet
