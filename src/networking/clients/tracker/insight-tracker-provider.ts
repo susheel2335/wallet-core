@@ -4,7 +4,7 @@ import { Wallet, Debug } from '../../../';
 import { InsightNetworkClient } from '../';
 import { TrackerClient } from './tracker-client';
 
-const io = require('socket.io-client');
+import io from 'socket.io-client';
 
 export class InsightTrackerProvider extends TrackerClient<InsightNetworkClient> {
 
@@ -22,7 +22,7 @@ export class InsightTrackerProvider extends TrackerClient<InsightNetworkClient> 
         const wsUrl = parseUrl(this.networkClient.getWSUrl());
         this.debug = Debug.create('SOCKET:' + wsUrl.host);
 
-        setTimeout(this.createSocketConnection.bind(this), 5);
+        setTimeout(() => this.createSocketConnection(), 1);
     }
 
     public destruct() {
@@ -48,11 +48,7 @@ export class InsightTrackerProvider extends TrackerClient<InsightNetworkClient> 
         this.socket.on('connect', () => {
             this.debug('Socket connected!');
 
-            setTimeout(() => {
-                if (this.connected) {
-                    this.fireConnect();
-                }
-            }, 350);
+            setTimeout(() => !this.connected && this.fireConnect(), 500);
         });
 
         this.socket.on('block', this.onHandleBlock);
@@ -66,7 +62,7 @@ export class InsightTrackerProvider extends TrackerClient<InsightNetworkClient> 
             this.reconnectSocket();
         });
 
-        this.socket.on('connect_timeout', (timeout) => {
+        this.socket.on('connect_timeout', () => {
             this.debug('Socket connection timeout');
 
             this.reconnectSocket();
@@ -91,7 +87,7 @@ export class InsightTrackerProvider extends TrackerClient<InsightNetworkClient> 
         }
         this.debug('Start reconnecting...');
 
-        setTimeout(this.createSocketConnection.bind(this), 2000);
+        setTimeout(() => this.createSocketConnection(), 2000);
     }
 
 
@@ -112,10 +108,7 @@ export class InsightTrackerProvider extends TrackerClient<InsightNetworkClient> 
             if (this.listenerCount('tx.' + txid) === 0) return;
 
             const tx = await this.networkClient.getTx(txid);
-
-            if (tx) {
-                this.fireTxidConfirmation(tx);
-            }
+            tx && this.fireTxidConfirmation(tx);
         });
 
         return super.fireNewBlock(block);
