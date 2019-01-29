@@ -3,14 +3,13 @@ import { Coin, Wallet, Debug } from '../';
 import * as Networking from './';
 import { Destructable } from '../utils';
 
-export interface ClientUnit {
+export type ClientUnit = {
     options: Networking.Api.TAdapterOption;
     client: Networking.Clients.INetworkClient;
     banned: boolean;
-}
+};
 
-export interface NetworkProviderInterface extends Destructable {
-
+export interface INetworkProvider {
     getClient(index: number): Networking.Clients.INetworkClient;
 
     broadCastTransaction(transaction: Coin.Transaction.Transaction): Promise<string>;
@@ -26,17 +25,18 @@ export interface NetworkProviderInterface extends Destructable {
     onAddrsTx(address: string[], callback: Networking.Events.NewTxCallback): void;
 
     onTransactionConfirm(txid: string, callback: Networking.Events.NewTxCallback): void;
+
+    getLastBlock(): Promise<Wallet.Entity.Block>;
 }
 
 
-export class NetworkProvider implements NetworkProviderInterface {
+export class NetworkProvider implements INetworkProvider, Destructable {
 
     protected clientList: ClientUnit[] = [];
     protected currentClientIndex = 0;
     protected debug: Debug.BerryDebug;
 
     public constructor(protected readonly coin: Coin.CoinInterface) {
-
         this.debug = Debug.create('NetworkProvider:' + this.coin.getUnit());
 
         const clientOptions = Networking.Adapter.getNetworkAdapters(coin);
@@ -117,6 +117,10 @@ export class NetworkProvider implements NetworkProviderInterface {
 
     public broadCastTransaction(transaction: Coin.Transaction.Transaction): Promise<string> {
         return this.getClient(0).broadCastTransaction(transaction);
+    }
+
+    public async getLastBlock(): Promise<Wallet.Entity.Block> {
+        throw new Error('Need implement block!');
     }
 
     public destruct() {

@@ -51,28 +51,26 @@ export class BlockcypherBIPNetworkClient extends NetworkClient {
         });
     }
 
-
+    /**
+     * @param transaction
+     */
     public broadCastTransaction(transaction: Coin.Transaction.Transaction): Promise<string> {
-        const requestData = {
-            tx: transaction.toBuffer().toString('hex'),
-        };
+        return wrapLimiterMethod(async () => {
+            const response = await this.client.post('/txs/push', {
+                tx: transaction.toBuffer().toString('hex'),
+            });
 
-        const onSuccess = (response) => {
             const tx: Blockcypher.Transaction = response.data;
 
             return tx.hash as string;
-        };
-
-        return wrapLimiterMethod(() => {
-            return this.client
-                .post('/txs/push', requestData)
-                .then(onSuccess);
         });
     }
 
 
     public getAddressTxs(address: string): Promise<Wallet.Entity.BIPTransaction[]> {
-        const onRequestSuccess = (response) => {
+        return wrapLimiterMethod(async () => {
+            const response = await this.client.get('/addrs/' + address + '/full');
+
             const addressData: Blockcypher.AddressInfo = response.data;
 
             const txList: Wallet.Entity.BIPTransaction[] = [];
@@ -83,12 +81,6 @@ export class BlockcypherBIPNetworkClient extends NetworkClient {
             forEach(orderBy(addressData.txs, 'block_height', 'asc'), extractTxCallback);
 
             return txList;
-        };
-
-        return wrapLimiterMethod(() => {
-            return this.client
-                .get('/addrs/' + address + '/full')
-                .then(onRequestSuccess);
         });
     }
 }

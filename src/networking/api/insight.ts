@@ -2,7 +2,6 @@ import { forEach, orderBy } from 'lodash';
 import BitcoinJS from 'bitcoinjs-lib';
 import BigNumber from 'bignumber.js';
 import { Coin, Wallet, Utils } from '../../';
-import { Insight } from './';
 
 export type Network = {
     info: {
@@ -114,7 +113,7 @@ export function toWalletTx(tx: Transaction, coin: Coin.CoinInterface): Wallet.En
         outputs: [],
     } as Wallet.Entity.BIPTransaction;
 
-    forEach(orderBy(tx.vin, 'n', 'asc'), (vin: Insight.Input) => {
+    forEach(orderBy(tx.vin, 'n', 'asc'), (vin: Input) => {
         if (!vin.txid) return;
 
         txData.inputs.push({
@@ -126,7 +125,7 @@ export function toWalletTx(tx: Transaction, coin: Coin.CoinInterface): Wallet.En
         });
     });
 
-    forEach(orderBy(tx.vout, 'n', 'asc'), (vout: Insight.Output) => {
+    forEach(orderBy(tx.vout, 'n', 'asc'), (vout: Output) => {
         const spk = vout.scriptPubKey;
 
         const buffer = Utils.hexToBuffer(spk.hex);
