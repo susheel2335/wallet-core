@@ -1,4 +1,4 @@
-import { find, forEach, reduce, map } from 'lodash';
+import { find, forEach } from 'lodash';
 import BigNumber from 'bignumber.js';
 
 import Constants from '../../../constants';

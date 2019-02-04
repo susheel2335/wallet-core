@@ -82,11 +82,11 @@ describe('Test Parse address', () => {
                         return;
                     }
 
-                    it('Check address version', () => {
+                    it('Check address format', () => {
                         assert.strictEqual(address.getFormat(), addrCase.equal[0]);
                     });
 
-                    it('Check address hex', () => {
+                    it('Check address HEX', () => {
                         assert.strictEqual(address.getData().toString('hex'), addrCase.equal[1]);
                     });
 

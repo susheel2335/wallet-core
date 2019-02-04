@@ -6,6 +6,7 @@ import { BalanceException } from './exceptions';
 import { WDProvider } from './wd-provider';
 import * as Entity from './entity';
 
+
 export function calculateBalance(balance: Entity.WDBalance, withUnconfirmed = false): number {
     let totalBalance = new BigNumber(0);
 
@@ -30,6 +31,7 @@ export function calculateTxBalance(balance: Entity.WDBalance, txid: string): num
 
     return txBalance.receive.minus(txBalance.spend).toNumber();
 }
+
 
 export function createWDProvider(walletData: Entity.WalletData): WDProvider {
     return new WDProvider(walletData);
