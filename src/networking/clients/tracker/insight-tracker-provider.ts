@@ -27,12 +27,7 @@ export class InsightTrackerProvider extends TrackerClient<InsightNetworkClient> 
 
     public destruct() {
         this.enableReconnect = false;
-        this.connected = false;
-
-        if (this.socket) {
-            this.socket.close();
-            delete this.socket;
-        }
+        this.__removeSocketConnection();
 
         super.destruct();
     }
@@ -48,7 +43,9 @@ export class InsightTrackerProvider extends TrackerClient<InsightNetworkClient> 
         this.socket.on('connect', () => {
             this.debug('Socket connected!');
 
-            setTimeout(() => !this.connected && this.fireConnect(), 500);
+            setTimeout(() => {
+                (!this.connected && this.socket) && this.fireConnect();
+            }, 500);
         });
 
         this.socket.on('block', this.onHandleBlock);
@@ -80,11 +77,8 @@ export class InsightTrackerProvider extends TrackerClient<InsightNetworkClient> 
             return;
         }
 
-        this.connected = false;
-        if (this.socket) {
-            this.socket.close();
-            delete this.socket;
-        }
+        this.__removeSocketConnection();
+
         this.debug('Start reconnecting...');
 
         setTimeout(() => this.createSocketConnection(), 2000);
@@ -139,4 +133,13 @@ export class InsightTrackerProvider extends TrackerClient<InsightNetworkClient> 
             }
         }
     };
+
+    private __removeSocketConnection() {
+        this.connected = false;
+        if (this.socket) {
+            this.socket.close();
+            this.socket.removeAllListeners();
+            delete this.socket;
+        }
+    }
 }
