@@ -136,9 +136,10 @@ export class InsightTrackerProvider extends TrackerClient<InsightNetworkClient> 
 
     private __removeSocketConnection() {
         this.connected = false;
-        if (this.socket) {
-            this.socket.close();
+        if (typeof this.socket !== 'undefined') {
             this.socket.removeAllListeners();
+            this.socket.close();
+
             delete this.socket;
         }
     }
