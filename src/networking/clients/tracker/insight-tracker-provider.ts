@@ -110,9 +110,16 @@ export class InsightTrackerProvider extends TrackerClient<InsightNetworkClient> 
 
 
     protected onHandleBlock = async (blockHash: string) => {
-        const block: Wallet.Entity.Block = await this.networkClient.getBlock(blockHash);
+        try {
+            const block: Wallet.Entity.Block = await this.networkClient.getBlock(blockHash);
 
-        this.fireNewBlock(block);
+            this.fireNewBlock(block);
+        } catch (error) {
+            throw new Error(
+                `Error on handle block "${blockHash}" of "${this.networkClient.getCoin().getName()}":
+                ${error.message}`,
+            );
+        }
     };
 
 
