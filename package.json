@@ -12,7 +12,7 @@
     ],
     "repository": "https://github.com/plark/wallet-core",
     "homepage": "https://plark.io",
-    "author": "Plark <berry@plark.com>",
+    "author": "Plark <berry@plark.io>",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "license": "LGPL-3.0",
