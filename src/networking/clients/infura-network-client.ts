@@ -27,7 +27,7 @@ export class InfuraNetworkClient extends NetworkClient implements IEthereumNetwo
         super(coin, options);
 
         if (false === (coin instanceof Coin.Defined.Ethereum)) {
-            throw new Error("Invalid Coin. Just ETH Coin");
+            throw new Error('Invalid Coin. Just ETH Coin');
         }
 
         const { network = null } = this.getOptions();
