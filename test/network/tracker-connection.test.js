@@ -2,7 +2,7 @@ import assert from 'assert';
 import { Coin, Networking } from '../../lib';
 
 const coins = [
-    // Coin.Unit.BTC,
+    Coin.Unit.BTC,
     Coin.Unit.BTCt,
     Coin.Unit.LTC,
     Coin.Unit.LTCt,
