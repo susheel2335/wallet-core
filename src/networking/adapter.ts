@@ -74,7 +74,7 @@ AdapterMap[Coin.Unit.DASHt] = [
     {
         type: AdapterType.INSIGHT,
         url: 'https://dasht.insight.plark.io/api',
-        wsUrl: 'wss://dash.insight.plark.io/',
+        wsUrl: 'wss://dasht.insight.plark.io/',
     },
 ];
 
