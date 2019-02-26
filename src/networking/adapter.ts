@@ -6,7 +6,7 @@ export enum AdapterType {
     INSIGHT = 'insight',
     BLOCKBOOK = 'blockbook',
     ETHERSCAN = 'etherscan',
-    // a symbios of two explorer - infura and etherscan
+    // a symbiosis of two explorer - infura and etherscan
     INFURA = 'infura',
     BLOCKCYPHER_BIP = 'blockcypher-bip',
     BLOCKCYPHER_ETHER = 'blockcypher-ether'
