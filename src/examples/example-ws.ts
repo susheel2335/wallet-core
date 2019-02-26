@@ -1,6 +1,6 @@
 import { Coin, Networking, Wallet } from '../';
 
-const coin = Coin.makeCoin(Coin.Unit.LTCt);
+const coin = Coin.makeCoin(Coin.Unit.DASH);
 const networkProvider = new Networking.NetworkProvider(coin);
 
 const handleNewBlock = (block: Wallet.Entity.Block) => {

@@ -1,12 +1,19 @@
-import { Provider } from '../../';
-
 import { map, forEach, chunk } from 'lodash';
+import queue from 'queue';
+import { create } from '../../../debugger';
+import { Provider } from '../../';
 import { Wallet } from '../../../';
 import { SimpleProvider } from './simple-provider';
 
-const queue = require('queue');
-
 export class UpdateProvider extends SimpleProvider {
+
+    protected debug: any;
+
+    public constructor(wdProvider: Provider.WDProvider) {
+        super(wdProvider);
+
+        this.debug = create(`${this.getCoin().getUnit()}_UPDATER`);
+    }
 
     protected async updateTransactions(addrs: Wallet.Entity.WalletAddress[]): Promise<void> {
         const networkProvider = this.wdProvider.getNetworkProvider();
@@ -23,9 +30,13 @@ export class UpdateProvider extends SimpleProvider {
     public update(): Promise<Provider.WDProvider> {
         const mapChunkIterator = (addrs: Wallet.Entity.WalletAddress[]) => {
             return async (done) => {
-                await this.updateTransactions(addrs);
-
-                done();
+                try {
+                    await this.updateTransactions(addrs);
+                } catch (error) {
+                    this.debug(error.message);
+                } finally {
+                    done();
+                }
             };
         };
 

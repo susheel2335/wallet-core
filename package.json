@@ -21,7 +21,7 @@
         "clear": "rm -rf ./lib",
         "build:ts": "tsc --esModuleInterop",
         "build:gulp": "gulp",
-        "test": "mocha -t 20000",
+        "test": "mocha -t 5000 --recursive --no-warnings",
         "tag:patch": "yarn version --new-version patch",
         "tag:minor": "yarn version --new-version minor",
         "publish:alpha": "yarn publish --tag next"
@@ -43,7 +43,7 @@
         "ethereumjs-util": "5.2.0",
         "etherscan-api": "6.0.2",
         "lodash": "4.17.10",
-        "queue": "4.4.2",
+        "queue": "6.0.0",
         "socket.io-client": "2.1.1",
         "wif": "2.0.6"
     },
