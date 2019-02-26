@@ -50,7 +50,7 @@ export class InsightNetworkClient extends NetworkClient {
 
         try {
             const data = await this.sendRequest(
-                '/utils/estimatefee?nbBlocks=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16'
+                '/utils/estimatefee?nbBlocks=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16',
             );
 
             return {
@@ -148,7 +148,7 @@ export class InsightNetworkClient extends NetworkClient {
 
 
     protected sendRequest<R>(url: string, postParams: any = null): Promise<R> {
-        const requestResolver = async (): Promise<R> => {
+        return this.wrapperLimiter<R>(async (): Promise<R> => {
             const response: AxiosResponse = await this.client.request({
                 url: url,
                 method: postParams ? 'POST' : 'GET',
@@ -156,8 +156,6 @@ export class InsightNetworkClient extends NetworkClient {
             });
 
             return response.data as R;
-        };
-
-        return this.wrapperLimiter<R>(requestResolver);
+        });
     }
 }

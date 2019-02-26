@@ -48,9 +48,9 @@ export class InfuraTrackerProvider extends TrackerClient<InfuraNetworkClient> {
     protected startBlockTracking() {
         this.enableBlockTracking = true;
 
-        this.trackLastOrNextBlock();
-
-        this.blockTrackInterval = setInterval(() => this.trackLastOrNextBlock(), NEW_BLOCK_CHECK_TIMEOUT);
+        this.trackLastOrNextBlock().then(() => {
+            this.blockTrackInterval = setInterval(() => this.trackLastOrNextBlock(), NEW_BLOCK_CHECK_TIMEOUT);
+        });
     }
 
 
