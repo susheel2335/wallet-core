@@ -18,8 +18,8 @@ export const AdapterMap: Record<string, TAdapterOption[]> = {};
 AdapterMap[Coin.Unit.BTC] = [
     {
         type: AdapterType.INSIGHT,
-        url: 'https://btc.insight.plark.io/api',
-        wsUrl: 'wss://btc.insight.plark.io',
+        url: 'https://btc1.trezor.io/api',
+        wsUrl: 'wss://btc1.trezor.io/socket.io/',
         version: '0.4.3',
     },
 ];
@@ -59,8 +59,8 @@ AdapterMap[Coin.Unit.LTCt] = [
 AdapterMap[Coin.Unit.DASH] = [
     {
         type: AdapterType.INSIGHT,
-        url: 'https://insight.dash.org/insight-api-dash',
-        wsUrl: 'wss://insight.dash.org/',
+        url: 'https://dash.insight.plark.io/api',
+        wsUrl: 'wss://dash.insight.plark.io/',
     },
 ];
 
@@ -68,8 +68,8 @@ AdapterMap[Coin.Unit.DASH] = [
 AdapterMap[Coin.Unit.DASHt] = [
     {
         type: AdapterType.INSIGHT,
-        url: 'https://testnet-insight.dashevo.org/insight-api-dash',
-        wsUrl: 'https://testnet-insight.dashevo.org/',
+        url: 'https://dasht.insight.plark.io/api',
+        wsUrl: 'wss://dash.insight.plark.io/',
     },
 ];
 
