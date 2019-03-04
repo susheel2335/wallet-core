@@ -12,19 +12,24 @@ const coins = [
     Coin.Unit.ETHt,
 ];
 
-describe('Test Tracker Connection', () => {
+describe('Test Tracker Connection', function () {
     coins.map((coinUnit) => {
         const coin = Coin.makeCoin(coinUnit);
 
-        it(`Connect Tracker for ${coin.getUnit()}`, async () => {
-            await new Promise(resolve => {
-                const networkProvider = new Networking.NetworkProvider(coin);
+        describe(`Tracker for ${coin.getUnit()}`, function () {
 
-                networkProvider.getTracker().onConnect(() => {
-                    networkProvider.destruct();
-                    resolve();
-                });
+            let networkProvider = new Networking.NetworkProvider(coin);
+
+            const connectionPromise = new Promise(resolve => {
+                networkProvider.getTracker().onConnect(() => resolve());
             });
+
+            it(`Successful Connected`, async () => {
+                await connectionPromise;
+
+                networkProvider.destruct();
+            }, 2000);
+
         }, 2000);
     });
 });
