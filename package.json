@@ -1,6 +1,6 @@
 {
     "name": "@plark/wallet-core",
-    "version": "0.4.19",
+    "version": "0.4.20",
     "description": "Plark Wallet Core for work with common cryptocurrencies like Bitcoin, Ethereum, Dash, Litecoin",
     "keywords": [
         "bitcoin",
@@ -17,7 +17,7 @@
     "types": "lib/index.d.ts",
     "license": "LGPL-3.0",
     "scripts": {
-        "build": "npm run clear && npm run build:ts && gulp global-dts",
+        "build": "npm run clear && npm run build:ts",
         "clear": "rm -rf ./lib",
         "build:ts": "tsc --esModuleInterop",
         "build:gulp": "gulp",
