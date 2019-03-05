@@ -111,9 +111,10 @@ export class InsightNetworkClient extends NetworkClient {
 
     public destruct(): void {
         if (this.trackerClient) {
+            this.trackerClient.onDisconnect(() => {
+                delete this.trackerClient;
+            });
             this.trackerClient.destruct();
-
-            delete this.trackerClient;
         }
 
         this.limiter.stopAll();

@@ -6,7 +6,7 @@ import { TrackerClient } from './tracker-client';
 
 import io from 'socket.io-client';
 
-export class InsightTrackerProvider extends TrackerClient<InsightNetworkClient> {
+export default class InsightTrackerProvider extends TrackerClient<InsightNetworkClient> {
 
     public socket: SocketIOClient.Socket;
     public connected: boolean = false;
@@ -25,12 +25,14 @@ export class InsightTrackerProvider extends TrackerClient<InsightNetworkClient> 
         setTimeout(() => this.createSocketConnection(), 1);
     }
 
-    public destruct() {
-        this.enableReconnect = false;
-        this.__removeSocketConnection();
 
+    public async destruct(): Promise<void> {
+        this.enableReconnect = false;
         super.destruct();
+
+        return this.__removeSocketConnection();
     }
+
 
     public createSocketConnection() {
         this.socket = io.connect(this.networkClient.getWSUrl(), {
@@ -40,7 +42,10 @@ export class InsightTrackerProvider extends TrackerClient<InsightNetworkClient> 
             transports: ['websocket'],
         });
 
-        this.socket.on('connect', () => {
+        this.socket.on('block', this.onHandleBlock);
+        this.socket.on('tx', this.onHandleTransaction);
+
+        this.socket.once('connect', () => {
             this.debug('Socket connected!');
 
             setTimeout(() => {
@@ -48,10 +53,7 @@ export class InsightTrackerProvider extends TrackerClient<InsightNetworkClient> 
             }, 500);
         });
 
-        this.socket.on('block', this.onHandleBlock);
-        this.socket.on('tx', this.onHandleTransaction);
-
-        this.socket.on('error', (error) => {
+        this.socket.once('error', (error) => {
             this.debug(error);
             this.debug('Socket connection error');
             this.fireConnectionError(error);
@@ -59,29 +61,32 @@ export class InsightTrackerProvider extends TrackerClient<InsightNetworkClient> 
             this.reconnectSocket();
         });
 
-        this.socket.on('connect_timeout', () => {
+        this.socket.once('connect_timeout', () => {
             this.debug('Socket connection timeout');
 
             this.reconnectSocket();
         });
 
-        this.socket.on('disconnect', () => {
+        this.socket.once('disconnect', () => {
+            this.fireDisconnect();
+
             this.reconnectSocket();
         });
 
         this.socket.open();
     }
 
+
     protected reconnectSocket() {
         if (!this.enableReconnect) {
             return;
         }
 
-        this.__removeSocketConnection();
+        this.__removeSocketConnection().then(() => {
+            setTimeout(() => this.createSocketConnection(), 2000);
+        });
 
         this.debug('Start reconnecting...');
-
-        setTimeout(() => this.createSocketConnection(), 2000);
     }
 
 
@@ -125,29 +130,35 @@ export class InsightTrackerProvider extends TrackerClient<InsightNetworkClient> 
 
     protected onHandleTransaction = async (tx: any) => {
         const { callback, addrs } = this.addrTxEvents;
-        if (callback && addrs.length) {
-            const transactionAddrs = reduce(
-                tx.vout,
-                (list, vout) => [...list, ...Object.keys(vout)],
-                [],
-            );
+        if (!callback || addrs.length === 0) {
+            return;
+        }
 
-            const addr = find(transactionAddrs, (addr) => this.isAddrTrack(addr));
+        const transactionAddrs = reduce(
+            tx.vout,
+            (list, vout) => [...list, ...Object.keys(vout)],
+            [],
+        );
 
-            if (addr) {
-                const responseTx: Wallet.Entity.BIPTransaction = await this.networkClient.getTx(tx.txid);
-                callback(responseTx);
-            }
+        const addr = find(transactionAddrs, (addr) => this.isAddrTrack(addr));
+
+        if (addr) {
+            const responseTx: Wallet.Entity.BIPTransaction = await this.networkClient.getTx(tx.txid);
+            callback(responseTx);
         }
     };
 
-    private __removeSocketConnection() {
+    private async __removeSocketConnection() {
         this.connected = false;
-        if (typeof this.socket !== 'undefined') {
-            this.socket.removeAllListeners();
-            this.socket.close();
 
-            delete this.socket;
+        if (typeof this.socket !== 'undefined') {
+            this.socket.once('disconnect', () => {
+                this.socket.removeAllListeners();
+
+                delete this.socket;
+            });
+
+            this.socket.disconnect();
         }
     }
 }

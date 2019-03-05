@@ -2,18 +2,19 @@ import { Coin } from '../';
 
 import * as Adapter from './adapter';
 import * as Api from './api';
-import * as Events from './events';
 import * as Clients from './clients';
 
-export { Clients, Api, Events, Adapter };
+export { Clients, Api, Adapter };
 export { NetworkProvider } from './network-provider';
 export { getNetworkAdapters, getNetworkAdapter } from './utils';
 
 export function createClient(coin: Coin.CoinInterface, params: Api.TAdapterOption): Clients.NetworkClient {
     switch (params.type) {
         case Adapter.AdapterType.INSIGHT:
-        case Adapter.AdapterType.BLOCKBOOK:
             return new Clients.InsightNetworkClient(coin, params);
+
+        case Adapter.AdapterType.BLOCKBOOK:
+            return new Clients.BlockbookNetworkClient(coin, params);
 
         case Adapter.AdapterType.INFURA:
             return new Clients.InfuraNetworkClient(coin, params);

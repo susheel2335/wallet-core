@@ -20,11 +20,11 @@ export interface INetworkProvider {
 
     getTracker(): Networking.Clients.Tracker.ITrackerClient;
 
-    onNewBlock(callback: Networking.Events.NewBlockCallback): void;
+    onNewBlock(callback: plarkcore.NewBlockCallback): void;
 
-    onAddrsTx(address: string[], callback: Networking.Events.NewTxCallback): void;
+    onAddrsTx(address: string[], callback: plarkcore.NewTxCallback): void;
 
-    onTransactionConfirm(txid: string, callback: Networking.Events.NewTxCallback): void;
+    onTransactionConfirm(txid: string, callback: plarkcore.NewTxCallback): void;
 
     getLastBlock(): Promise<Wallet.Entity.Block>;
 }
@@ -99,15 +99,15 @@ export class NetworkProvider implements INetworkProvider, Destructable {
         return this.clientList[0].client.getTracker();
     }
 
-    public onNewBlock(callback: Networking.Events.NewBlockCallback): void {
+    public onNewBlock(callback: plarkcore.NewBlockCallback): void {
         this.getTracker().onBlock(callback);
     }
 
-    public onTransactionConfirm(txid: string, callback: Networking.Events.NewTxCallback) {
+    public onTransactionConfirm(txid: string, callback: plarkcore.NewTxCallback) {
         this.getTracker().onTransactionConfirm(txid, callback);
     }
 
-    public onAddrsTx(addrs: string[], callback: Networking.Events.NewTxCallback): void {
+    public onAddrsTx(addrs: string[], callback: plarkcore.NewTxCallback): void {
         this.getTracker().onAddrsTx(addrs, callback);
     }
 

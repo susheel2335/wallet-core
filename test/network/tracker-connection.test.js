@@ -24,10 +24,21 @@ describe('Test Tracker Connection', function () {
                 networkProvider.getTracker().onConnect(() => resolve());
             });
 
+
+            const disconectionPromise = new Promise((resolve) => {
+                networkProvider.getTracker().onDisconnect(() => resolve());
+            });
+
+
             it(`Successful Connected`, async () => {
                 await connectionPromise;
 
                 networkProvider.destruct();
+            }, 2000);
+
+
+            it(`Successful Disconnected`, async () => {
+                await disconectionPromise;
             }, 2000);
 
         }, 2000);

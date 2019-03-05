@@ -1,3 +1,6 @@
 export { TrackerEvent, ITrackerClient, TrackerClient } from './tracker-client';
-export { InfuraTrackerProvider } from './infura-tracker-provider';
-export { InsightTrackerProvider } from './insight-tracker-provider';
+import InfuraTrackerProvider from './infura-tracker-provider';
+import InsightTrackerProvider from './insight-tracker-provider';
+import BlockbookTrackerProvider from './blockbook-tracker-provider';
+
+export { InfuraTrackerProvider, InsightTrackerProvider, BlockbookTrackerProvider };

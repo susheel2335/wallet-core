@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 import { forEach, map, findIndex } from 'lodash';
 import { Coin, Wallet } from '../../';
 import { Destructable } from '../../utils';
-import { Api, Events } from '../';
+import { Api } from '../';
 import * as Tracker from './tracker';
 
 export { Tracker };
@@ -41,23 +41,23 @@ export interface IEthereumNetworkClient extends INetworkClient {
 
 
 export abstract class NetworkClient implements INetworkClient {
-    protected readonly coin: Coin.CoinInterface;
-    protected readonly options: Api.TAdapterOption;
-    protected onBlocksCbs: Events.NewBlockCallback[] = [];
-    protected onAddrTXCbs: Record<string, Events.NewTxCallback[]> = {};
+    public readonly coin: Coin.CoinInterface;
+    public readonly options: Api.TAdapterOption;
+    protected onBlocksCbs: plarkcore.NewBlockCallback[] = [];
+    protected onAddrTXCbs: Record<string, plarkcore.NewTxCallback[]> = {};
 
     public constructor(coin: Coin.CoinInterface, options: Api.TAdapterOption) {
         this.coin = coin;
         this.options = options;
     }
 
-    abstract getTx(txid: string): Promise<Wallet.Entity.WalletTransaction | undefined>;
+    public abstract getTx(txid: string): Promise<Wallet.Entity.WalletTransaction | undefined>;
 
-    abstract getBlock(blockHash: string): Promise<Wallet.Entity.Block>;
+    public abstract getBlock(blockHash: string): Promise<Wallet.Entity.Block>;
 
-    abstract getAddressTxs(address: string): Promise<Wallet.Entity.WalletTransaction[]>;
+    public abstract getAddressTxs(address: string): Promise<Wallet.Entity.WalletTransaction[]>;
 
-    abstract broadCastTransaction(transaction: Coin.Transaction.Transaction): Promise<string>;
+    public abstract broadCastTransaction(transaction: Coin.Transaction.Transaction): Promise<string>;
 
     public getCoin(): Coin.CoinInterface {
         return this.coin;

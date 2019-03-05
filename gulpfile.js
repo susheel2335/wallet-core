@@ -39,6 +39,13 @@ gulp.task(
     })
 );
 
+gulp.task('global-dts', copyTask({
+    source: path.resolve('./src'),
+    destination: path.resolve('./lib'),
+    pattern: '*.d.ts',
+    transform: flatten()
+}));
+
 
 function copyTask(opts) {
     const {source, destination, destinations = [destination], pattern = '**/*', excludePattern, transform} = opts;

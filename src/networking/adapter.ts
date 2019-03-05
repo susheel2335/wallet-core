@@ -17,14 +17,14 @@ export const AdapterMap: Record<string, TAdapterOption[]> = {};
 // Bitcoin
 AdapterMap[Coin.Unit.BTC] = [
     {
+        type: AdapterType.BLOCKBOOK,
+        url: 'https://btc.blockbook.plark.io/api/',
+        wsUrl: 'wss://btc.blockbook.plark.io',
+        version: '0.1.1',
+    }, {
         type: AdapterType.INSIGHT,
         url: 'https://insight.bitpay.com/api',
         wsUrl: 'wss://insight.bitpay.com',
-        version: '0.4.3',
-    }, {
-        type: AdapterType.INSIGHT,
-        url: 'https://btc.insight.plark.io/api',
-        wsUrl: 'wss://btc.insight.plark.io',
         version: '0.4.3',
     },
 ];

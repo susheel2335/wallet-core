@@ -2,7 +2,6 @@ import { map, find } from 'lodash';
 import { EventEmitter } from 'events';
 import { Wallet, Debug } from '../../../';
 import { Destructable } from '../../../utils';
-import { Events } from '../../';
 import { INetworkClient } from '../';
 
 export enum TrackerEvent {
@@ -17,11 +16,11 @@ export enum TrackerEvent {
 export interface ITrackerClient extends Destructable, EventEmitter {
     onConnect(callback): ITrackerClient;
 
-    onBlock(callback: Events.NewBlockCallback): ITrackerClient;
+    onBlock(callback: plarkcore.NewBlockCallback): ITrackerClient;
 
-    onAddrsTx(addrs: string[], callback: Events.NewTxCallback): ITrackerClient;
+    onAddrsTx(addrs: string[], callback: plarkcore.NewTxCallback): ITrackerClient;
 
-    onTransactionConfirm(txid: string, callback: Events.NewTxCallback): ITrackerClient;
+    onTransactionConfirm(txid: string, callback: plarkcore.NewTxCallback): ITrackerClient;
 
     onDisconnect(callback: (...args: any[]) => void): ITrackerClient;
 
@@ -32,7 +31,7 @@ export interface ITrackerClient extends Destructable, EventEmitter {
 
 export interface IAddressTrackEvent {
     addrs: Buffer[];
-    callback?: Events.NewTxCallback;
+    callback?: plarkcore.NewTxCallback;
 }
 
 
@@ -74,21 +73,21 @@ export class TrackerClient<T extends INetworkClient> extends EventEmitter implem
     }
 
 
-    public onBlock(callback: Events.NewBlockCallback): ITrackerClient {
+    public onBlock(callback: plarkcore.NewBlockCallback): ITrackerClient {
         this.on(TrackerEvent.Block, callback);
 
         return this;
     }
 
 
-    public onTransactionConfirm(txid: string, callback: Events.NewTxCallback): ITrackerClient {
+    public onTransactionConfirm(txid: string, callback: plarkcore.NewTxCallback): ITrackerClient {
         this.once(`tx.${txid}`, callback);
 
         return this;
     }
 
 
-    public onAddrsTx(addrs: string[], callback: Events.NewTxCallback): ITrackerClient {
+    public onAddrsTx(addrs: string[], callback: plarkcore.NewTxCallback): ITrackerClient {
         const coinKeyFormatter = this.networkClient.getCoin().getKeyFormat();
 
         const addrBuffers: Buffer[] = map(addrs, (addr: string) => {

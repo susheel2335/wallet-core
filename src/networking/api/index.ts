@@ -3,6 +3,7 @@ import { AdapterType } from '../adapter';
 import Blockcypher from './blockcypher';
 import EthereumBlockcypher from './ethereum-blockcypher';
 import Etherscan from './etherscan';
+import blockbook from './blockbook';
 import * as Infura from './infura';
 import * as Insight from './insight';
 
@@ -18,6 +19,7 @@ export {
     Blockcypher,
     EthereumBlockcypher,
     Etherscan,
+    blockbook,
     Infura,
     Insight,
 };

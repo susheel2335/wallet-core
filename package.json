@@ -17,7 +17,7 @@
     "types": "lib/index.d.ts",
     "license": "LGPL-3.0",
     "scripts": {
-        "build": "npm run clear && npm run build:ts",
+        "build": "npm run clear && npm run build:ts && gulp global-dts",
         "clear": "rm -rf ./lib",
         "build:ts": "tsc --esModuleInterop",
         "build:gulp": "gulp",
@@ -45,7 +45,8 @@
         "lodash": "4.17.10",
         "queue": "6.0.0",
         "socket.io-client": "2.1.1",
-        "wif": "2.0.6"
+        "wif": "2.0.6",
+        "ws": "^6.1.4"
     },
     "devDependencies": {
         "@types/bip32": "1.0.0",
@@ -57,6 +58,7 @@
         "@types/lodash": "4.14.116",
         "@types/socket.io": "1.4.36",
         "@types/socket.io-client": "1.4.32",
+        "@types/ws": "^6.0.1",
         "@warren-bank/ethereumjs-tx-sign": "2.0.0",
         "assert": "1.4.1",
         "babel-core": "6.26.3",

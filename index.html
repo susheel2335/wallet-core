@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+</head>
+<body>
+<script>
+    $(function () {
+        var socket = io.connect(
+            "wss://ltc1.trezor.io", {
+                timeout: 5000,
+                // autoConnect: false,
+                // rejectUnauthorized: true,
+                transports: ['websocket'],
+            }
+        );
+
+
+        async function sendRequest(socket, method, params) {
+            return new Promise((resolve, reject) => {
+                socket.send({method, params}, (response) => {
+                    if (response.error) {
+                        reject(new Error(response.error.message));
+                    }
+
+                    resolve(response.result);
+                });
+            });
+        }
+
+        const addresses = [
+            "LYwBHMGktmXWCNahpcuZ9CPWfVEfTSyepP",
+            "LVFhUNZJSPNEXCzNorLiGvMi68gezmP2D8",
+            "LU1vTW2cWNDgxAifZ8zia4ucnRfFR99CSP",
+            "LhvK5AU9CdbFkfu7xjzLM8WFdShdCN55cS",
+            "LhRrfbPUxASnPPHHRDW2jnzQck6k13oR7d",
+            "LcjH7EHnYt6Sj11U8aRwabYHP2kKh429Fa",
+            "LZmBapx65YWhtLWfL6g49C29phNFj5jcJt",
+        ];
+
+        socket.on('connect', async function () {
+            console.log('Connected!');
+
+            const info = await sendRequest(socket, 'getInfo');
+            console.log(info);
+
+            const addressHistory = await sendRequest(socket, 'getAddressHistory', [
+                addresses,
+                {
+                    start: info.blocks,
+                    end: 0,
+
+                    from: 0,
+                    to: 50,
+
+                    queryMempoolOnly: false
+                }
+            ]);
+
+            console.log(addressHistory);
+
+            socket.emit('subscribe', 'bitcoind/hashblock');
+            socket.emit('subscribe', 'bitcoind/addresstxid', addresses);
+
+            socket.on('bitcoind/hashblock', (data) => console.log(data));
+            socket.on('bitcoind/addresstxid', (data) => console.log(data));
+        });
+    });
+</script>
+
+
+</body>
+</html>

@@ -247,11 +247,14 @@ export class InfuraNetworkClient extends NetworkClient implements IEthereumNetwo
     }
 
 
-    public destruct() {
+    public async destruct() {
         if (this.trackerClient) {
-            this.trackerClient.destruct();
+            const destructor = this.trackerClient.destruct();
 
-            delete this.trackerClient;
+            if (destructor instanceof Promise) {
+                await destructor;
+                delete this.trackerClient;
+            }
         }
 
         delete this.client;

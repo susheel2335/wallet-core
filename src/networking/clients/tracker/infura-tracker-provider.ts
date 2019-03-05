@@ -9,7 +9,7 @@ const NEW_BLOCK_CHECK_TIMEOUT = 15000;
 const RECONNECT_TIMEOUT = 30000;
 const CONNECTION_TIMEOUT = 60000 * 10;
 
-export class InfuraTrackerProvider extends TrackerClient<InfuraNetworkClient> {
+export default class InfuraTrackerProvider extends TrackerClient<InfuraNetworkClient> {
 
     protected currentBlockHeight?: number;
     protected currentBlockTime?: number;
@@ -23,6 +23,7 @@ export class InfuraTrackerProvider extends TrackerClient<InfuraNetworkClient> {
 
         this.startBlockTracking();
     }
+
 
     protected handleBlockError = (error): void => {
         if (this.blockTrackInterval) {
@@ -39,7 +40,9 @@ export class InfuraTrackerProvider extends TrackerClient<InfuraNetworkClient> {
             this.fireDisconnect();
         }
 
-        setTimeout(this.startBlockTracking.bind(this), RECONNECT_TIMEOUT);
+        if (this.enableBlockTracking) {
+            setTimeout(() => this.startBlockTracking.bind(this), RECONNECT_TIMEOUT);
+        }
 
         throw error;
     };
@@ -51,6 +54,12 @@ export class InfuraTrackerProvider extends TrackerClient<InfuraNetworkClient> {
         this.trackLastOrNextBlock().then(() => {
             this.blockTrackInterval = setInterval(() => this.trackLastOrNextBlock(), NEW_BLOCK_CHECK_TIMEOUT);
         });
+    }
+
+
+    protected stopBlockTracking() {
+        this.enableBlockTracking = false;
+        clearInterval(this.blockTrackInterval);
     }
 
 
@@ -81,14 +90,16 @@ export class InfuraTrackerProvider extends TrackerClient<InfuraNetworkClient> {
         return super.fireNewBlock(block);
     }
 
+
     protected getCurrentBlockTime(): number {
         return this.currentBlockTime || 0;
     }
 
+
     protected async fireTxidConfirmation(tx: Wallet.Entity.EtherTransaction): Promise<void> {
         try {
             const rtx = await this.networkClient.checkAndMapTxReceipt(tx);
-            super.fireTxidConfirmation(rtx);
+            await super.fireTxidConfirmation(rtx);
         } catch (e) {
 
         }
@@ -133,11 +144,7 @@ export class InfuraTrackerProvider extends TrackerClient<InfuraNetworkClient> {
     }
 
     public destruct() {
-        this.enableBlockTracking = false;
-
-        if (this.blockTrackInterval) {
-            clearInterval(this.blockTrackInterval);
-        }
+        this.stopBlockTracking();
 
         super.destruct();
     }
