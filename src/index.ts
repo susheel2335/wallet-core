@@ -13,8 +13,9 @@ import * as Utils from './utils';
 import * as Networking from './networking';
 import * as Wallet from './wallet';
 
-export { Constants, Coin, HD, Wallet, Networking, Utils, Debug };
+import './global';
 
+export { Constants, Coin, HD, Wallet, Networking, Utils, Debug };
 export const CoinUnit = Coin.Unit;
 export const coinMap = Coin.coinMap;
 export const makeCoin = Coin.makeCoin;

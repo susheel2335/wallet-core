@@ -1,8 +1,7 @@
-import { forEach, orderBy } from 'lodash';
+import { forEach } from 'lodash';
 import BitcoinJS from 'bitcoinjs-lib';
 import BigNumber from 'bignumber.js';
-import { Coin, Wallet, Utils } from '../../';
-import { Output } from 'networking/api/insight';
+import { Coin, Wallet, Utils, Constants } from '../../';
 
 namespace blockbook {
     export type Info = {
@@ -122,7 +121,9 @@ namespace blockbook {
                 scriptPubKey: vout.script,
                 scriptType: type,
                 addresses: address ? [address] : [],
-                value: new BigNumber(vout.satoshis).toString(10),
+                value: new BigNumber(vout.satoshis)
+                    .div(Constants.SATOSHI_PER_COIN)
+                    .toString(10),
             });
         });
 

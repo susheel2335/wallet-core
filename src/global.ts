@@ -6,3 +6,6 @@ declare global {
         type NewBlockCallback = (block: Wallet.Entity.Block) => void;
     }
 }
+
+export {};
+
