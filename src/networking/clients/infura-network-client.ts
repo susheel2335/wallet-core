@@ -1,6 +1,6 @@
 import { forEach, map } from 'lodash';
 import BigNumber from 'bignumber.js';
-import Axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig } from 'axios';
+import Axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig, AxiosError } from 'axios';
 
 import { Coin, Wallet, Constants, Utils } from '../../';
 import { TAdapterOption, Infura, Etherscan } from '../api';
@@ -11,8 +11,6 @@ import { NetworkClient, IEthereumNetworkClient, GasPrice } from './network-clien
 import { ITrackerClient, InfuraTrackerProvider } from './tracker';
 
 const EtherscanApi = require('etherscan-api');
-
-const INFURA_APP_ID = '19d88e5db236483ab0e0c4e2e20f4244';
 
 /**
  * @TODO This is a temporary mechanism that helps to track blocks
@@ -33,9 +31,14 @@ export class InfuraNetworkClient extends NetworkClient implements IEthereumNetwo
 
         const { network = null } = this.getOptions();
 
+        const requestURL = `https://${network ? network : 'mainnet'}.infura.io/v3/${Constants.INFURA_APP_ID}`;
+
         this.client = Axios.create({
-            baseURL: `${network ? network : 'mainnet'}.infura.io/v3/${INFURA_APP_ID}`,
+            baseURL: requestURL,
             timeout: 10000,
+            headers: {
+                'Content-Type': 'application/json',
+            },
         });
 
         this.etherchainClient = Axios.create({
@@ -47,9 +50,7 @@ export class InfuraNetworkClient extends NetworkClient implements IEthereumNetwo
     }
 
 
-    protected sendRequest(method: string,
-                          params: any[] = null): Promise<Infura.JsonRPCResponse> {
-
+    protected sendRequest(method: string, params: any[] = null): Promise<Infura.JsonRPCResponse> {
         if (params) {
             params = map(params, (elem) => {
                 if (Number.isInteger(elem)) {
@@ -64,23 +65,20 @@ export class InfuraNetworkClient extends NetworkClient implements IEthereumNetwo
             });
         }
 
-        const requestConfig = {} as AxiosRequestConfig;
-        requestConfig.method = 'POST';
-        requestConfig.headers = {
-            'Content-Type': 'application/json',
-        };
-
-        requestConfig.data = {
-            id: 1,
-            jsonrpc: "2.0",
-            method: method,
-            params: params,
-        };
-
         return infuraWrap(async () => {
-            const response = await this.client.request(requestConfig);
+            const requestData = {
+                jsonrpc: "2.0",
+                id: 1,
+                method: method,
+                params: params,
+            };
 
-            return response.data;
+            const { data } = await this.client.request({
+                method: 'POST',
+                data: requestData,
+            });
+
+            return data;
         });
     }
 
@@ -155,8 +153,21 @@ export class InfuraNetworkClient extends NetworkClient implements IEthereumNetwo
     }
 
 
-    public getBlock(blockHash: string): Promise<Wallet.Entity.Block> {
-        throw new Error('Must be implement');
+    public async getBlock(blockHash: string): Promise<Wallet.Entity.Block> {
+        const response = await this.sendRequest('eth_getBlockByHash', [blockHash, true]);
+
+        const blockRes: Infura.Block = response.result;
+        if (!blockRes) {
+            return;
+        }
+
+        return {
+            hash: blockRes.hash,
+            time: new BigNumber(blockRes.timestamp).times(1000).toNumber(),
+            height: new BigNumber(blockRes.number).toNumber(),
+            txids: map(blockRes.transactions, tx => tx.hash),
+            original: blockRes,
+        } as Wallet.Entity.Block;
     }
 
 

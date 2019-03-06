@@ -2,6 +2,7 @@ import BigNumber from 'bignumber.js';
 
 export default {
     ETHERSCAN_API_KEY: 'PY4P1BMTRKT3E2J1IQGVEFVVNGZ5FTSUMG',
+    INFURA_APP_ID: '19d88e5db236483ab0e0c4e2e20f4244',
 
     MIN_ADDRESS_COUNT: 10,
 
