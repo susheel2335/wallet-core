@@ -1,4 +1,4 @@
-import { forEach } from 'lodash';
+import { forEach, chunk } from 'lodash';
 import { Wallet } from '../../../';
 import { BlockbookNetworkClient } from '../';
 import { ITrackerClient, TrackerClient, TrackerEvent } from './tracker-client';
@@ -19,7 +19,7 @@ export default class BlockbookTrackerProvider extends TrackerClient<BlockbookNet
         ws.on('bitcoind/hashblock', this.handleBlockHash);
         ws.on('bitcoind/addresstxid', this.handleTxid);
     }
-    
+
 
     protected fireNewBlock(block: Wallet.Entity.Block): boolean {
         forEach(block.txids, async (txid) => {
@@ -58,12 +58,19 @@ export default class BlockbookTrackerProvider extends TrackerClient<BlockbookNet
 
 
     public onAddrsTx(addrs: string[], callback: plarkcore.NewTxCallback): ITrackerClient {
+        const addressChunks = chunk(addrs, 20);
+        super.onAddrsTx(addrs, callback);
+
         this.networkClient.getWSClient().init()
-            .then(ws => ws.emit('subscribe', 'bitcoind/addresstxid', addrs));
+            .then(ws => {
+                addressChunks.forEach((ch: string[]) => {
+                    ws.emit('subscribe', 'bitcoind/addresstxid', ch);
+                });
+            });
 
-        return super.onAddrsTx(addrs, callback);
+        return;
     }
-
+    
 
     public destruct() {
         this.fireDisconnect();

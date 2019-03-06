@@ -15,7 +15,7 @@ const EtherscanApi = require('etherscan-api');
 /**
  * @TODO This is a temporary mechanism that helps to track blocks
  */
-export class InfuraNetworkClient extends NetworkClient implements IEthereumNetworkClient {
+export default class InfuraNetworkClient extends NetworkClient implements IEthereumNetworkClient {
     protected client: AxiosInstance;
     protected etherchainClient: AxiosInstance;
     protected etherscanClient;

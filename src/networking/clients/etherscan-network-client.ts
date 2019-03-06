@@ -6,7 +6,7 @@ import { TAdapterOption, Etherscan } from '../api';
 import { NetworkClient, IEthereumNetworkClient, GasPrice } from './network-client';
 
 
-export class EtherscanNetworkClient extends NetworkClient implements IEthereumNetworkClient {
+export default class EtherscanNetworkClient extends NetworkClient implements IEthereumNetworkClient {
     protected etherscanClient: EtherscanApiClient;
 
     /**

@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import { union, get } from 'lodash';
 import * as Wallet from '../../../wallet';
 import { blockbook } from '../../api';
 import { FeeRecord } from '../network-client';
@@ -60,6 +61,7 @@ class TransactionHelper {
         this.client = client;
     }
 
+
     public async getTx(txid: string): Promise<Wallet.Entity.BIPTransaction | undefined> {
         try {
             const tx = await this.client.getWSClient()
@@ -71,22 +73,33 @@ class TransactionHelper {
         }
     }
 
+
     public async getBulkAddrsTxs(addrs: string[]): Promise<Wallet.Entity.BIPTransaction[]> {
         const info = await this.client.getInfo();
 
-        const params = [
-            addrs,
-            {
-                start: info.blockHeight,
-                end: 0,
-                from: 0,
-                to: 1000,
-                queryMempoolOnly: false,
-            },
-        ];
+        const params = {
+            start: info.blockHeight,
+            end: 0,
+            from: 0,
+            to: 1000,
+            queryMempoolOnly: true,
+        };
 
-        const { items } = await this.client.getWSClient()
-            .send('getAddressHistory', params);
+        const data = await Promise.all([
+            await this.client.getWSClient().send(
+                'getAddressHistory',
+                [addrs, { ...params, queryMempoolOnly: true }],
+            ),
+            await this.client.getWSClient().send(
+                'getAddressHistory',
+                [addrs, { ...params, queryMempoolOnly: false }],
+            ),
+        ]);
+
+        const items = union(
+            get(data, '[0].items', []),
+            get(data, '[1].items', []),
+        );
 
         return items.map(
             (txInfo: blockbook.ExtendedTransaction) => blockbook.toWalletTx(txInfo.tx, this.client.coin),
@@ -98,5 +111,6 @@ class TransactionHelper {
         return this.client.getWSClient().send<string>('sendTransaction', [rawTransactionHex]);
     }
 }
+
 
 export { WSClient, TransactionHelper, FeeHelper };
