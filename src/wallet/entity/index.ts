@@ -42,7 +42,7 @@ export type BIPOutput = {
     value: string;
     scriptPubKey: string;
     scriptType: Coin.ScriptType;  // @TODO Need declare specific script types
-    addresses?: string[];    // @TODO Need find why there is used an Array instead of primitive
+    addresses?: string[];         // @TODO Need find why there is used an Array instead of primitive
 };
 
 

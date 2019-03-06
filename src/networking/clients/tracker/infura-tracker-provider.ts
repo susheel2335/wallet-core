@@ -60,6 +60,8 @@ export default class InfuraTrackerProvider extends TrackerClient<InfuraNetworkCl
     protected stopBlockTracking() {
         this.enableBlockTracking = false;
         clearInterval(this.blockTrackInterval);
+
+        this.fireDisconnect();
     }
 
 

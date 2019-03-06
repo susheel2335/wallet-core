@@ -20,6 +20,8 @@ export interface INetworkClient extends Destructable {
 
     getOptions(): Api.TAdapterOption;
 
+    getInfo(): Promise<plarkcore.BlockchainInfo>;
+
     getBlock(blockHash: string): Promise<Wallet.Entity.Block>;
 
     getTx(txid: string): Promise<Wallet.Entity.WalletTransaction | undefined>;

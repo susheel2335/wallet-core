@@ -18,6 +18,7 @@ export class BlockcypherBIPNetworkClient extends NetworkClient {
         });
     }
 
+
     public getTx(txid: string): Promise<Wallet.Entity.WalletTransaction | null> {
         return wrapLimiterMethod(async () => {
             try {
@@ -34,6 +35,7 @@ export class BlockcypherBIPNetworkClient extends NetworkClient {
             }
         });
     }
+
 
     public getInfo(): Promise<plarkcore.BlockchainInfo> {
         throw new Error('Must be implement');

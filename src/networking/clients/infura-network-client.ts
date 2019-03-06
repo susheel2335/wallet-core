@@ -1,6 +1,6 @@
 import { forEach, map } from 'lodash';
 import BigNumber from 'bignumber.js';
-import Axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig, AxiosError } from 'axios';
+import Axios, { AxiosInstance, AxiosResponse } from 'axios';
 
 import { Coin, Wallet, Constants, Utils } from '../../';
 import { TAdapterOption, Infura, Etherscan } from '../api';
@@ -266,11 +266,9 @@ export class InfuraNetworkClient extends NetworkClient implements IEthereumNetwo
 
             if (destructor instanceof Promise) {
                 await destructor;
+
                 delete this.trackerClient;
             }
         }
-
-        delete this.client;
-        delete this.etherscanClient;
     }
 }

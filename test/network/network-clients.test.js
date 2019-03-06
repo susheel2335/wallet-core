@@ -12,7 +12,7 @@ const coins = [
     Coin.Unit.ETHt,
 ];
 
-describe('Test Tracker Connection', function () {
+describe('Test Network Adapter', function () {
     coins.map((coinUnit) => {
         const coin = Coin.makeCoin(coinUnit);
 
@@ -20,27 +20,16 @@ describe('Test Tracker Connection', function () {
 
             let networkClient = Networking.firstNetworkClient(coin);
 
-            const connectionPromise = new Promise(resolve => {
-                networkClient.getTracker().onConnect(() => resolve());
-            });
-
-            const disconectionPromise = new Promise((resolve) => {
-                networkClient.getTracker().onDisconnect(() => resolve());
-            });
-
-
-            it(`Successful Connected`, async () => {
+            it('Get Info', async () => {
                 try {
-                    await connectionPromise;
+                    const info = await networkClient.getInfo();
+
+                    assert.ok(info.blockHeight, 'Not found blockHeight in "info"');
                 } finally {
                     networkClient.destruct();
                 }
             }, 2000);
 
-
-            it(`Successful Disconnected`, async () => {
-                await disconectionPromise;
-            }, 2000);
         }, 2000);
     });
 });
