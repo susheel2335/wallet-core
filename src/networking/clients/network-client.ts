@@ -53,6 +53,8 @@ export abstract class NetworkClient implements INetworkClient {
 
     public abstract getTx(txid: string): Promise<Wallet.Entity.WalletTransaction | undefined>;
 
+    public abstract getInfo(): Promise<plarkcore.BlockchainInfo>;
+
     public abstract getBlock(blockHash: string): Promise<Wallet.Entity.Block>;
 
     public abstract getAddressTxs(address: string): Promise<Wallet.Entity.WalletTransaction[]>;

@@ -19,6 +19,23 @@ export type Network = {
     }
 };
 
+
+export type BlockchainInfo = {
+    info: {
+        version: number;
+        protocolversion: number;
+        blocks: number;
+        timeoffset: number;
+        connections: number;
+        proxy: string;
+        difficulty: number;
+        testnet: boolean;
+        relayfee: number;
+        errors: string;
+        network: 'livenet' | 'testnet';
+    }
+};
+
 export type Input = {
     txid: string;
     vout: number;
@@ -137,7 +154,8 @@ export function toWalletTx(tx: Transaction, coin: Coin.CoinInterface): Wallet.En
                 buffer,
                 (coin as Coin.BIPGenericCoin).networkInfo(),
             );
-        } catch (e) {}
+        } catch (e) {
+        }
 
         txData.outputs.push({
             scriptPubKey: spk.hex,

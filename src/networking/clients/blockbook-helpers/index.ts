@@ -72,12 +72,12 @@ class TransactionHelper {
     }
 
     public async getBulkAddrsTxs(addrs: string[]): Promise<Wallet.Entity.BIPTransaction[]> {
-        const info = await this.client.getWSClient().send('getInfo', []);
+        const info = await this.client.getInfo();
 
         const params = [
             addrs,
             {
-                start: info.blocks,
+                start: info.blockHeight,
                 end: 0,
                 from: 0,
                 to: 1000,

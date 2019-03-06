@@ -27,6 +27,7 @@ export class EtherscanNetworkClient extends NetworkClient implements IEthereumNe
         this.etherscanClient = EtherscanApi.init(Constants.ETHERSCAN_API_KEY, network);
     }
 
+
     /**
      * Get Transaction information by TX Hash
      *
@@ -64,6 +65,9 @@ export class EtherscanNetworkClient extends NetworkClient implements IEthereumNe
         throw new Error('Must be implement');
     }
 
+    public getInfo(): Promise<plarkcore.BlockchainInfo> {
+        throw new Error('Must be implement');
+    }
 
     /**
      * Find and get GAS Price of Ethereum

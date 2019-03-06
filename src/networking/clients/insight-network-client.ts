@@ -9,7 +9,7 @@ import { TAdapterOption, Insight } from '../api';
 import { FeeRecord, NetworkClient } from './network-client';
 import { ITrackerClient, InsightTrackerProvider } from './tracker';
 
-export class InsightNetworkClient extends NetworkClient {
+export default class InsightNetworkClient extends NetworkClient {
     protected client: AxiosInstance;
     protected limiter: Bottleneck;
 
@@ -65,6 +65,17 @@ export class InsightNetworkClient extends NetworkClient {
                 high: (this.coin as Coin.BIPGenericCoin).highFeePerByte,
             };
         }
+    }
+
+    public async getInfo(): Promise<plarkcore.BlockchainInfo> {
+        const info = await this.sendRequest<Insight.BlockchainInfo>('/status');
+
+        return {
+            blockHeight: info.info.blocks,
+            difficulty: info.info.difficulty,
+            testnet: info.info.testnet,
+            network: info.info.network,
+        };
     }
 
 

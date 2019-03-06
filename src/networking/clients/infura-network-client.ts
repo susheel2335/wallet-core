@@ -12,6 +12,8 @@ import { ITrackerClient, InfuraTrackerProvider } from './tracker';
 
 const EtherscanApi = require('etherscan-api');
 
+const INFURA_APP_ID = '19d88e5db236483ab0e0c4e2e20f4244';
+
 /**
  * @TODO This is a temporary mechanism that helps to track blocks
  */
@@ -22,8 +24,7 @@ export class InfuraNetworkClient extends NetworkClient implements IEthereumNetwo
 
     protected trackerClient: ITrackerClient;
 
-
-    constructor(coin: Coin.CoinInterface, options: TAdapterOption) {
+    public constructor(coin: Coin.CoinInterface, options: TAdapterOption) {
         super(coin, options);
 
         if (false === (coin instanceof Coin.Defined.Ethereum)) {
@@ -33,7 +34,7 @@ export class InfuraNetworkClient extends NetworkClient implements IEthereumNetwo
         const { network = null } = this.getOptions();
 
         this.client = Axios.create({
-            baseURL: `https://api.infura.io/v1/jsonrpc/${network ? network : 'mainnet'}`,
+            baseURL: `${network ? network : 'mainnet'}.infura.io/v3/${INFURA_APP_ID}`,
             timeout: 10000,
         });
 
@@ -47,8 +48,7 @@ export class InfuraNetworkClient extends NetworkClient implements IEthereumNetwo
 
 
     protected sendRequest(method: string,
-                          params: any[] = null,
-                          isPost: boolean = false): Promise<Infura.JsonRPCResponse> {
+                          params: any[] = null): Promise<Infura.JsonRPCResponse> {
 
         if (params) {
             params = map(params, (elem) => {
@@ -65,24 +65,17 @@ export class InfuraNetworkClient extends NetworkClient implements IEthereumNetwo
         }
 
         const requestConfig = {} as AxiosRequestConfig;
-        if (isPost) {
-            requestConfig.method = 'POST';
-            requestConfig.headers = {
-                'Content-Type': 'application/json',
-            };
-            requestConfig.data = {
-                id: 1,
-                jsonrpc: "2.0",
-                method: method,
-                params: params,
-            };
-        } else {
-            requestConfig.url = `/${method}`;
-            requestConfig.method = 'GET';
-            requestConfig.params = {
-                params: JSON.stringify(params),
-            };
-        }
+        requestConfig.method = 'POST';
+        requestConfig.headers = {
+            'Content-Type': 'application/json',
+        };
+
+        requestConfig.data = {
+            id: 1,
+            jsonrpc: "2.0",
+            method: method,
+            params: params,
+        };
 
         return infuraWrap(async () => {
             const response = await this.client.request(requestConfig);
@@ -117,6 +110,19 @@ export class InfuraNetworkClient extends NetworkClient implements IEthereumNetwo
         }
 
         return responseTx;
+    }
+
+    public async getInfo(): Promise<plarkcore.BlockchainInfo> {
+        const response: Infura.JsonRPCResponse = await this.sendRequest('eth_blockNumber');
+
+        const { network = null } = this.getOptions();
+
+        return {
+            blockHeight: new BigNumber(response.result).toNumber(),
+            difficulty: 0,
+            testnet: network === 'mainnet',
+            network: network,
+        };
     }
 
 
@@ -204,11 +210,7 @@ export class InfuraNetworkClient extends NetworkClient implements IEthereumNetwo
 
 
     public async broadCastTransaction(transaction: Coin.Transaction.Transaction): Promise<string> {
-        const data = await this.sendRequest(
-            'eth_sendRawTransaction',
-            [transaction.toBuffer()],
-            true,
-        );
+        const data = await this.sendRequest('eth_sendRawTransaction', [transaction.toBuffer()]);
 
         if (data.error) {
             throw new Error(data.error.message);

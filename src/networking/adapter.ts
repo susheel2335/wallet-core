@@ -32,6 +32,11 @@ AdapterMap[Coin.Unit.BTC] = [
 // Bitcoin Testnet
 AdapterMap[Coin.Unit.BTCt] = [
     {
+        type: AdapterType.BLOCKBOOK,
+        url: 'https://tbtc1.trezor.io/api/',
+        wsUrl: 'wss://tbtc1.trezor.io/',
+        version: '0.1.1',
+    }, {
         type: AdapterType.INSIGHT,
         url: 'https://btct.insight.plark.io/api',
         wsUrl: 'wss://btct.insight.plark.io',

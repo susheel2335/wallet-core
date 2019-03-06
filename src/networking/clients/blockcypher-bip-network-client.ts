@@ -35,6 +35,10 @@ export class BlockcypherBIPNetworkClient extends NetworkClient {
         });
     }
 
+    public getInfo(): Promise<plarkcore.BlockchainInfo> {
+        throw new Error('Must be implement');
+    }
+
 
     public getBlock(blockHash: string): Promise<Wallet.Entity.Block> {
         return wrapLimiterMethod(async () => {
