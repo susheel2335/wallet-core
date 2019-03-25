@@ -3,7 +3,7 @@ import { Coin, Networking } from '../../lib';
 
 const coins = [
     Coin.Unit.BTC,
-    // Coin.Unit.BTCt,
+    Coin.Unit.BTCt,
     Coin.Unit.LTC,
     Coin.Unit.LTCt,
     Coin.Unit.DASH,

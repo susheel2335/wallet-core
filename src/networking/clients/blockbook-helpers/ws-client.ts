@@ -1,7 +1,6 @@
 import io from 'socket.io-client';
 import { Destructable } from '../../../utils';
 
-export type WsCallback = (result: Object) => void;
 export default class WsClient implements Destructable {
     protected wsUrl: string;
     protected ws: SocketIOClient.Socket;
@@ -46,6 +45,7 @@ export default class WsClient implements Destructable {
         this.openingPromise = new Promise<SocketIOClient.Socket>((resolve, reject) => {
             this.ws.once('connect', () => {
                 delete this.openingPromise;
+                this.isOpen = true;
 
                 resolve(this.ws);
             });
