@@ -29,18 +29,21 @@ describe('Test Tracker Connection', function () {
             });
 
 
-            it(`Successful Connected`, async () => {
+            it(`Successful Connected`, async function () {
+                this.timeout(2000);
+
                 try {
                     await connectionPromise;
                 } finally {
                     networkClient.destruct();
                 }
-            }, 2000);
+            });
 
 
-            it(`Successful Disconnected`, async () => {
+            it(`Successful Disconnected`, async function () {
+                this.timeout(2000);
                 await disconectionPromise;
-            }, 2000);
+            });
         }, 2000);
     });
 });

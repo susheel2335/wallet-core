@@ -70,7 +70,7 @@ export default class BlockbookTrackerProvider extends TrackerClient<BlockbookNet
 
         return;
     }
-    
+
 
     public destruct() {
         this.fireDisconnect();

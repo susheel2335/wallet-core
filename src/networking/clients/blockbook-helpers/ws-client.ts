@@ -4,20 +4,28 @@ import { Destructable } from '../../../utils';
 export type WsCallback = (result: Object) => void;
 export default class WsClient implements Destructable {
     protected wsUrl: string;
-    protected ws?: SocketIOClient.Socket;
+    protected ws: SocketIOClient.Socket;
 
-    protected messageID: number = 0;
-    protected pendingMessages: Record<string, WsCallback> = {};
+    protected isOpen: boolean = false;
 
+    protected openingPromise?: Promise<SocketIOClient.Socket>;
 
     public constructor(wsUrl: string) {
         this.wsUrl = wsUrl;
+
+        this.ws = io.connect(this.wsUrl, {
+            timeout: 1000,
+            autoConnect: false,
+            transports: ['websocket'],
+        });
 
         this.init();
     }
 
 
     public destruct(): void {
+        this.isOpen = false;
+
         if (this.ws) {
             this.ws.close();
         }
@@ -25,17 +33,34 @@ export default class WsClient implements Destructable {
 
 
     public async init(): Promise<SocketIOClient.Socket> {
-        if (this.ws) {
+        if (this.isOpen) {
             return this.ws;
         }
 
-        this.ws = this._createWebSocket();
+        if (this.openingPromise) {
+            return this.openingPromise;
+        }
 
-        return new Promise<SocketIOClient.Socket>((resolve) => {
+        this._openWebSocket();
+
+        this.openingPromise = new Promise<SocketIOClient.Socket>((resolve, reject) => {
             this.ws.once('connect', () => {
+                delete this.openingPromise;
+
                 resolve(this.ws);
             });
+
+            this.ws.once('connect_timeout', () => {
+                console.warn('Connection Timeout!');
+
+                delete this.openingPromise;
+                this.__closeWS();
+
+                reject();
+            });
         });
+
+        return this.openingPromise;
     }
 
 
@@ -54,25 +79,17 @@ export default class WsClient implements Destructable {
     }
 
 
-    protected _createWebSocket(): SocketIOClient.Socket {
-        const ws = io.connect(this.wsUrl, {
-            timeout: 1000,
-            transports: ['websocket'],
-        });
+    protected _openWebSocket(): void {
+        this.ws.once('disconnect', this.__closeWS);
 
-        ws.on('disconnect', this.__closeWS);
-        ws.on('connect_timeout', this.__closeWS);
-
-        return ws;
+        this.ws.open();
     }
-
-    private __onOpenError = (err: Error) => {
-        console.error('OpenError', err);
-    };
 
 
     private __closeWS = () => {
+        this.isOpen = false;
+
         this.ws.close();
-        delete this.ws;
+        this.ws.removeAllListeners();
     };
 }

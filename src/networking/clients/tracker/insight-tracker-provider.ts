@@ -22,19 +22,6 @@ export default class InsightTrackerProvider extends TrackerClient<InsightNetwork
         const wsUrl = parseUrl(this.networkClient.getWSUrl());
         this.debug = Debug.create('SOCKET:' + wsUrl.host);
 
-        setTimeout(() => this.createSocketConnection(), 1);
-    }
-
-
-    public async destruct(): Promise<void> {
-        this.enableReconnect = false;
-        super.destruct();
-
-        return this.__removeSocketConnection();
-    }
-
-
-    public createSocketConnection() {
         this.socket = io.connect(this.networkClient.getWSUrl(), {
             timeout: 1000,
             autoConnect: false,
@@ -42,6 +29,19 @@ export default class InsightTrackerProvider extends TrackerClient<InsightNetwork
             transports: ['websocket'],
         });
 
+        setTimeout(() => this.openSocketConnection(), 1);
+    }
+
+
+    public async destruct(): Promise<void> {
+        this.enableReconnect = false;
+        super.destruct();
+
+        await this.__removeSocketConnection();
+    }
+
+
+    public openSocketConnection() {
         this.socket.on('block', this.onHandleBlock);
         this.socket.on('tx', this.onHandleTransaction);
 
@@ -83,7 +83,7 @@ export default class InsightTrackerProvider extends TrackerClient<InsightNetwork
         }
 
         this.__removeSocketConnection().then(() => {
-            setTimeout(() => this.createSocketConnection(), 2000);
+            setTimeout(() => this.openSocketConnection(), 2000);
         });
 
         this.debug('Start reconnecting...');
@@ -148,17 +148,14 @@ export default class InsightTrackerProvider extends TrackerClient<InsightNetwork
         }
     };
 
+
     private async __removeSocketConnection() {
         this.connected = false;
 
-        if (typeof this.socket !== 'undefined') {
-            this.socket.once('disconnect', () => {
-                this.socket.removeAllListeners();
+        this.socket.once('disconnect', () => {
+            this.socket.removeAllListeners();
+        });
 
-                delete this.socket;
-            });
-
-            this.socket.disconnect();
-        }
+        this.socket.disconnect();
     }
 }
