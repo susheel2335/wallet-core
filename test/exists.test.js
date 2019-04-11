@@ -1,6 +1,6 @@
 import * as Berrywallet from '../lib';
 
-describe('Test existing modules', () => {
+describe('Existing modules', () => {
     it('HD', (done) => {
         if ('HD' in Berrywallet) {
             done();

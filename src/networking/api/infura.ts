@@ -76,7 +76,7 @@ export interface TransactionReceipt {
  *
  * @returns {WalletTransaction}
  */
-export function toWalletTx(tx: Transaction, coin: Coin.CoinInterface, blockTime: number = null): Wallet.Entity.EtherTransaction {
+export function toWalletTx(tx: Transaction, coin: Coin.CoinInterface, blockTime: number = undefined): Wallet.Entity.EtherTransaction {
     return {
         coin: coin.getUnit(),
         txid: tx.hash,

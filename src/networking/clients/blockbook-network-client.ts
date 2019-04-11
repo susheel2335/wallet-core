@@ -34,11 +34,11 @@ export default class BlockbookNetworkClient extends NetworkClient {
     }
 
 
-    public async sendApiRequest<R>(url: string, postParams: any = null): Promise<R> {
+    public async sendApiRequest<R>(url: string, postParams: any = undefined): Promise<R> {
         const response: AxiosResponse = await this.client.request({
             url: url,
             method: postParams ? 'POST' : 'GET',
-            data: postParams ? postParams : null,
+            data: postParams ? postParams : undefined,
         });
 
         return response.data as R;

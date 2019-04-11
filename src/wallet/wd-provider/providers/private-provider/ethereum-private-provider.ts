@@ -20,7 +20,7 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
      *
      * @returns {Promise<BigNumber>}
      */
-    public async getGasLimit(address: Coin.Key.Address = null, value: BigNumber = null): Promise<BigNumber> {
+    public async getGasLimit(address: Coin.Key.Address = undefined, value: BigNumber = undefined): Promise<BigNumber> {
         if (address && value) {
             const networkClient = this.wdProvider.getNetworkProvider().getClient(0);
 

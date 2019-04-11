@@ -49,7 +49,7 @@ const coinsToTest = {
     }
 };
 
-describe('Test Common coin', () => {
+describe('Common coin', () => {
     _.each(coinsToTest, (testParams, coinUnit) => {
         const coin = Coin.makeCoin(coinUnit);
 

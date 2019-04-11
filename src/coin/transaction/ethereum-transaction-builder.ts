@@ -45,7 +45,7 @@ export class EthereumTransactionBuilder implements TransactionBuilder {
     }
 
     public buildUnsigned(): EthereumTransaction {
-        if (this.to === null && this.data === null) {
+        if (this.to === undefined && this.data === undefined) {
             throw new Error('Either data or to must be set');
         }
 
@@ -66,8 +66,8 @@ export class EthereumTransactionBuilder implements TransactionBuilder {
         this.gasPrice = this.coin.defaultGasPrice;
         this.gasLimit = this.coin.defaultGasLimit;
         this.value = new BigNumber(0);
-        this.data = null;
-        this.to = null;
+        this.data = undefined;
+        this.to = undefined;
     }
 
     public get nonce(): number {

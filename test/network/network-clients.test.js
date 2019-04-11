@@ -12,7 +12,7 @@ const coins = [
     Coin.Unit.ETHt,
 ];
 
-describe('Test Network Adapter', function () {
+describe('Network Adapter', function () {
     coins.map((coinUnit) => {
         const coin = Coin.makeCoin(coinUnit);
 

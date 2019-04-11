@@ -12,7 +12,7 @@ const coins = [
     Coin.Unit.ETHt,
 ];
 
-describe('Test Tracker Connection', function () {
+describe('Tracker Connection', function () {
     coins.map((coinUnit) => {
         const coin = Coin.makeCoin(coinUnit);
 

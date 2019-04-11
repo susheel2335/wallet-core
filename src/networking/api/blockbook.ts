@@ -82,7 +82,7 @@ namespace blockbook {
             coin: coin.getUnit(),
             txid: tx.hash,
             scheme: Coin.TransactionScheme.INPUTS_OUTPUTS,
-            blockHeight: tx.height > 0 ? tx.height : null,
+            blockHeight: tx.height > 0 ? tx.height : undefined,
             blockTime: tx.blockTimestamp * 1000,
             version: tx.version,
             lockTime: tx.locktime,

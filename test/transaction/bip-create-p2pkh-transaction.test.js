@@ -115,7 +115,7 @@ const provideTransaction = (txInfo) => {
     });
 };
 
-describe('Test Create transaction', () => {
+describe('Create transaction', () => {
     transactions.map(provideTransaction);
 });
 

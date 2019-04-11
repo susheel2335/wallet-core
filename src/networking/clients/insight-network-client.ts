@@ -159,12 +159,12 @@ export default class InsightNetworkClient extends NetworkClient {
     }
 
 
-    protected sendRequest<R>(url: string, postParams: any = null): Promise<R> {
+    protected sendRequest<R>(url: string, postParams: any = undefined): Promise<R> {
         return this.wrapperLimiter<R>(async (): Promise<R> => {
             const response: AxiosResponse = await this.client.request({
                 url: url,
                 method: postParams ? 'POST' : 'GET',
-                data: postParams ? postParams : null,
+                data: postParams ? postParams : undefined,
             });
 
             return response.data as R;

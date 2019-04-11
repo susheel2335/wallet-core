@@ -27,7 +27,7 @@ const coinsToTest = {
     }
 };
 
-describe('Test Segwit coin', () => {
+describe('Segwit coin', () => {
     _.each(coinsToTest, (testParams, coinUnit) => {
         const coin = Coin.makeCoin(coinUnit);
 
@@ -36,7 +36,7 @@ describe('Test Segwit coin', () => {
                 return;
             }
 
-            it(`Test SeGwit ${testParams.isSegwit ? 'enabled' : 'disabled'}`, () => {
+            it(`SeGwit ${testParams.isSegwit ? 'enabled' : 'disabled'}`, () => {
                 assert.strictEqual(coin.isSegWitAvailable(), testParams.isSegwit);
             });
 
@@ -45,6 +45,6 @@ describe('Test Segwit coin', () => {
             }
         };
 
-        describe(`Test SegWit coin - ${coinUnit}`, testCoin);
+        describe(`SegWit coin - ${coinUnit}`, testCoin);
     });
 });

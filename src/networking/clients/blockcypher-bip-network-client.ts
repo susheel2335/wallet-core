@@ -19,7 +19,7 @@ export class BlockcypherBIPNetworkClient extends NetworkClient {
     }
 
 
-    public getTx(txid: string): Promise<Wallet.Entity.WalletTransaction | null> {
+    public getTx(txid: string): Promise<Wallet.Entity.WalletTransaction | undefined> {
         return wrapLimiterMethod(async () => {
             try {
                 const response = await this.client.get('/txs/' + txid);
@@ -28,7 +28,7 @@ export class BlockcypherBIPNetworkClient extends NetworkClient {
                 return Blockcypher.toWalletTx(tx, this.coin);
             } catch (error) {
                 if (error.response.status == 404) {
-                    return null;
+                    return undefined;
                 }
 
                 throw error;

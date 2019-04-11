@@ -40,8 +40,6 @@ export class BIPWalletGenerator extends WDGenerator {
     public async bulkAddrGenerate(addressType: HD.BIP44.AddressType): Promise<void> {
         const addrs: string[] = await this.deriveAddresses(Constants.MIN_ADDRESS_COUNT, addressType);
 
-        console.log(addrs);
-
         const txs: Wallet.Entity.WalletTransaction[] = await this.extractAddrsTxs(addrs);
         this.fillAddrsTxs(txs);
 

@@ -128,8 +128,8 @@ namespace blockcypher {
         const txData: Wallet.Entity.BIPTransaction = {
             coin: coin.getUnit(),
             txid: tx.hash,
-            blockHeight: (tx.block_height && tx.block_height > 0) ? tx.block_height : null,
-            blockTime: tx.confirmed ? new Date(tx.confirmed).getTime() : null,
+            blockHeight: (tx.block_height && tx.block_height > 0) ? tx.block_height : undefined,
+            blockTime: tx.confirmed ? new Date(tx.confirmed).getTime() : undefined,
             scheme: Coin.TransactionScheme.INPUTS_OUTPUTS,
             version: tx.ver,
             lockTime: tx.lock_time,

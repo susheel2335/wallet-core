@@ -121,7 +121,7 @@ export function toWalletTx(tx: Transaction, coin: Coin.CoinInterface): Wallet.En
     const txData: Wallet.Entity.BIPTransaction = {
         coin: coin.getUnit(),
         txid: tx.txid,
-        blockHeight: (+tx.blockheight > 0) ? tx.blockheight : null,
+        blockHeight: (+tx.blockheight > 0) ? tx.blockheight : undefined,
         blockTime: tx.blocktime * 1000,
         scheme: Coin.TransactionScheme.INPUTS_OUTPUTS,
         version: tx.version,

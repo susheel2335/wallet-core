@@ -71,7 +71,7 @@ export default class InfuraTrackerProvider extends TrackerClient<InfuraNetworkCl
 
         const originalResponse: Infura.Block = block.original;
         if (originalResponse) {
-            const { addrs = [], callback = null } = this.addrTxEvents;
+            const { addrs = [], callback = undefined } = this.addrTxEvents;
             forEach(originalResponse.transactions, (tx: Infura.Transaction) => {
 
                 const needCallCallback =

@@ -63,12 +63,12 @@ export class BIPTransactionBuilder implements TransactionBuilder {
                 case Coin.ScriptType.ScriptHash: {
                     const redeemScript = Key.getRedeemScript(keyPair.getPublicKeyBuffer());
 
-                    this.txBuilder.sign(Number(index), keyPair, redeemScript, null, utxoMeta.value);
+                    this.txBuilder.sign(Number(index), keyPair, redeemScript, undefined, utxoMeta.value);
                     break;
                 }
 
                 case Coin.ScriptType.WitnessPubKeyHash: {
-                    this.txBuilder.sign(Number(index), keyPair, null, null, utxoMeta.value);
+                    this.txBuilder.sign(Number(index), keyPair, undefined, undefined, utxoMeta.value);
                     break;
                 }
 

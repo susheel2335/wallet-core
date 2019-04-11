@@ -33,11 +33,11 @@ export default class InsightTrackerProvider extends TrackerClient<InsightNetwork
     }
 
 
-    public async destruct(): Promise<void> {
+    public destruct() {
         this.enableReconnect = false;
         super.destruct();
 
-        await this.__removeSocketConnection();
+        this.__removeSocketConnection();
     }
 
 
@@ -82,9 +82,9 @@ export default class InsightTrackerProvider extends TrackerClient<InsightNetwork
             return;
         }
 
-        this.__removeSocketConnection().then(() => {
-            setTimeout(() => this.openSocketConnection(), 2000);
-        });
+        this.__removeSocketConnection();
+
+        setTimeout(() => this.openSocketConnection(), 2000);
 
         this.debug('Start reconnecting...');
     }
@@ -149,7 +149,7 @@ export default class InsightTrackerProvider extends TrackerClient<InsightNetwork
     };
 
 
-    private async __removeSocketConnection() {
+    private __removeSocketConnection() {
         this.connected = false;
 
         this.socket.once('disconnect', () => {

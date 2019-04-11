@@ -21,7 +21,7 @@ export class AddressProvider extends SimpleProvider {
         this.setData({
             addresses: [
                 ...this.getWalletData().addresses,
-                newAddress
+                newAddress,
             ],
         });
 
@@ -29,13 +29,17 @@ export class AddressProvider extends SimpleProvider {
     }
 
 
-    public count(addressType: HD.BIP44.AddressType = null): number {
+    public count(addressType?: HD.BIP44.AddressType): number {
         return this.list(addressType).length;
     }
 
 
-    public list(addressType: HD.BIP44.AddressType = null): Entity.WalletAddress[] {
-        if (null !== addressType) {
+    public list(addressType?: HD.BIP44.AddressType): Entity.WalletAddress[] {
+        if (this.getCoin() instanceof Coin.Defined.Ethereum) {
+            return this.getWalletData().addresses;
+        }
+
+        if (typeof addressType !== 'undefined') {
             return filter(this.getWalletData().addresses, wlt => wlt.type === addressType);
         }
 
@@ -69,15 +73,15 @@ export class AddressProvider extends SimpleProvider {
     }
 
 
-    public last(type: HD.BIP44.AddressType, balance: Entity.WDBalance = null): Entity.WalletAddress | null {
-        let addresses = this.list(type);
-
+    public last(type: HD.BIP44.AddressType, balance?: Entity.WDBalance): Entity.WalletAddress | undefined {
         // @TODO Need to review model and change
         if (this.getCoin() instanceof Coin.Defined.Ethereum) {
-            return first(addresses);
+            return first(this.list());
         }
 
-        if (!balance) {
+        let addresses = this.list(type);
+
+        if (typeof balance === 'undefined') {
             balance = this.wdProvider.balance;
         }
 

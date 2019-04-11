@@ -49,7 +49,7 @@ const coinAddresses = {
     ]
 };
 
-describe('Test Parse address', () => {
+describe('Parse address', () => {
     it('Exists parse function', () => {
         assert.strictEqual(typeof Coin.parseAddressByCoin, 'function');
     });

@@ -88,7 +88,7 @@ AdapterMap[Coin.Unit.ETH] = [
     {
         type: AdapterType.INFURA,
         url: '<no specific url>',
-        network: null,
+        network: undefined,
     },
 ];
 

@@ -29,7 +29,7 @@ export default class InfuraNetworkClient extends NetworkClient implements IEther
             throw new Error('Invalid Coin. Just ETH Coin');
         }
 
-        const { network = null } = this.getOptions();
+        const { network = undefined } = this.getOptions();
 
         const requestURL = `https://${network ? network : 'mainnet'}.infura.io/v3/${Constants.INFURA_APP_ID}`;
 
@@ -50,7 +50,7 @@ export default class InfuraNetworkClient extends NetworkClient implements IEther
     }
 
 
-    protected sendRequest(method: string, params: any[] = null): Promise<Infura.JsonRPCResponse> {
+    protected sendRequest(method: string, params?: any[]): Promise<Infura.JsonRPCResponse> {
         if (params) {
             params = map(params, (elem) => {
                 if (Number.isInteger(elem)) {
@@ -84,11 +84,12 @@ export default class InfuraNetworkClient extends NetworkClient implements IEther
 
 
     public async getTx(txid: string): Promise<Wallet.Entity.EtherTransaction | undefined> {
-
         const response = await this.sendRequest('eth_getTransactionByHash', [txid]);
 
         const tx: Infura.Transaction = response.result;
-        if (!tx) return null;
+        if (!tx) {
+            return undefined;
+        }
 
         const responseTx = {
             coin: this.coin.getUnit(),
@@ -113,7 +114,7 @@ export default class InfuraNetworkClient extends NetworkClient implements IEther
     public async getInfo(): Promise<plarkcore.BlockchainInfo> {
         const response: Infura.JsonRPCResponse = await this.sendRequest('eth_blockNumber');
 
-        const { network = null } = this.getOptions();
+        const { network = undefined } = this.getOptions();
 
         return {
             blockHeight: new BigNumber(response.result).toNumber(),
@@ -260,15 +261,10 @@ export default class InfuraNetworkClient extends NetworkClient implements IEther
     }
 
 
-    public async destruct() {
+    public destruct() {
         if (this.trackerClient) {
-            const destructor = this.trackerClient.destruct();
-
-            if (destructor instanceof Promise) {
-                await destructor;
-
-                delete this.trackerClient;
-            }
+            this.trackerClient.destruct();
+            delete this.trackerClient;
         }
     }
 }

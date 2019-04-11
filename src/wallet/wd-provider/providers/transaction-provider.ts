@@ -51,7 +51,7 @@ export class TransactionProvider extends SimpleProvider {
     }
 
 
-    public get(txid: string): Entity.WalletTransaction | null {
-        return this.list()[txid] || null;
+    public get(txid: string): Entity.WalletTransaction | undefined {
+        return this.list()[txid] || undefined;
     }
 }

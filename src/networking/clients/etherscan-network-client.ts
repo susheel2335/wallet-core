@@ -22,7 +22,7 @@ export default class EtherscanNetworkClient extends NetworkClient implements IEt
             throw new Error('Invalid Coin. Just ETH Coin');
         }
 
-        const { network = null } = options;
+        const { network = undefined } = options;
 
         this.etherscanClient = EtherscanApi.init(Constants.ETHERSCAN_API_KEY, network);
     }

@@ -14,11 +14,11 @@ export function isHexPrefixed(hex: string): boolean {
 /**
  *
  * @param {string} hex
- * @param {number} length Length in bytes, null for any
+ * @param {number} length Length in bytes, undefined for any
  * @param {number} prefix 0 - no prefix, 1 - required prefix, 2 - optional
  * @returns {boolean}
  */
-export function isHexValid(hex: string, length: number = null, prefix: number = 0): boolean {
+export function isHexValid(hex: string, length?: number, prefix: number = 0): boolean {
 
     if (!/^(0x)?([0-9a-fA-F]+)?$/i.test(hex)) {
         return false;
@@ -63,7 +63,7 @@ export function padHexToEven(a: string): string {
 }
 
 export function hexToBuffer(hex: string): Buffer {
-    if (!isHexValid(hex, null, 2)) {
+    if (!isHexValid(hex, undefined, 2)) {
         throw new TypeError(`Invalid hex string ${hex}`);
     }
 

@@ -44,7 +44,7 @@ function checkAddressOutputScript(address, network) {
     );
 }
 
-describe('Test Create address', () => {
+describe('Create address', () => {
     for (const coinUnit in coinAddresses) {
         const coinCases = coinAddresses[coinUnit];
         const coin = Coin.makeCoin(coinUnit);
