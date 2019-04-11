@@ -82,7 +82,7 @@ export class BalanceCalculator {
                 let wdAddressBalance = wdBalance.addrBalances[outAddress];
 
                 wdAddressBalance.receive = wdAddressBalance.receive.plus(out.value);
-                if (typeof tx.blockHeight === 'undefined') {
+                if (!tx.blockHeight) {
                     wdAddressBalance.unconfirmed = wdAddressBalance.unconfirmed.plus(out.value);
                 }
 
@@ -102,7 +102,7 @@ export class BalanceCalculator {
                         addresses: out.addresses,
                         prevScript: out.scriptPubKey,
                         prevScriptType: out.scriptType,
-                        confirmed: typeof tx.blockHeight === 'undefined',
+                        confirmed: tx.blockHeight && tx.blockHeight > 0,
 
                         /* @deprecated */
                         script: { length: 120 },

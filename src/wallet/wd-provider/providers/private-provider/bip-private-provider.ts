@@ -64,7 +64,7 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
     }
 
 
-    public getPureChangeAddress(balance: Entity.WDBalance = undefined): Entity.WalletAddress {
+    public getPureChangeAddress(balance?: Entity.WDBalance): Entity.WalletAddress {
         let pureChangeAddr = this.wdProvider.address.last(HD.BIP44.AddressType.CHANGE, balance);
 
         if (!pureChangeAddr) {

@@ -12,23 +12,21 @@ import WSClient from './ws-client';
 class FeeHelper {
     protected client: BlockbookNetworkClient;
     protected feeCache?: FeeRecord;
+    protected feeTimeout?: number;
 
     public constructor(client: BlockbookNetworkClient) {
         this.client = client;
     }
 
-
     public async getFee(): Promise<FeeRecord> {
-        if (!this.feeCache) {
+        if (this.isFeeExpired()) {
             this.feeCache = {
                 low: await this.resolveFee(12, 'lowFeePerByte'),
                 standard: await this.resolveFee(6, 'defaultFeePerByte'),
                 high: await this.resolveFee(1, 'highFeePerByte'),
             };
 
-            setTimeout(() => {
-                delete this.feeCache;
-            }, 3 * 60 * 1000);
+            this.feeTimeout = new Date().getTime();
         }
 
         return this.feeCache;
@@ -48,6 +46,14 @@ class FeeHelper {
 
         return this.client.coin[type];
     };
+
+    protected isFeeExpired(): boolean {
+        if (!this.feeTimeout || !this.feeCache) {
+            return true;
+        }
+
+        return this.feeTimeout - 3 * 60 * 1000 <= new Date().getTime();
+    }
 }
 
 

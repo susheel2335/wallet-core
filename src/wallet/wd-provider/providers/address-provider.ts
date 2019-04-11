@@ -39,7 +39,7 @@ export class AddressProvider extends SimpleProvider {
             return this.getWalletData().addresses;
         }
 
-        if (typeof addressType !== 'undefined') {
+        if (addressType !== undefined) {
             return filter(this.getWalletData().addresses, wlt => wlt.type === addressType);
         }
 
@@ -81,7 +81,7 @@ export class AddressProvider extends SimpleProvider {
 
         let addresses = this.list(type);
 
-        if (typeof balance === 'undefined') {
+        if (balance === undefined) {
             balance = this.wdProvider.balance;
         }
 
