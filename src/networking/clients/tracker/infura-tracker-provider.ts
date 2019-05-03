@@ -4,6 +4,7 @@ import { Wallet } from '../../../';
 import { Infura } from '../../api';
 import { InfuraNetworkClient } from '../';
 import { TrackerClient } from './tracker-client';
+import Axios, { CancelTokenSource } from 'axios';
 
 const NEW_BLOCK_CHECK_TIMEOUT = 15000;
 const RECONNECT_TIMEOUT = 30000;
@@ -18,9 +19,12 @@ export default class InfuraTrackerProvider extends TrackerClient<InfuraNetworkCl
     protected connected: boolean = false;
     protected blockTrackInterval?: any;
 
+    protected cancelTokenSource: CancelTokenSource;
+
     public constructor(networkClient: InfuraNetworkClient) {
         super(networkClient);
 
+        this.cancelTokenSource = Axios.CancelToken.source();
         this.startBlockTracking();
     }
 
@@ -52,7 +56,10 @@ export default class InfuraTrackerProvider extends TrackerClient<InfuraNetworkCl
         this.enableBlockTracking = true;
 
         this.trackLastOrNextBlock().then(() => {
-            this.blockTrackInterval = setInterval(() => this.trackLastOrNextBlock(), NEW_BLOCK_CHECK_TIMEOUT);
+            this.blockTrackInterval = setInterval(
+                () => this.trackLastOrNextBlock(),
+                NEW_BLOCK_CHECK_TIMEOUT,
+            );
         });
     }
 
@@ -107,12 +114,14 @@ export default class InfuraTrackerProvider extends TrackerClient<InfuraNetworkCl
         }
     }
 
+
     protected activateConnection() {
         if (!this.connected) {
             this.connected = true;
             this.fireConnect();
         }
     }
+
 
     protected async trackLastOrNextBlock(): Promise<Wallet.Entity.Block | void> {
         if (!this.enableBlockTracking) {
@@ -125,8 +134,10 @@ export default class InfuraTrackerProvider extends TrackerClient<InfuraNetworkCl
         }
 
         try {
-            const block: Wallet.Entity.Block | undefined
-                = await this.networkClient.getBlockByNumber(blockHeight);
+            const block: Wallet.Entity.Block | undefined = await this.networkClient.getBlockByNumber(
+                blockHeight, {
+                    cancelToken: this.cancelTokenSource.token,
+                });
 
             this.activateConnection();
 
@@ -139,15 +150,20 @@ export default class InfuraTrackerProvider extends TrackerClient<InfuraNetworkCl
 
             return block;
         } catch (error) {
-            this.handleBlockError(error);
+            if (false === Axios.isCancel(error)) {
+                this.debug(error.message);
 
-            return;
+                return;
+            }
+
+            this.handleBlockError(error);
         }
     }
 
-    public destruct() {
-        this.stopBlockTracking();
 
+    public destruct() {
+        this.cancelTokenSource.cancel(`Destruct Infura block Tracker`);
+        this.stopBlockTracking();
         super.destruct();
     }
 }

@@ -3,8 +3,8 @@ import * as EthereumJsUtil from 'ethereumjs-util';
 
 import * as Crypto from './crypto';
 
-export { Destructable } from './destructable';
-export { Crypto };
+import Destructible from 'utils/destructible';
+export { Crypto, Destructible };
 
 
 export function isHexPrefixed(hex: string): boolean {

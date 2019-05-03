@@ -2,7 +2,7 @@ import { forEach } from 'lodash';
 import BIP39 from 'bip39';
 import BigNumber from 'bignumber.js';
 
-import { Coin, Wallet } from '../';
+import { Coin, Wallet, Networking } from '../';
 
 type CoinInfo = {
     coin: Coin.CoinInterface,
@@ -134,7 +134,9 @@ async function onWdCreated(wdProvider: Wallet.Provider.WDProvider, coinInfo: Coi
 
 
 coins.forEach(async (coinInfo: CoinInfo) => {
-    const walletGenerator = Wallet.Generator.createGenerator(coinInfo.coin, bufferSeed);
+    const coinNetwork = Networking.createNetworkProvider(coinInfo.coin);
+    
+    const walletGenerator = Wallet.Generator.createGenerator(coinInfo.coin, bufferSeed, coinNetwork);
     const wdProvider: Wallet.Provider.WDProvider = await walletGenerator.fill();
 
     onWdCreated(wdProvider, coinInfo);

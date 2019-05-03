@@ -2,6 +2,7 @@ import { forEach, map } from 'lodash';
 import BigNumber from 'bignumber.js';
 import BitcoinJS from 'bitcoinjs-lib';
 import { Coin, Constants } from '../';
+import { INetworkProvider } from '../networking';
 import { BalanceException } from './exceptions';
 import { WDProvider } from './wd-provider';
 import * as Entity from './entity';
@@ -33,8 +34,8 @@ export function calculateTxBalance(balance: Entity.WDBalance, txid: string): num
 }
 
 
-export function createWDProvider(walletData: Entity.WalletData): WDProvider {
-    return new WDProvider(walletData);
+export function createWDProvider(walletData: Entity.WalletData, networkProvider: INetworkProvider): WDProvider {
+    return new WDProvider(walletData, networkProvider);
 }
 
 

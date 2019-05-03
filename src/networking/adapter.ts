@@ -1,5 +1,6 @@
 export { getNetworkAdapter, getNetworkAdapters } from './utils';
 import * as Coin from '../coin';
+import Constants from '../constants';
 import { TAdapterOption } from './api';
 
 export enum AdapterType {
@@ -20,6 +21,11 @@ AdapterMap[Coin.Unit.BTC] = [
         type: AdapterType.BLOCKBOOK,
         url: 'https://btc.blockbook.plark.io/api/',
         wsUrl: 'wss://btc.blockbook.plark.io',
+        version: '0.1.1',
+    }, {
+        type: AdapterType.BLOCKBOOK,
+        url: 'https://btc1.trezor.io/api/',
+        wsUrl: 'wss://btc1.trezor.io',
         version: '0.1.1',
     }, {
         type: AdapterType.INSIGHT,
@@ -52,6 +58,11 @@ AdapterMap[Coin.Unit.LTC] = [
         url: 'https://ltc.insight.plark.io/api',
         wsUrl: 'wss://ltc.insight.plark.io/',
         version: '0.4.4',
+    }, {
+        type: AdapterType.INSIGHT,
+        url: 'https://ltc1.trezor.io/api',
+        wsUrl: 'wss://ltc1.trezor.io/',
+        version: '0.1.1',
     },
 ];
 
@@ -71,6 +82,11 @@ AdapterMap[Coin.Unit.DASH] = [
         type: AdapterType.INSIGHT,
         url: 'https://dash.insight.plark.io/api',
         wsUrl: 'wss://dash.insight.plark.io/',
+    }, {
+        type: AdapterType.BLOCKBOOK,
+        url: 'https://dash1.trezor.io/api',
+        wsUrl: 'wss://dash1.trezor.io/',
+        version: '0.2.2',
     },
 ];
 
@@ -87,8 +103,8 @@ AdapterMap[Coin.Unit.DASHt] = [
 AdapterMap[Coin.Unit.ETH] = [
     {
         type: AdapterType.INFURA,
-        url: '<no specific url>',
-        network: undefined,
+        url: `https://mainnet.infura.io/v3/${Constants.INFURA_APP_ID}`,
+        network: 'mainnet',
     },
 ];
 
@@ -96,7 +112,7 @@ AdapterMap[Coin.Unit.ETH] = [
 AdapterMap[Coin.Unit.ETHt] = [
     {
         type: AdapterType.INFURA,
-        url: 'https://api.infura.io',
+        url: `https://ropsten.infura.io/v3/${Constants.INFURA_APP_ID}`,
         network: 'ropsten',
     },
 ];

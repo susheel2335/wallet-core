@@ -1,7 +1,8 @@
 import { forEach } from 'lodash';
 import { Coin, Wallet, Debug } from '../';
 import * as Networking from './';
-import { Destructable } from '../utils';
+import { createClient } from './client-helper';
+import { Destructible } from '../utils';
 
 export type ClientUnit = {
     options: Networking.Api.TAdapterOption;
@@ -9,7 +10,9 @@ export type ClientUnit = {
     banned: boolean;
 };
 
-export interface INetworkProvider {
+export interface INetworkProvider extends Destructible {
+    getCoin(): Coin.CoinInterface;
+
     getClient(index: number): Networking.Clients.INetworkClient;
 
     broadCastTransaction(transaction: Coin.Transaction.Transaction): Promise<string>;
@@ -17,6 +20,8 @@ export interface INetworkProvider {
     getAddressTxs(address: string): Promise<Wallet.Entity.WalletTransaction[]>;
 
     getTx(txid: string): Promise<Wallet.Entity.WalletTransaction | undefined>;
+
+    getBulkAddrTxs(address: string[]): Promise<Wallet.Entity.WalletTransaction[]>;
 
     getTracker(): Networking.Clients.Tracker.ITrackerClient;
 
@@ -30,10 +35,8 @@ export interface INetworkProvider {
 }
 
 
-export class NetworkProvider implements INetworkProvider, Destructable {
-
+export class NetworkProvider implements INetworkProvider, Destructible {
     protected clientList: ClientUnit[] = [];
-    protected currentClientIndex = 0;
     protected debug: Debug.BerryDebug;
 
     public constructor(protected readonly coin: Coin.CoinInterface) {
@@ -45,83 +48,98 @@ export class NetworkProvider implements INetworkProvider, Destructable {
             throw new Error(`No providers for ${coin.getUnit()}`);
         }
 
-        forEach(clientOptions, (props: Networking.Api.TAdapterOption, indx: number) => {
-            const client = Networking.createClient(this.coin, props);
-            this.clientList.push({
+        forEach(clientOptions, (props: Networking.Api.TAdapterOption) => {
+            const client = createClient(this.coin, props);
+            let clientUnit = {
                 client: client,
                 banned: false,
                 options: props.options,
-            } as ClientUnit);
+            };
+
+            this.clientList.push(clientUnit);
         });
     }
 
-    protected getClientCount(): number {
-        return this.clientList.length;
+
+    public getCoin(): Coin.CoinInterface {
+        return this.coin;
     }
 
-    protected rotateClient(depth: number = 0): Networking.Clients.INetworkClient {
-        if (depth > 0 && depth > this.getClientCount()) {
-            throw new Error('All clients are wrong..!');
-        }
 
-        this.currentClientIndex++;
-        if (this.currentClientIndex >= this.getClientCount()) {
-            this.currentClientIndex = 0;
-        }
-
-        return this.clientList[this.currentClientIndex].client;
-    }
-
-    /**
-     * @TODO Need add normal client observer
-     */
     public getAddressTxs(address: string): Promise<Wallet.Entity.WalletTransaction[]> {
-        const client = this.getClient(0);
-
-        return client
-            .getAddressTxs(address)
-            .catch(this.catchError('getAddressTxs', client));
+        return this.__callMethod(
+            'getAddressTxs',
+            [address],
+        );
     }
+
 
     public getBulkAddrTxs(addrs: string[]): Promise<Wallet.Entity.WalletTransaction[]> {
-        const client = this.getClient(0);
-
-        return client.getBulkAddrsTxs(addrs).catch(this.catchError('getBulkAddrTxs', client));
+        return this.__callMethod(
+            'getBulkAddrsTxs',
+            [addrs],
+        );
     }
+
 
     public getTx(txid: string): Promise<Wallet.Entity.WalletTransaction | undefined> {
-        const client = this.getClient(0);
-
-        return client.getTx(txid).catch(this.catchError('getTx', client));
+        return this.__callMethod(
+            'getTx',
+            [txid],
+        );
     }
+
+
+    protected async __callMethod<T = any>(method: string, params: any[]): Promise<T> {
+        const errors = [];
+        for (let info of this.clientList) {
+            const client = info.client;
+
+            try {
+                return await client[method](...params);
+            } catch (error) {
+                errors.push(info);
+            }
+        }
+
+        this.catchError(method, errors[0]);
+    }
+
+
+    public broadCastTransaction(transaction: Coin.Transaction.Transaction): Promise<string> {
+        return this.__callMethod<string>('broadCastTransaction', [transaction]);
+    }
+
 
     public getTracker(): Networking.Clients.Tracker.ITrackerClient {
         return this.clientList[0].client.getTracker();
     }
 
+
     public onNewBlock(callback: plarkcore.NewBlockCallback): void {
         this.getTracker().onBlock(callback);
     }
+
 
     public onTransactionConfirm(txid: string, callback: plarkcore.NewTxCallback) {
         this.getTracker().onTransactionConfirm(txid, callback);
     }
 
+
     public onAddrsTx(addrs: string[], callback: plarkcore.NewTxCallback): void {
         this.getTracker().onAddrsTx(addrs, callback);
     }
+
 
     public getClient(index: number = 0): Networking.Clients.INetworkClient {
         return this.clientList[index].client;
     }
 
-    public broadCastTransaction(transaction: Coin.Transaction.Transaction): Promise<string> {
-        return this.getClient(0).broadCastTransaction(transaction);
-    }
 
     public async getLastBlock(): Promise<Wallet.Entity.Block> {
         throw new Error('Need implement block!');
     }
+
 
     public destruct() {
         for (let i in this.clientList) {
@@ -134,6 +152,7 @@ export class NetworkProvider implements INetworkProvider, Destructable {
 
         this.clientList = [];
     }
+
 
     protected catchError = (method: string, client) => {
         return (error: Error) => {

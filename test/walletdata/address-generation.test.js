@@ -1,7 +1,6 @@
 import assert from 'assert';
 import BigNumber from 'bignumber.js';
-import { Coin, HD, Wallet } from '../../lib';
-
+import { Coin, HD, Wallet, Networking } from '../../lib';
 import { seed } from '../fixtures/seed';
 
 const coinCases = {
@@ -23,8 +22,11 @@ describe('Generate WalletData', () => {
         const coin = Coin.makeCoin(coinUnit);
 
         describe(`Wallet Data ${coinUnit}`, () => {
+
+            const networkProvider = Networking.createNetworkProvider(coin);
+
             let wdProvider;
-            const wdGenerator = Wallet.Generator.createGenerator(coin, seed);
+            const wdGenerator = Wallet.Generator.createGenerator(coin, seed, networkProvider);
             const promiseLists = [];
 
             const waitGenerateWDProvider = new Promise((resolve, reject) => {
@@ -68,7 +70,9 @@ describe('Generate WalletData', () => {
 
             Promise.all(promiseLists).finally(() => {
                 if (wdProvider) {
+                    console.log('Call destruct');
                     wdProvider.destruct();
+                    networkProvider.destruct();
                 }
             });
         });

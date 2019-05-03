@@ -1,7 +1,7 @@
 import { map, find } from 'lodash';
 import { EventEmitter } from 'events';
 import { Wallet, Debug } from '../../../';
-import { Destructable } from '../../../utils';
+import { Destructible } from '../../../utils';
 import { INetworkClient } from '../';
 
 export enum TrackerEvent {
@@ -13,7 +13,7 @@ export enum TrackerEvent {
     Tx = 'tx'
 }
 
-export interface ITrackerClient extends Destructable, EventEmitter {
+export interface ITrackerClient extends Destructible, EventEmitter {
     onConnect(callback): ITrackerClient;
 
     onBlock(callback: plarkcore.NewBlockCallback): ITrackerClient;

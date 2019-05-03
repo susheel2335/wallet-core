@@ -1,6 +1,6 @@
 import Bottleneck from 'bottleneck';
 
-const limiter = new Bottleneck(1, 500);
+const limiter = new Bottleneck(1, 300);
 
 /**
  * @param {() => PromiseLike<R>} cb
