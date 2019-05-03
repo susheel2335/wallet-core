@@ -32,10 +32,12 @@ export interface INetworkProvider extends Destructible {
     onTransactionConfirm(txid: string, callback: plarkcore.NewTxCallback): void;
 
     getLastBlock(): Promise<Wallet.Entity.Block>;
+
+    destruct(): void;
 }
 
 
-export class NetworkProvider implements INetworkProvider, Destructible {
+export class NetworkProvider implements INetworkProvider {
     protected clientList: ClientUnit[] = [];
     protected debug: Debug.BerryDebug;
 
