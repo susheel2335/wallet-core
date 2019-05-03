@@ -13,7 +13,7 @@ export type ClientUnit = {
 export interface INetworkProvider extends Destructible {
     getCoin(): Coin.CoinInterface;
 
-    getClient(index: number): Networking.Clients.INetworkClient;
+    getClient(index?: number): Networking.Clients.INetworkClient;
 
     broadCastTransaction(transaction: Coin.Transaction.Transaction): Promise<string>;
 
