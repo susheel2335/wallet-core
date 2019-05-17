@@ -104,6 +104,7 @@ AdapterMap[Coin.Unit.ETH] = [
     {
         type: AdapterType.INFURA,
         url: `https://mainnet.infura.io/v3/${Constants.INFURA_APP_ID}`,
+        wsUrl: `wss://mainnet.infura.io/ws/v3/${Constants.INFURA_APP_ID}`,
         network: 'mainnet',
     },
 ];
@@ -113,6 +114,7 @@ AdapterMap[Coin.Unit.ETHt] = [
     {
         type: AdapterType.INFURA,
         url: `https://ropsten.infura.io/v3/${Constants.INFURA_APP_ID}`,
+        wsUrl: `wss://ropsten.infura.io/ws/v3/${Constants.INFURA_APP_ID}`,
         network: 'ropsten',
     },
 ];

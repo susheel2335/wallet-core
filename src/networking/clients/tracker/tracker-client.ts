@@ -36,7 +36,7 @@ export interface IAddressTrackEvent {
 
 
 export class TrackerClient<T extends INetworkClient> extends EventEmitter implements ITrackerClient {
-    protected debug;
+    protected debug: debug.IDebugger;
     protected readonly networkClient: T;
     protected addrTxEvents: IAddressTrackEvent = {
         addrs: [],
