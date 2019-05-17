@@ -36,10 +36,10 @@ export default class InfuraTrackerProvider extends TrackerClient<InfuraNetworkCl
         this.socket
             .subscribe('eth_subscribe', 'newHeads', [])
             .then((subscription: string) => {
+                if (!this.socket.isConnecting()) return;
+                
                 this.subscription = subscription;
                 this.socket.on(subscription, this.__handleBlock);
-
-                console.log(subscription);
             });
     };
 

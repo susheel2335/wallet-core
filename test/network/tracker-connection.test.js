@@ -2,13 +2,13 @@ import assert from 'assert';
 import { Coin, Networking } from '../../lib';
 
 const coins = [
-    // Coin.Unit.BTC,
-    // Coin.Unit.BTCt,
-    // Coin.Unit.LTC,
-    // Coin.Unit.LTCt,
-    // Coin.Unit.DASH,
-    // Coin.Unit.DASHt,
-    // Coin.Unit.ETH,
+    Coin.Unit.BTC,
+    Coin.Unit.BTCt,
+    Coin.Unit.LTC,
+    Coin.Unit.LTCt,
+    Coin.Unit.DASH,
+    Coin.Unit.DASHt,
+    Coin.Unit.ETH,
     Coin.Unit.ETHt,
 ];
 
@@ -36,7 +36,7 @@ describe('Tracker Connection', function () {
                 try {
                     await connectionPromise;
                 } finally {
-                    // networkClient.destruct();
+                    networkClient.destruct();
                 }
             });
 
