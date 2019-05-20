@@ -1,62 +1,75 @@
-import { forEach, get } from 'lodash';
-import { WebsocketProvider } from 'web3-providers';
+import { forEach } from 'lodash';
+
 import { Wallet } from '../../../';
 import { Infura } from '../../api';
 import { InfuraNetworkClient } from '../';
 import { TrackerClient } from './tracker-client';
+import Axios, { CancelTokenSource } from 'axios';
+
+const NEW_BLOCK_CHECK_TIMEOUT = 20000;
+const RECONNECT_TIMEOUT = 40000;
+const CONNECTION_TIMEOUT = 60000 * 10;
 
 export default class InfuraTrackerProvider extends TrackerClient<InfuraNetworkClient> {
+
     protected currentBlockHeight?: number;
     protected currentBlockTime?: number;
 
-    protected socket: WebsocketProvider;
+    protected enableBlockTracking: boolean = false;
+    protected connected: boolean = false;
+    protected blockTrackInterval?: any;
 
-
-    protected subscription: string;
+    protected cancelTokenSource: CancelTokenSource;
 
     public constructor(networkClient: InfuraNetworkClient) {
         super(networkClient);
-        this.socket = new WebsocketProvider(this.networkClient.getWSUrl());
 
+        this.cancelTokenSource = Axios.CancelToken.source();
         this.startBlockTracking();
     }
 
 
+    protected handleBlockError = (error): void => {
+        if (this.blockTrackInterval) {
+            clearInterval(this.blockTrackInterval);
+
+            this.currentBlockHeight = undefined;
+            this.currentBlockTime = undefined;
+        }
+
+        this.fireConnectionError(error);
+
+        if (this.connected) {
+            this.connected = false;
+            this.fireDisconnect();
+        }
+
+        if (this.enableBlockTracking) {
+            setTimeout(() => this.startBlockTracking.bind(this), RECONNECT_TIMEOUT);
+        }
+
+        throw error;
+    };
+
+
     protected startBlockTracking() {
-        this.socket.on('connect', this.__onConnect);
+        this.enableBlockTracking = true;
+
+        this.trackLastOrNextBlock().then(() => {
+            this.blockTrackInterval = setInterval(
+                () => this.trackLastOrNextBlock(),
+                NEW_BLOCK_CHECK_TIMEOUT,
+            );
+        });
     }
 
 
-    protected __onConnect = () => {
-        this.debug('Socket connected!');
+    protected stopBlockTracking() {
+        this.enableBlockTracking = false;
+        clearInterval(this.blockTrackInterval);
 
-        this.fireConnect();
-        this.socket.removeListener('connect', this.__onConnect);
-
-        this.socket
-            .subscribe('eth_subscribe', 'newHeads', [])
-            .then((subscription: string) => {
-                if (!this.socket.isConnecting()) return;
-                
-                this.subscription = subscription;
-                this.socket.on(subscription, this.__handleBlock);
-            });
-    };
-
-
-    protected __handleBlock = async (...data: any[]) => {
-        const rawBlock = get(data, '[0]result', undefined);
-        if (!rawBlock || !rawBlock.hash) {
-            return;
-        }
-
-        try {
-            const block = await this.networkClient.getBlock(rawBlock.hash);
-            this.fireNewBlock(block);
-        } catch (error) {
-
-        }
-    };
+        this.fireDisconnect();
+    }
 
 
     protected fireNewBlock(block: Wallet.Entity.Block): boolean {
@@ -102,17 +115,55 @@ export default class InfuraTrackerProvider extends TrackerClient<InfuraNetworkCl
     }
 
 
-    public destruct() {
-        this.socket.disconnect(1001, 'Need to say Bye!');
+    protected activateConnection() {
+        if (!this.connected) {
+            this.connected = true;
+            this.fireConnect();
+        }
+    }
 
-        if (this.subscription) {
-            this.socket.removeAllListeners(this.subscription);
-            delete this.subscription;
+
+    protected async trackLastOrNextBlock(): Promise<Wallet.Entity.Block | void> {
+        if (!this.enableBlockTracking) {
+            return;
         }
 
-        this.socket.removeAllListeners('connect');
-        this.fireDisconnect();
+        let blockHeight: string | number = 'latest';
+        if (this.currentBlockHeight && (new Date().getTime() - this.getCurrentBlockTime() < CONNECTION_TIMEOUT)) {
+            blockHeight = this.currentBlockHeight + 1;
+        }
 
+        try {
+            const block: Wallet.Entity.Block | undefined = await this.networkClient.getBlockByNumber(
+                blockHeight, {
+                    cancelToken: this.cancelTokenSource.token,
+                });
+
+            this.activateConnection();
+
+            if (!block) {
+                return;
+            }
+
+            this.fireNewBlock(block);
+            this.trackLastOrNextBlock();
+
+            return block;
+        } catch (error) {
+            if (false === Axios.isCancel(error)) {
+                this.debug(error.message);
+
+                return;
+            }
+
+            this.handleBlockError(error);
+        }
+    }
+
+
+    public destruct() {
+        this.cancelTokenSource.cancel(`Destruct Infura block Tracker`);
+        this.stopBlockTracking();
         super.destruct();
     }
 }
