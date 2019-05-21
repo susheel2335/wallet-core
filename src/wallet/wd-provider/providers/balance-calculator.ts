@@ -63,6 +63,7 @@ export class BalanceCalculator {
         return balance;
     }
 
+
     protected calcUTXOBalance(): Wallet.Entity.WDBalance {
         const wdBalance = this.generateEmptyBalance();
 

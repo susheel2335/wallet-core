@@ -45,7 +45,7 @@ export default class InfuraTrackerProvider extends TrackerClient<InfuraNetworkCl
         }
 
         if (this.enableBlockTracking) {
-            setTimeout(() => this.startBlockTracking.bind(this), RECONNECT_TIMEOUT);
+            setTimeout(() => this.startBlockTracking(), RECONNECT_TIMEOUT);
         }
 
         throw error;
@@ -137,7 +137,8 @@ export default class InfuraTrackerProvider extends TrackerClient<InfuraNetworkCl
             const block: Wallet.Entity.Block | undefined = await this.networkClient.getBlockByNumber(
                 blockHeight, {
                     cancelToken: this.cancelTokenSource.token,
-                });
+                }
+            );
 
             this.activateConnection();
 
