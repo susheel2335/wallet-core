@@ -232,20 +232,31 @@ export default class InfuraNetworkClient extends NetworkClient implements IEther
 
     public getAddressTxs(address: string): Promise<Wallet.Entity.EtherTransaction[]> {
         return etherscanWrap(async () => {
+            const txList: Wallet.Entity.EtherTransaction[] = [];
+
             try {
                 const response = await this.etherscanClient.account
                     .txlist(address.toLowerCase(), 1, 'latest', 'asc');
 
-                const txList: Wallet.Entity.EtherTransaction[] = [];
                 forEach(response.result, (tx: Etherscan.Transaction) => {
                     const txData = Etherscan.toWalletTx(this.coin, tx);
                     txList.push(txData);
                 });
-
-                return txList;
             } catch (error) {
-                return [];
             }
+
+            try {
+                const responseInternal = await this.etherscanClient.account
+                    .txlistinternal(undefined, address.toLowerCase(), 1, 'latest', 'asc');
+
+                forEach(responseInternal.result, (tx: Etherscan.InternalTransaction) => {
+                    const txData = Etherscan.internalToWalletTx(this.coin, tx);
+                    txList.push(txData);
+                });
+            } catch (error) {
+            }
+
+            return txList;
         });
     }
 

@@ -20,6 +20,8 @@ declare module 'etherscan-api' {
     interface EtherscanAccount {
         txlist(address: string, startBlock: BlockNumber, endBlock: BlockNumber, sort: Sort): Promise<EtherscanResponse<any[]>>;
 
+        txlistinternal(txhash: string, address: string, startBlock: BlockNumber, endBlock: BlockNumber, sort: Sort): Promise<EtherscanResponse<any[]>>;
+
         balance(address: string): Promise<EtherscanResponse<string>>;
     }
 

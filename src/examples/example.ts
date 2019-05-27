@@ -1,42 +1,19 @@
 import { forEach } from 'lodash';
 import BIP39 from 'bip39';
-import BigNumber from 'bignumber.js';
 
 import { Coin, Wallet, Networking } from '../';
 
 type CoinInfo = {
     coin: Coin.CoinInterface,
-    address: string;
 };
 
 const coins: CoinInfo[] = [
-    // {
-    //     coin: Coin.makeCoin(Coin.Unit.ETHt),
-    //     address: '0x6a42b86469B9c3Df1e1De589bd1741B81a5A5fAF'
-    // },
-    // {
-    //     coin: Coin.makeCoin(Coin.Unit.BTC),
-    //     address: '15Wmq5V7ojGWCTWtjdWKsJCQB29gTB6VMa'
-    // },
     {
-        coin: Coin.makeCoin(Coin.Unit.BTCt),
-        address: 'mm5GgtNrzXKE7y8LZhtdvX6uhuTmWL12eZ',
+        coin: Coin.makeCoin(Coin.Unit.ETH),
     },
-    // {
-    //     coin: Coin.makeCoin(Coin.Unit.DASH),
-    //     address: 'XdYysbHbuV9tMg31NvE7DnzoySvoeZGmor'
-    // },
-    // {
-    //     coin: Coin.makeCoin(Coin.Unit.DASHt),
-    //     address: 'yjYxawxUJCDVmKKkKTCVbkT6ca2zWL28vz'
-    // }
 ];
 
-const oldSeed = 'honey relief scale kite dose lyrics they middle globe exhaust smooth galaxy ' +
-    'horror ensure grape way gift embody spring cupboard horror hurt image swift';
-
 const mnemonicSeed = 'flag output rich laptop hub lift list scout enjoy topic sister lab';
-// const mnemonicSeed = 'flag output rich laptop hub lift list horror enjoy topic sister lab';
 const bufferSeed = BIP39.mnemonicToSeed(mnemonicSeed);
 
 
@@ -52,7 +29,8 @@ async function onWdCreated(wdProvider: Wallet.Provider.WDProvider, coinInfo: Coi
 
     const extractTx = async (txid: string) => {
         console.log('Extracting ' + txid + ' ... ');
-        const tx: Wallet.Entity.WalletTransaction | undefined = await networkProvider.getTx(txid);
+        const tx: Wallet.Entity.WalletTransaction | undefined
+            = await networkProvider.getTx(txid);
 
         if (!tx) {
             setTimeout(() => {
@@ -78,17 +56,24 @@ async function onWdCreated(wdProvider: Wallet.Provider.WDProvider, coinInfo: Coi
         );
     });
 
-    console.log('Addrs: ');
+    console.log('Address balances: ');
     forEach(balance.addrBalances, (balance: Wallet.Entity.Balance, addr: string) => {
-        console.log(
-            `${addr}: ${balance.receive.toNumber()} > ${balance.unconfirmed.toNumber()} > ${balance.receive.minus(balance.spend).minus(balance.unconfirmed).toNumber()}`,
-        );
+        console.log([
+            `${addr}`,
+            `Receive: ${balance.receive.toNumber()}`,
+            `Unconfirmed: ${balance.unconfirmed.toNumber()}`,
+            `Balance: ${balance.receive.minus(balance.spend).minus(balance.unconfirmed).toNumber()}`,
+        ].join(' | '));
     });
 
     console.log('');
     console.log('Txs: ');
     forEach(balance.txBalances, (balance: Wallet.Entity.Balance, txid: string) => {
-        console.log(`${txid}: ${balance.receive.toNumber()} - ${balance.spend.toNumber()}`);
+        console.log([
+            `${txid}`,
+            `Receive: ${balance.receive.toNumber()}`,
+            `Spend: ${balance.spend.toNumber()}`,
+        ].join(' | '));
     });
     console.log('');
 
@@ -111,31 +96,12 @@ async function onWdCreated(wdProvider: Wallet.Provider.WDProvider, coinInfo: Coi
         console.log('------------------------------------------------------------------');
         console.log('');
     };
-
-    try {
-        const address = coinInfo.coin.getKeyFormat().parseAddress(coinInfo.address);
-
-        const fee: BigNumber = await privateProvider.calculateFee(
-            new BigNumber(0.001),
-            address,
-            Coin.FeeTypes.Low,
-        );
-
-        const tx = await privateProvider.createTransaction(address, new BigNumber(0.5), Coin.FeeTypes.Low);
-
-        console.log('Fee: ', fee.toFixed());
-    } catch (error) {
-        console.error(`ERROR - ${error.message}`);
-        console.log('');
-        console.log('');
-        console.log('');
-    }
 };
 
 
 coins.forEach(async (coinInfo: CoinInfo) => {
     const coinNetwork = Networking.createNetworkProvider(coinInfo.coin);
-    
+
     const walletGenerator = Wallet.Generator.createGenerator(coinInfo.coin, bufferSeed, coinNetwork);
     const wdProvider: Wallet.Provider.WDProvider = await walletGenerator.fill();
 

@@ -55,8 +55,9 @@ export type BIPTransaction = WalletTransaction & {
 
 
 export type EtherTransaction = WalletTransaction & {
-    from: string;
+    type: 'normal' | 'internal';
     to: string;
+    from: string;
     value: string;
     nonce: number;
     data: string;
