@@ -18,23 +18,36 @@ describe('Tracker Connection', function () {
 
         describe(`Tracker for ${coin.getUnit()}`, function () {
 
-            let networkClient = Networking.firstNetworkClient(coin);
-            const tracker = networkClient.getTracker();
+            let networkClient;
+            let tracker;
 
-            const connectionPromise = new Promise(resolve => {
-                tracker.onConnect(() => resolve());
+            let connectionPromise;
+            let disconectionPromise;
+
+            before(function () {
+                networkClient = Networking.firstNetworkClient(coin);
+                tracker = networkClient.getTracker();
+
+                connectionPromise = new Promise(resolve => {
+                    tracker.onConnect(() => resolve());
+                });
+
+                disconectionPromise = new Promise(resolve => {
+                    tracker.onDisconnect(() => resolve());
+                });
             });
 
-            const disconectionPromise = new Promise((resolve) => {
-                tracker.onDisconnect(() => resolve());
+            after(function () {
+                networkClient && networkClient.destruct();
             });
-
 
             it(`Successful Connected`, async function () {
                 this.timeout(2000);
 
                 try {
                     await connectionPromise;
+                } catch (error) {
+                    console.error(error.message);
                 } finally {
                     networkClient.destruct();
                 }

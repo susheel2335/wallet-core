@@ -31,7 +31,7 @@ export interface PrivateProvider {
      *
      * @returns {Promise<BigNumber>}
      */
-    calculateFee(value: BigNumber, address: Coin.Key.Address, feeType: Coin.FeeTypes): Promise<BigNumber>;
+    calculateFee(value: BigNumber, address: Coin.Key.Address, feeType: Coin.FeeTypes): Promise<Coin.CalculateFeeResponse>;
 
     /**
      * Create transaction to specific address with some value

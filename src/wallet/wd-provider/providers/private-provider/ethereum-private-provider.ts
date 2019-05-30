@@ -6,7 +6,6 @@ import { Entity } from '../../../';
 import { AbstractPrivateProvider } from './abstract-private-provider';
 
 export class EthereumPrivateProvider extends AbstractPrivateProvider {
-
     public getTxNonce(fromAddress: Entity.WalletAddress) {
         return filter(
             this.wdProvider.tx.list(),
@@ -22,10 +21,9 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
      */
     public async getGasLimit(address: Coin.Key.Address = undefined, value: BigNumber = undefined): Promise<BigNumber> {
         if (address && value) {
-            const networkClient = this.wdProvider.getNetworkProvider().getClient(0);
+            // const networkClient = this.wdProvider.getNetworkProvider().getClient(0);
 
             /**
-             *
              * @TODO Need to request a etherscan for optimal gasLimit for current address transaction
              *
              * try {
@@ -33,7 +31,6 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
              * } catch (error) {
              *      return Constants.MIN_GAS_LIMIT;
              * }
-             *
              */
         }
 
@@ -69,19 +66,25 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
      * @param {Address} address
      * @param {FeeTypes} feeType
      *
-     * @returns {Promise<BigNumber>}
+     * @returns {Promise<CalculateFeeResponse>}
      */
-    public async calculateFee(value: BigNumber,
-                              address: Coin.Key.Address,
-                              feeType: Coin.FeeTypes = Coin.FeeTypes.Medium,
-    ): Promise<BigNumber> {
-
+    public async calculateFee(
+        value: BigNumber,
+        address: Coin.Key.Address,
+        feeType: Coin.FeeTypes = Coin.FeeTypes.Medium,
+    ): Promise<Coin.CalculateFeeResponse> {
         const [gasPrice, gasLimit]: BigNumber[] = await Promise.all([
             this.getGasPrice(feeType),
             this.getGasLimit(address, value),
         ]);
 
-        return gasLimit.times(gasPrice.div(Constants.GWEI_PER_COIN));
+        return {
+            fee: gasLimit.times(gasPrice.div(Constants.GWEI_PER_COIN)),
+            coin: this.getCoin().getUnit(),
+            feeType: feeType,
+            gasLimit: gasLimit.toNumber(),
+            gasPrice: gasPrice.toNumber(),
+        };
     }
 
     /**

@@ -7,74 +7,86 @@ const coinCases = {
     [Coin.Unit.BTC]: {},
     [Coin.Unit.BTCt]: {
         generateTransaction: true,
+        calculateFee: true,
     },
     [Coin.Unit.LTC]: {},
-    [Coin.Unit.LTCt]: {},
+    [Coin.Unit.LTCt]: {
+        calculateFee: true,
+    },
     [Coin.Unit.DASH]: {},
-    [Coin.Unit.DASHt]: {},
-    [Coin.Unit.ETH]: {},
-    [Coin.Unit.ETHt]: {}
+    [Coin.Unit.DASHt]: {
+        calculateFee: true,
+    },
+    [Coin.Unit.ETH]: {
+        calculateFee: true,
+    },
+    [Coin.Unit.ETHt]: {
+        calculateFee: true,
+    }
 };
 
 describe('Generate WalletData', () => {
     for (const coinUnit in coinCases) {
-        const cases = coinCases[coinUnit];
-        const coin = Coin.makeCoin(coinUnit);
-
         describe(`Wallet Data ${coinUnit}`, () => {
 
-            const networkProvider = Networking.createNetworkProvider(coin);
+            const cases = coinCases[coinUnit];
+            const coin = Coin.makeCoin(coinUnit);
 
+            let networkProvider;
             let wdProvider;
-            const wdGenerator = Wallet.Generator.createGenerator(coin, seed, networkProvider);
-            const promiseLists = [];
 
-            const waitGenerateWDProvider = new Promise((resolve, reject) => {
-                wdGenerator.fill().then(wdp => resolve(wdp), reject);
+            before(async function () {
+                this.timeout(15000);
+
+                networkProvider = Networking.createNetworkProvider(coin);
+
+                const wdGenerator = Wallet.Generator.createGenerator(coin, seed, networkProvider);
+                wdProvider = await wdGenerator.fill();
             });
 
-            it(`Test Can Generate WalletData provider`, async function () {
-                this.timeout(30000);
-                wdProvider = await waitGenerateWDProvider;
-            });
+            after(function () {
+                if (wdProvider) {
+                    wdProvider.destruct();
+                }
 
+                if (networkProvider) {
+                    networkProvider.destruct();
+                }
+            });
 
             it(`Can get balance`, () => {
                 const balance = Wallet.calculateBalance(wdProvider.balance);
                 assert.strictEqual(typeof balance, 'number');
             });
 
-            if ('generateTransaction' in cases) {
-                it(`Can generate Transaction`, async function () {
-                    const waitGenerateTx = new Promise(async (resolve, reject) => {
-                        try {
-                            const address = wdProvider.address.last(HD.BIP44.AddressType.CHANGE);
-                            const tx = await wdProvider.getPrivate(seed).createTransaction(
-                                coin.getKeyFormat().parseAddress(address.address),
-                                new BigNumber(0.0001),
-                                Coin.FeeTypes.Medium
-                            );
 
-                            resolve(tx.id);
-                        } catch (error) {
-                            reject(error);
-                        }
-                    });
+            if ('calculateFee' in cases) {
+                it(`Can calculate fee`, async () => {
+                    const address = wdProvider.address.last(HD.BIP44.AddressType.CHANGE);
+                    const feeResponse = await wdProvider.getPrivate(seed).calculateFee(
+                        new BigNumber(0.01),
+                        coin.getKeyFormat().parseAddress(address.address),
+                        Coin.FeeTypes.Medium
+                    );
 
-                    promiseLists.push(waitGenerateTx);
-
-                    await waitGenerateTx;
+                    console.log(`Fee of ${feeResponse.coin}: ` + feeResponse.fee.toNumber());
+                    assert.strictEqual(typeof feeResponse, 'object');
                 });
             }
 
+            if ('generateTransaction' in cases) {
+                it(`Can generate Transaction`, async () => {
+                    const address = wdProvider.address.last(HD.BIP44.AddressType.CHANGE);
+                    const tx = await wdProvider.getPrivate(seed).createTransaction(
+                        coin.getKeyFormat().parseAddress(address.address),
+                        new BigNumber(0.0001),
+                        Coin.FeeTypes.Medium
+                    );
 
-            Promise.all(promiseLists).finally(() => {
-                if (wdProvider) {
-                    console.log('Call destruct');
-                    wdProvider.destruct();
-                    networkProvider.destruct();
-                }
-            });
+                    assert.strictEqual(typeof tx, 'object');
+                    assert.ok(tx.id);
+                });
+            }
         });
     }
 });

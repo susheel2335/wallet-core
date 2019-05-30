@@ -20,7 +20,7 @@ export abstract class AbstractPrivateProvider extends SimpleProvider implements 
 
     public abstract calculateFee(value: BigNumber,
                                  address: Coin.Key.Address,
-                                 feeType: Coin.FeeTypes): Promise<BigNumber>;
+                                 feeType: Coin.FeeTypes): Promise<Coin.CalculateFeeResponse>;
 
 
     public abstract createTransaction(address: Coin.Key.Address,

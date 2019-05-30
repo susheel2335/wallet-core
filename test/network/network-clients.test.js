@@ -17,20 +17,23 @@ describe('Network Adapter', function () {
         const coin = Coin.makeCoin(coinUnit);
 
         describe(`Tracker for ${coin.getUnit()}`, function () {
+            let networkClient;
 
-            let networkClient = Networking.firstNetworkClient(coin);
-
-            it('Get Info', async function () {
-                this.timeout(2000);
-
-                try {
-                    const info = await networkClient.getInfo();
-                    assert.ok(info.blockHeight, 'Not found blockHeight in "info"');
-                } finally {
-                    networkClient.destruct();
-                }
+            before(function () {
+                networkClient = Networking.firstNetworkClient(coin);
             });
 
-        }, 2000);
+            after(function () {
+                networkClient && networkClient.destruct();
+            });
+
+            it('Get Info', async function () {
+                this.timeout(3000);
+
+                const info = await networkClient.getInfo();
+                assert.ok(info.blockHeight, 'Not found blockHeight in "info"');
+            });
+
+        }, 3000);
     });
 });

@@ -7,6 +7,7 @@ import { AbstractPrivateProvider } from './abstract-private-provider';
 import { FeeRecord, InsightNetworkClient, BlockbookNetworkClient } from '../../../../networking/clients';
 
 import coinSelect, { CoinSelectResult } from 'coinselect';
+import { FeeTypes } from 'coin';
 
 export class BIPPrivateProvider extends AbstractPrivateProvider {
 
@@ -43,10 +44,12 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
     }
 
 
-    protected async calculateOptimalInputs(balance: Entity.WDBalance,
-                                           address: string,
-                                           value: BigNumber,
-                                           feeType: Coin.FeeTypes = Coin.FeeTypes.Medium): Promise<CoinSelectResult> {
+    protected async calculateOptimalInputs(
+        balance: Entity.WDBalance,
+        address: string,
+        value: BigNumber,
+        feeType: Coin.FeeTypes = Coin.FeeTypes.Medium,
+    ): Promise<CoinSelectResult> {
 
         const coin = this.wdProvider.coin as Coin.BIPGenericCoin;
 
@@ -75,15 +78,22 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
     }
 
 
-    public async calculateFee(value: BigNumber,
-                              address: Coin.Key.Address,
-                              feeType: Coin.FeeTypes = Coin.FeeTypes.Medium): Promise<BigNumber> {
-
+    public async calculateFee(
+        value: BigNumber,
+        address: Coin.Key.Address,
+        feeType: Coin.FeeTypes = Coin.FeeTypes.Medium,
+    ): Promise<Coin.CalculateFeeResponse> {
         const balance = this.wdProvider.balance;
+        let { inputs = [], outputs = [], fee = 0 }
+            = await this.calculateOptimalInputs(balance, address.toString(), value, feeType);
 
-        let { fee = 0 } = await this.calculateOptimalInputs(balance, address.toString(), value, feeType);
-
-        return new BigNumber(fee.toFixed(8)).div(Constants.SATOSHI_PER_COIN);
+        return {
+            fee: new BigNumber(fee.toFixed(8)).div(Constants.SATOSHI_PER_COIN),
+            coin: this.getCoin().getUnit(),
+            feeType: feeType,
+            inputCount: inputs.length,
+            outputCount: outputs.length,
+        };
     }
 
 
