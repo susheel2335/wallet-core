@@ -2,7 +2,6 @@ import * as EthereumJsUtil from 'ethereumjs-util';
 import * as Key from './';
 import * as Utils from '../../utils';
 
-
 export class EthereumKeyFormat implements Key.FormatInterface {
 
     public isValidAddress(address: string): boolean {
@@ -55,7 +54,7 @@ export class EthereumKeyFormat implements Key.FormatInterface {
 
 
     public publicToAddress(publicKey: Key.Public): Key.Address {
-        let addressBuffer = EthereumJsUtil.publicToAddress(publicKey.toBuffer(), true);
+        let addressBuffer = EthereumJsUtil.pubToAddress(publicKey.toBuffer(), true) as Buffer;
 
         return new Key.Address(Key.AddressFormat.P2PKH, addressBuffer, this);
     }

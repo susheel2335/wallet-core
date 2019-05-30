@@ -7,7 +7,6 @@ import { TrackerClient } from './tracker-client';
 import io from 'socket.io-client';
 
 export default class InsightTrackerProvider extends TrackerClient<InsightNetworkClient> {
-
     public socket: SocketIOClient.Socket;
     public connected: boolean = false;
     public enableReconnect: boolean = true;
@@ -29,7 +28,7 @@ export default class InsightTrackerProvider extends TrackerClient<InsightNetwork
             transports: ['websocket'],
         });
 
-        setTimeout(() => this.openSocketConnection(), 1);
+        this._openSocketConnection();
     }
 
 
@@ -41,15 +40,15 @@ export default class InsightTrackerProvider extends TrackerClient<InsightNetwork
     }
 
 
-    public openSocketConnection() {
-        this.socket.on('block', this.onHandleBlock);
-        this.socket.on('tx', this.onHandleTransaction);
+    protected _openSocketConnection() {
+        this.socket.on('block', this.__onHandleBlock);
+        this.socket.on('tx', this.__onHandleTransaction);
 
         this.socket.once('connect', () => {
             this.debug('Socket connected!');
 
             setTimeout(() => {
-                (!this.connected && this.socket) && this.fireConnect();
+                !this.connected && this.fireConnect();
             }, 500);
         });
 
@@ -58,40 +57,27 @@ export default class InsightTrackerProvider extends TrackerClient<InsightNetwork
             this.debug('Socket connection error');
             this.fireConnectionError(error);
 
-            this.reconnectSocket();
+            this.__reconnectSocket();
         });
 
         this.socket.once('connect_timeout', () => {
             this.debug('Socket connection timeout');
 
-            this.reconnectSocket();
+            this.__reconnectSocket();
         });
 
         this.socket.once('disconnect', () => {
             this.fireDisconnect();
 
-            this.reconnectSocket();
+            this.__reconnectSocket();
         });
 
         this.socket.open();
     }
 
 
-    protected reconnectSocket() {
-        if (!this.enableReconnect) {
-            return;
-        }
-
-        this.__removeSocketConnection();
-
-        setTimeout(() => this.openSocketConnection(), 2000);
-
-        this.debug('Start reconnecting...');
-    }
-
-
     protected fireConnect(): boolean {
-        if (!this.socket) {
+        if (!this.socket.connected) {
             throw new Error('No socket connection for ' + this.networkClient.getWSUrl());
         }
 
@@ -114,7 +100,7 @@ export default class InsightTrackerProvider extends TrackerClient<InsightNetwork
     }
 
 
-    protected onHandleBlock = async (blockHash: string) => {
+    private __onHandleBlock = async (blockHash: string) => {
         try {
             const block: Wallet.Entity.Block = await this.networkClient.getBlock(blockHash);
 
@@ -128,7 +114,7 @@ export default class InsightTrackerProvider extends TrackerClient<InsightNetwork
     };
 
 
-    protected onHandleTransaction = async (tx: any) => {
+    private __onHandleTransaction = async (tx: any) => {
         const { callback, addrs } = this.addrTxEvents;
         if (!callback || addrs.length === 0) {
             return;
@@ -147,6 +133,19 @@ export default class InsightTrackerProvider extends TrackerClient<InsightNetwork
             callback(responseTx);
         }
     };
+
+
+    private __reconnectSocket() {
+        if (!this.enableReconnect) {
+            return;
+        }
+
+        this.__removeSocketConnection();
+
+        setTimeout(() => this._openSocketConnection(), 2000);
+
+        this.debug('Start reconnecting...');
+    }
 
 
     private __removeSocketConnection() {

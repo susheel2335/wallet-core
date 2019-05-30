@@ -17,7 +17,7 @@ export default class BlockbookTrackerProvider extends TrackerClient<BlockbookNet
 
         ws.emit('subscribe', 'bitcoind/hashblock');
         ws.on('bitcoind/hashblock', this.handleBlockHash);
-        ws.on('bitcoind/addresstxid', this.handleTxid);
+        ws.on('bitcoind/addresstxid', this.handleAddressTxid);
     }
 
 
@@ -46,7 +46,7 @@ export default class BlockbookTrackerProvider extends TrackerClient<BlockbookNet
     };
 
 
-    protected handleTxid = async (data: { address: string; txid: string; }) => {
+    protected handleAddressTxid = async (data: { address: string; txid: string; }) => {
         const { callback, addrs } = this.addrTxEvents;
         if (!callback || addrs.length === 0) {
             return;
