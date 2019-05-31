@@ -28,10 +28,16 @@ export interface PrivateProvider {
      * @param {BigNumber} value
      * @param {Address} address
      * @param {FeeTypes} feeType
+     * @param {any} options
      *
-     * @returns {Promise<BigNumber>}
+     * @returns {Promise<CalculateFeeResponse>}
      */
-    calculateFee(value: BigNumber, address: Coin.Key.Address, feeType: Coin.FeeTypes): Promise<Coin.CalculateFeeResponse>;
+    calculateFee<Options = any>(
+        value: BigNumber,
+        address: Coin.Key.Address,
+        feeType: Coin.FeeTypes,
+        options?: Options
+    ): Promise<Coin.CalculateFeeResponse>;
 
     /**
      * Create transaction to specific address with some value
@@ -39,10 +45,16 @@ export interface PrivateProvider {
      * @param {Address} address
      * @param {BigNumber} value
      * @param {FeeTypes} feeType
+     * @param {any} options
      *
      * @returns {Promise<Transaction>}
      */
-    createTransaction(address: Coin.Key.Address, value: BigNumber, feeType: Coin.FeeTypes): Promise<Coin.Transaction.Transaction>;
+    createTransaction<Options = any>(
+        address: Coin.Key.Address,
+        value: BigNumber,
+        feeType: Coin.FeeTypes,
+        options?: Options,
+    ): Promise<Coin.Transaction.Transaction>;
 
     /**
      * Broadcast transaction to Network

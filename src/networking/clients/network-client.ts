@@ -38,7 +38,7 @@ export interface INetworkClient extends Destructible {
 export interface IEthereumNetworkClient extends INetworkClient {
     getGasPrice(): Promise<GasPrice>;
 
-    estimateGas(address: Coin.Key.Address, value: BigNumber): Promise<BigNumber>;
+    estimateGas(option: plarkcore.eth.EstimateGasRequestOptions): Promise<BigNumber>;
 }
 
 

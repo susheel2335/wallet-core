@@ -1,11 +1,12 @@
 import { AdapterType } from '../adapter';
-
-import Blockcypher from './blockcypher';
-import EthereumBlockcypher from './ethereum-blockcypher';
-import Etherscan from './etherscan';
-import blockbook from './blockbook';
 import * as Infura from './infura';
 import * as Insight from './insight';
+
+export { default as Blockcypher } from './blockcypher';
+export { default as EthereumBlockcypher } from './ethereum-blockcypher';
+export { default as Etherscan } from './etherscan';
+export { default as blockbook } from './blockbook';
+export { Infura, Insight };
 
 export type TAdapterOption = {
     type: AdapterType;
@@ -13,13 +14,4 @@ export type TAdapterOption = {
     wsUrl?: string;
 
     [key: string]: any;
-};
-
-export {
-    Blockcypher,
-    EthereumBlockcypher,
-    Etherscan,
-    blockbook,
-    Infura,
-    Insight,
 };

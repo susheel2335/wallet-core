@@ -18,14 +18,19 @@ export abstract class AbstractPrivateProvider extends SimpleProvider implements 
     }
 
 
-    public abstract calculateFee(value: BigNumber,
-                                 address: Coin.Key.Address,
-                                 feeType: Coin.FeeTypes): Promise<Coin.CalculateFeeResponse>;
+    public abstract calculateFee(
+        value: BigNumber,
+        address: Coin.Key.Address,
+        feeType: Coin.FeeTypes,
+    ): Promise<Coin.CalculateFeeResponse>;
 
 
-    public abstract createTransaction(address: Coin.Key.Address,
-                                      value: BigNumber,
-                                      feeType: Coin.FeeTypes): Promise<Coin.Transaction.Transaction>;
+    public abstract createTransaction<Options = any>(
+        address: Coin.Key.Address,
+        value: BigNumber,
+        feeType: Coin.FeeTypes,
+        options?: Options,
+    ): Promise<Coin.Transaction.Transaction>;
 
 
     public deriveAddressNode(wdAddress: Entity.WalletAddress): Coin.Private.NodeInterface {

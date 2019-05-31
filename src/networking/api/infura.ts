@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
-import { Coin, Constants, Wallet } from '../../';
+import { map, forEach } from 'lodash';
+import { Coin, Constants, Utils, Wallet } from '../../';
 
 export interface JsonRPCResponse {
     id: number;
@@ -96,4 +97,42 @@ export function toWalletTx(tx: Transaction, coin: Coin.CoinInterface, blockTime:
         s: tx.s,
         v: tx.v,
     } as Wallet.Entity.EtherTransaction;
+}
+
+
+function transformUnit(unit: any) {
+    if (typeof unit === 'undefined') {
+        return undefined;
+    }
+
+    if (Number.isInteger(unit) || BigNumber.isBigNumber(unit)) {
+        return Utils.numberToHex(unit);
+    }
+
+    if (Buffer.isBuffer(unit)) {
+        return Utils.addHexPrefix((unit as Buffer).toString('hex'));
+    }
+
+    if (typeof unit === 'object') {
+        let newUnit = {};
+
+        forEach(unit, (v, k) => {
+            v = transformUnit(v);
+            if (!v) return;
+            newUnit[k] = v;
+        });
+
+        return newUnit;
+    }
+
+    return unit;
+}
+
+
+export function transformRequestParams(params: any[]) {
+    if (!params) {
+        return undefined;
+    }
+
+    return map(params, transformUnit);
 }

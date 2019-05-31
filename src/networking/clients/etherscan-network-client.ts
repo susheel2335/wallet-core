@@ -87,7 +87,7 @@ export default class EtherscanNetworkClient extends NetworkClient implements IEt
     }
 
 
-    public estimateGas(address: Coin.Key.Address, value: BigNumber): Promise<BigNumber> {
+    public estimateGas(options: plarkcore.eth.EstimateGasRequestOptions): Promise<BigNumber> {
         throw new Error('Can not get Value');
     }
 

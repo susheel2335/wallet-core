@@ -11,6 +11,6 @@ export type CalculateFeeResponse = {
     coin: Coin.Unit;
     fee: BigNumber;
     feeType: FeeTypes;
-    
+
     [key: string]: any;
 }

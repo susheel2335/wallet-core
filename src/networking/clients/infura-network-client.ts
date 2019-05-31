@@ -1,4 +1,4 @@
-import { forEach, map } from 'lodash';
+import { forEach, map, filter } from 'lodash';
 import BigNumber from 'bignumber.js';
 import Axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 
@@ -48,19 +48,7 @@ export default class InfuraNetworkClient extends NetworkClient implements IEther
 
 
     protected sendRequest(method: string, params?: any[], options: AxiosRequestConfig = {}): Promise<Infura.JsonRPCResponse> {
-        if (params) {
-            params = map(params, (elem) => {
-                if (Number.isInteger(elem)) {
-                    return Utils.numberToHex(elem);
-                }
-
-                if (Buffer.isBuffer(elem)) {
-                    return Utils.addHexPrefix((elem as Buffer).toString('hex'));
-                }
-
-                return elem;
-            });
-        }
+        params = Infura.transformRequestParams(params);
 
         return infuraWrap(async () => {
             const requestData = {
@@ -214,8 +202,26 @@ export default class InfuraNetworkClient extends NetworkClient implements IEther
     }
 
 
-    public estimateGas(address: Coin.Key.Address, value: BigNumber): Promise<BigNumber> {
-        throw new Error('Can not get Value');
+    public async estimateGas(options: plarkcore.eth.EstimateGasRequestOptions): Promise<BigNumber> {
+        const { to, from, value, data, gas, gasPrice } = options;
+
+        const requestData: any = {};
+        if (to) {
+            requestData.to = typeof to === 'string' ? to : to.toString();
+        }
+
+        if (from) {
+            requestData.from = typeof from === 'string' ? from : from.toString();
+        }
+
+        requestData.value = value ? Utils.numberToHex(value.times(Constants.WEI_PER_COIN)) : 0;
+        requestData.gas = gas ? Utils.numberToHex(gas) : undefined;
+        requestData.gasPrice = gasPrice ? Utils.numberToHex(gasPrice) : undefined;
+        requestData.data = data;
+
+        const response = await this.sendRequest('eth_estimateGas', [requestData]);
+
+        return new BigNumber(response.result as string);
     }
 
 

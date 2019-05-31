@@ -1,18 +1,17 @@
-export { IEthereumNetworkClient, INetworkClient, NetworkClient, FeeType, FeeRecord, GasPrice } from './network-client';
-
-import InsightNetworkClient from './insight-network-client';
-import BlockbookNetworkClient from './blockbook-network-client';
-import InfuraNetworkClient from './infura-network-client';
-import EtherscanNetworkClient  from './etherscan-network-client';
-import { BlockcypherBIPNetworkClient } from './blockcypher-bip-network-client';
-
 import * as Tracker from './tracker';
 
+export { Tracker };
 export {
-    Tracker,
-    InfuraNetworkClient,
-    EtherscanNetworkClient,
-    InsightNetworkClient,
-    BlockcypherBIPNetworkClient,
-    BlockbookNetworkClient,
-};
+    IEthereumNetworkClient,
+    INetworkClient,
+    NetworkClient,
+    FeeType,
+    FeeRecord,
+    GasPrice,
+} from './network-client';
+export { default as InsightNetworkClient } from './insight-network-client';
+export { default as BlockbookNetworkClient } from './blockbook-network-client';
+export { default as InfuraNetworkClient } from './infura-network-client';
+export { BlockcypherBIPNetworkClient } from './blockcypher-bip-network-client';
+
+export { default as EtherscanNetworkClient } from './etherscan-network-client';

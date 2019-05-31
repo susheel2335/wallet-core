@@ -1,4 +1,4 @@
-import { filter } from 'lodash';
+import { filter, get } from 'lodash';
 import BigNumber from 'bignumber.js';
 import { IEthereumNetworkClient, GasPrice } from '../../../../networking/clients';
 import { Coin, Constants } from '../../../../';
@@ -14,27 +14,34 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
     }
 
     /**
-     * @param {Address} address
-     * @param {BigNumber} value
+     * @param {plarkcore.eth.EstimateGasRequestOptions} options
      *
      * @returns {Promise<BigNumber>}
      */
-    public async getGasLimit(address: Coin.Key.Address = undefined, value: BigNumber = undefined): Promise<BigNumber> {
-        if (address && value) {
-            // const networkClient = this.wdProvider.getNetworkProvider().getClient(0);
+    public async getGasLimit(options: plarkcore.eth.EstimateGasRequestOptions): Promise<BigNumber> {
+        let { value, to, from, data, gas, gasPrice } = options;
 
-            /**
-             * @TODO Need to request a etherscan for optimal gasLimit for current address transaction
-             *
-             * try {
-             *      return await (networkClient as IEthereumNetworkClient).estimateGas(address, value);
-             * } catch (error) {
-             *      return Constants.MIN_GAS_LIMIT;
-             * }
-             */
+        if (!value) {
+            value = new BigNumber(0);
         }
 
-        return Constants.MIN_GAS_LIMIT;
+        if (!to) {
+            return Constants.MIN_GAS_LIMIT;
+        }
+
+        const networkClient = this.wdProvider.getNetworkProvider().getClient(0);
+        try {
+            return await (networkClient as IEthereumNetworkClient).estimateGas({
+                to: to ? to.toString() : undefined,
+                from: from ? from.toString() : undefined,
+                value: value,
+                data: data,
+                gas: gas,
+                gasPrice: gasPrice,
+            });
+        } catch (error) {
+            return Constants.MIN_GAS_LIMIT;
+        }
     }
 
     /**
@@ -75,15 +82,15 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
     ): Promise<Coin.CalculateFeeResponse> {
         const [gasPrice, gasLimit]: BigNumber[] = await Promise.all([
             this.getGasPrice(feeType),
-            this.getGasLimit(address, value),
+            this.getGasLimit({ to: address, value: value }),
         ]);
 
         return {
             fee: gasLimit.times(gasPrice.div(Constants.GWEI_PER_COIN)),
             coin: this.getCoin().getUnit(),
             feeType: feeType,
-            gasLimit: gasLimit.toNumber(),
-            gasPrice: gasPrice.toNumber(),
+            gasLimit: gasLimit.toString(),
+            gasPrice: gasPrice.toString(),
         };
     }
 
@@ -91,12 +98,20 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
      * @param {Address} address
      * @param {BigNumber} value
      * @param {FeeTypes} feeType
+     * @param {plarkcore.eth.EthTransactionRequestOptions} options
      *
      * @returns {Transaction}
      */
-    public async createTransaction(address: Coin.Key.Address,
-                                   value: BigNumber,
-                                   feeType: Coin.FeeTypes = Coin.FeeTypes.Medium): Promise<Coin.Transaction.Transaction> {
+    public async createTransaction<Options = plarkcore.eth.EthTransactionRequestOptions>(
+        address: Coin.Key.Address,
+        value: BigNumber,
+        feeType: Coin.FeeTypes = Coin.FeeTypes.Medium,
+        options?: Options,
+    ): Promise<Coin.Transaction.Transaction> {
+
+        const transactionData: Buffer | undefined = get(options, 'data');
+        let gasPrice: BigNumber | undefined = get(options, 'gasPrice');
+        let gasLimit: BigNumber | undefined = get(options, 'gasLimit');
 
         let coin = this.wdProvider.coin as Coin.Defined.Ethereum;
         let balance = this.wdProvider.balance;
@@ -119,14 +134,20 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
         txBuilder.value = value;
         txBuilder.nonce = this.getTxNonce(addressFrom);
 
+        if (transactionData) {
+            txBuilder.data = transactionData;
+        }
+
         let privateKeys: Coin.Key.Private[] = [privateNodeFrom.getPrivateKey()];
 
-        const promises = [
-            this.getGasPrice(feeType),
-            this.getGasLimit(address, value),
-        ];
 
-        const [gasPrice, gasLimit]: BigNumber[] = await Promise.all(promises);
+        if (!gasPrice || gasPrice.isLessThanOrEqualTo(0)) {
+            gasPrice = await this.getGasPrice(feeType);
+        }
+
+        if (!gasLimit || gasLimit.isLessThanOrEqualTo(0)) {
+            gasLimit = await this.getGasLimit({ to: address, value: value, data: transactionData });
+        }
 
         txBuilder.gasPrice = gasPrice.div(Constants.GWEI_PER_COIN);
         txBuilder.gasLimit = gasLimit.toNumber();

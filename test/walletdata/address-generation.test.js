@@ -63,13 +63,17 @@ describe('Generate WalletData', () => {
             if ('calculateFee' in cases) {
                 it(`Can calculate fee`, async () => {
                     const address = wdProvider.address.last(HD.BIP44.AddressType.CHANGE);
+                    let toAddress = coin.getKeyFormat().parseAddress(address.address);
+                    if (coin.getUnit() === 'ETH') {
+                        toAddress = '0xa4838435696987d30e697019a1735493f886ce66';
+                    }
+
                     const feeResponse = await wdProvider.getPrivate(seed).calculateFee(
                         new BigNumber(0.01),
-                        coin.getKeyFormat().parseAddress(address.address),
+                        toAddress,
                         Coin.FeeTypes.Medium
                     );
 
-                    console.log(`Fee of ${feeResponse.coin}: ` + feeResponse.fee.toNumber());
                     assert.strictEqual(typeof feeResponse, 'object');
                 });
             }
@@ -77,8 +81,10 @@ describe('Generate WalletData', () => {
             if ('generateTransaction' in cases) {
                 it(`Can generate Transaction`, async () => {
                     const address = wdProvider.address.last(HD.BIP44.AddressType.CHANGE);
+                    let toAddress = coin.getKeyFormat().parseAddress(address.address);
+
                     const tx = await wdProvider.getPrivate(seed).createTransaction(
-                        coin.getKeyFormat().parseAddress(address.address),
+                        toAddress,
                         new BigNumber(0.0001),
                         Coin.FeeTypes.Medium
                     );

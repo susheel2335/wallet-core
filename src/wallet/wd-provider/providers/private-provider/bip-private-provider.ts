@@ -97,10 +97,11 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
     }
 
 
-    public async createTransaction(
+    public async createTransaction<O = any>(
         address: Coin.Key.Address,
         value: BigNumber,
         feeType: Coin.FeeTypes = Coin.FeeTypes.Medium,
+        options?: O
     ): Promise<Coin.Transaction.Transaction> {
 
         const balance = this.wdProvider.balance;
