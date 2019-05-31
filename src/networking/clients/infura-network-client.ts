@@ -64,6 +64,10 @@ export default class InfuraNetworkClient extends NetworkClient implements IEther
                 data: requestData,
             });
 
+            if (data.error) {
+                throw new Error(data.error.message);
+            }
+
             return data;
         });
     }
