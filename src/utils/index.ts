@@ -1,10 +1,9 @@
 import BigNumber from 'bignumber.js';
 import * as EthereumJsUtil from 'ethereumjs-util';
-
 import * as Crypto from './crypto';
 
-import Destructible from 'utils/destructible';
-export { Crypto, Destructible };
+export { default as Destructible }  from './destructible';
+export { Crypto };
 
 
 export function isHexPrefixed(hex: string): boolean {
@@ -12,7 +11,6 @@ export function isHexPrefixed(hex: string): boolean {
 }
 
 /**
- *
  * @param {string} hex
  * @param {number} length Length in bytes, undefined for any
  * @param {number} prefix 0 - no prefix, 1 - required prefix, 2 - optional
