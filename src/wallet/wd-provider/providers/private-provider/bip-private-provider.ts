@@ -7,16 +7,14 @@ import { AbstractPrivateProvider } from './abstract-private-provider';
 import { FeeRecord, InsightNetworkClient, BlockbookNetworkClient } from '../../../../networking/clients';
 
 import coinSelect, { CoinSelectResult } from 'coinselect';
-import { FeeTypes } from 'coin';
 
 export class BIPPrivateProvider extends AbstractPrivateProvider {
-
     protected getCoin(): Coin.BIPGenericCoin {
         return super.getCoin() as Coin.BIPGenericCoin;
     }
 
 
-    protected async getFee(coin: Coin.BIPGenericCoin, feeType: Coin.FeeTypes): Promise<number> {
+    protected async getFee(coin: Coin.BIPGenericCoin, feeType: Constants.FeeTypes): Promise<number> {
         let networkClient = this.wdProvider.getNetworkProvider().getClient(0);
 
         if (networkClient instanceof InsightNetworkClient || networkClient instanceof BlockbookNetworkClient) {
@@ -24,11 +22,11 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
             let responseFee: BigNumber = fees.standard;
 
             switch (feeType) {
-                case Coin.FeeTypes.High:
+                case Constants.FeeTypes.High:
                     responseFee = fees.high;
                     break;
 
-                case Coin.FeeTypes.Low:
+                case Constants.FeeTypes.Low:
                     responseFee = fees.low;
                     break;
             }
@@ -48,7 +46,7 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
         balance: Entity.WDBalance,
         address: string,
         value: BigNumber,
-        feeType: Coin.FeeTypes = Coin.FeeTypes.Medium,
+        feeType: Constants.FeeTypes = Constants.FeeTypes.Medium,
     ): Promise<CoinSelectResult> {
 
         const coin = this.wdProvider.coin as Coin.BIPGenericCoin;
@@ -81,8 +79,8 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
     public async calculateFee(
         value: BigNumber,
         address: Coin.Key.Address,
-        feeType: Coin.FeeTypes = Coin.FeeTypes.Medium,
-    ): Promise<Coin.CalculateFeeResponse> {
+        feeType: Constants.FeeTypes = Constants.FeeTypes.Medium,
+    ): Promise<plarkcore.CalculateFeeResponse> {
         const balance = this.wdProvider.balance;
         let { inputs = [], outputs = [], fee = 0 }
             = await this.calculateOptimalInputs(balance, address.toString(), value, feeType);
@@ -100,7 +98,7 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
     public async createTransaction<O = any>(
         address: Coin.Key.Address,
         value: BigNumber,
-        feeType: Coin.FeeTypes = Coin.FeeTypes.Medium,
+        feeType: Constants.FeeTypes = Constants.FeeTypes.Medium,
         options?: O
     ): Promise<Coin.Transaction.Transaction> {
 

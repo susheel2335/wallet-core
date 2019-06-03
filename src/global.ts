@@ -1,6 +1,7 @@
+import BigNumber from 'bignumber.js';
+import * as Constants from './constants';
 import * as Wallet from './wallet';
 import * as Coin from './coin';
-import BigNumber from 'bignumber.js';
 
 declare global {
     namespace plarkcore {
@@ -14,6 +15,13 @@ declare global {
             network: string;
         };
 
+        type CalculateFeeResponse = {
+            coin: Coin.Unit;
+            fee: BigNumber;
+            feeType: Constants.FeeTypes;
+
+            [key: string]: any;
+        };
 
         namespace eth {
             type EthTransactionRequestOptions = {

@@ -1,25 +1,22 @@
-import { forEach, map, filter } from 'lodash';
+import { forEach, map } from 'lodash';
 import BigNumber from 'bignumber.js';
 import Axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 
-import { Coin, Wallet, Constants, Utils } from '../../';
+import { Coin, Wallet, Constants } from '../../';
 import { TAdapterOption, Infura, Etherscan } from '../api';
 import { wrapLimiterMethod as infuraWrap } from '../limmiters/infura';
 import { wrapLimiterMethod as etherscanWrap } from '../limmiters/etherscan';
 import { NetworkClient, IEthereumNetworkClient, GasPrice } from './network-client';
 import { ITrackerClient, InfuraTrackerProvider } from './tracker';
+import { GasHelper } from './infura-helpers';
 
 const EtherscanApi = require('etherscan-api');
 
-/**
- * @TODO This is a temporary mechanism that helps to track blocks
- */
 export default class InfuraNetworkClient extends NetworkClient implements IEthereumNetworkClient {
     protected client: AxiosInstance;
-    protected etherchainClient: AxiosInstance;
     protected etherscanClient;
-
     protected trackerClient: InfuraTrackerProvider;
+    protected gasHelper: GasHelper;
 
     public constructor(coin: Coin.CoinInterface, options: TAdapterOption) {
         super(coin, options);
@@ -38,16 +35,12 @@ export default class InfuraNetworkClient extends NetworkClient implements IEther
             },
         });
 
-        this.etherchainClient = Axios.create({
-            baseURL: 'https://www.etherchain.org/api',
-            timeout: 10000,
-        });
-
         this.etherscanClient = EtherscanApi.init(Constants.ETHERSCAN_API_KEY, network);
+        this.gasHelper = new GasHelper(this);
     }
 
 
-    protected sendRequest(method: string, params?: any[], options: AxiosRequestConfig = {}): Promise<Infura.JsonRPCResponse> {
+    public sendRequest(method: string, params?: any[], options: AxiosRequestConfig = {}): Promise<Infura.JsonRPCResponse> {
         params = Infura.transformRequestParams(params);
 
         return infuraWrap(async () => {
@@ -183,49 +176,12 @@ export default class InfuraNetworkClient extends NetworkClient implements IEther
 
 
     public async getGasPrice(): Promise<GasPrice> {
-        const standardGasPrice = new BigNumber(4).div(Constants.WEI_PER_COIN);
-        const defaultGasPrice = {
-            low: standardGasPrice,
-            standard: standardGasPrice.times(2),
-            high: standardGasPrice.times(4),
-        };
-
-        const data = await this.sendRequest('eth_gasPrice');
-
-        const gasPrices = new BigNumber(data.result).div(Constants.GWEI_PER_COIN);
-
-        if (!gasPrices) {
-            return defaultGasPrice;
-        }
-
-        return {
-            low: gasPrices.div(2),
-            standard: gasPrices,
-            high: gasPrices.times(4),
-        } as GasPrice;
+        return this.gasHelper.getGasPrice();
     }
 
 
     public async estimateGas(options: plarkcore.eth.EstimateGasRequestOptions): Promise<BigNumber> {
-        const { to, from, value, data, gas, gasPrice } = options;
-
-        const requestData: any = {};
-        if (to) {
-            requestData.to = typeof to === 'string' ? to : to.toString();
-        }
-
-        if (from) {
-            requestData.from = typeof from === 'string' ? from : from.toString();
-        }
-
-        requestData.value = value ? Utils.numberToHex(value.times(Constants.WEI_PER_COIN)) : 0;
-        requestData.gas = gas ? Utils.numberToHex(gas) : undefined;
-        requestData.gasPrice = gasPrice ? Utils.numberToHex(gasPrice) : undefined;
-        requestData.data = data;
-
-        const response = await this.sendRequest('eth_estimateGas', [requestData]);
-
-        return new BigNumber(response.result as string);
+        return this.gasHelper.estimateGas(options);
     }
 
 

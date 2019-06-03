@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import * as Coin from '../';
 import { Ethereum } from './ethereum';
-import Constants from '../../constants';
+import * as Constants from '../../constants';
 
 
 export class EthereumRopstenTestnet extends Ethereum {

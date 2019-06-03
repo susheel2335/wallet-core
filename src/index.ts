@@ -5,7 +5,7 @@ BigNumber.config({
     DECIMAL_PLACES: 100,
 });
 
-import Constants from './constants';
+import * as Constants from './constants';
 import * as Debug from './debugger';
 import * as Coin from './coin';
 import * as HD from './hd';

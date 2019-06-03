@@ -49,18 +49,18 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
      *
      * @returns {Promise<BigNumber>}
      */
-    public async getGasPrice(feeType: Coin.FeeTypes = Coin.FeeTypes.Medium): Promise<BigNumber> {
+    public async getGasPrice(feeType: Constants.FeeTypes = Constants.FeeTypes.Medium): Promise<BigNumber> {
         const networkClient = this.wdProvider.getNetworkProvider().getClient(0);
 
         const gasPrices: GasPrice = await (networkClient as IEthereumNetworkClient).getGasPrice();
 
         let gasPriceGWEI = gasPrices.standard;
         switch (feeType) {
-            case Coin.FeeTypes.High:
+            case Constants.FeeTypes.High:
                 gasPriceGWEI = gasPrices.high;
                 break;
 
-            case Coin.FeeTypes.Low:
+            case Constants.FeeTypes.Low:
                 gasPriceGWEI = gasPrices.low;
                 break;
         }
@@ -78,8 +78,8 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
     public async calculateFee(
         value: BigNumber,
         address: Coin.Key.Address,
-        feeType: Coin.FeeTypes = Coin.FeeTypes.Medium,
-    ): Promise<Coin.CalculateFeeResponse> {
+        feeType: Constants.FeeTypes = Constants.FeeTypes.Medium,
+    ): Promise<plarkcore.CalculateFeeResponse> {
         const [gasPrice, gasLimit]: BigNumber[] = await Promise.all([
             this.getGasPrice(feeType),
             this.getGasLimit({ to: address, value: value }),
@@ -105,7 +105,7 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
     public async createTransaction<Options = plarkcore.eth.EthTransactionRequestOptions>(
         address: Coin.Key.Address,
         value: BigNumber,
-        feeType: Coin.FeeTypes = Coin.FeeTypes.Medium,
+        feeType: Constants.FeeTypes = Constants.FeeTypes.Medium,
         options?: Options,
     ): Promise<Coin.Transaction.Transaction> {
 

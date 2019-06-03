@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 
-import { Coin, HD } from '../../../../';
+import { Coin, HD, Constants } from '../../../../';
 import { Entity, Provider } from '../../../';
 import { BIPPrivateProvider } from './bip-private-provider';
 import { EthereumPrivateProvider } from './ethereum-private-provider';
@@ -35,9 +35,9 @@ export interface PrivateProvider {
     calculateFee<Options = any>(
         value: BigNumber,
         address: Coin.Key.Address,
-        feeType: Coin.FeeTypes,
+        feeType: Constants.FeeTypes,
         options?: Options
-    ): Promise<Coin.CalculateFeeResponse>;
+    ): Promise<plarkcore.CalculateFeeResponse>;
 
     /**
      * Create transaction to specific address with some value
@@ -52,7 +52,7 @@ export interface PrivateProvider {
     createTransaction<Options = any>(
         address: Coin.Key.Address,
         value: BigNumber,
-        feeType: Coin.FeeTypes,
+        feeType: Constants.FeeTypes,
         options?: Options,
     ): Promise<Coin.Transaction.Transaction>;
 

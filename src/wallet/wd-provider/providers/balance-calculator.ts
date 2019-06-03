@@ -1,7 +1,7 @@
 import { find, forEach } from 'lodash';
 import BigNumber from 'bignumber.js';
 
-import Constants from '../../../constants';
+import * as Constants from '../../../constants';
 import * as Coin from '../../../coin';
 import * as Wallet from '../../';
 

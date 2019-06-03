@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { Coin, HD } from '../../../../';
+import { Coin, HD, Constants } from '../../../../';
 import * as Entity from '../../../entity';
 import * as Provider from '../../';
 import { SimpleProvider } from '../simple-provider';
@@ -21,14 +21,14 @@ export abstract class AbstractPrivateProvider extends SimpleProvider implements 
     public abstract calculateFee(
         value: BigNumber,
         address: Coin.Key.Address,
-        feeType: Coin.FeeTypes,
-    ): Promise<Coin.CalculateFeeResponse>;
+        feeType: Constants.FeeTypes,
+    ): Promise<plarkcore.CalculateFeeResponse>;
 
 
     public abstract createTransaction<Options = any>(
         address: Coin.Key.Address,
         value: BigNumber,
-        feeType: Coin.FeeTypes,
+        feeType: Constants.FeeTypes,
         options?: Options,
     ): Promise<Coin.Transaction.Transaction>;
 

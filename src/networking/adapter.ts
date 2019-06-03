@@ -1,6 +1,6 @@
 export { getNetworkAdapter, getNetworkAdapters } from './utils';
 import * as Coin from '../coin';
-import Constants from '../constants';
+import * as Constants from '../constants';
 import { TAdapterOption } from './api';
 
 export enum AdapterType {

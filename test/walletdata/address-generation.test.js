@@ -1,6 +1,6 @@
 import assert from 'assert';
 import BigNumber from 'bignumber.js';
-import { Coin, HD, Wallet, Networking } from '../../lib';
+import { Coin, HD, Wallet, Networking, Constants } from '../../lib';
 import { seed } from '../fixtures/seed';
 
 const coinCases = {
@@ -71,7 +71,7 @@ describe('Generate WalletData', () => {
                     const feeResponse = await wdProvider.getPrivate(seed).calculateFee(
                         new BigNumber(0.01),
                         toAddress,
-                        Coin.FeeTypes.Medium
+                        Constants.FeeTypes.Medium
                     );
 
                     assert.strictEqual(typeof feeResponse, 'object');
@@ -86,7 +86,7 @@ describe('Generate WalletData', () => {
                     const tx = await wdProvider.getPrivate(seed).createTransaction(
                         toAddress,
                         new BigNumber(0.0001),
-                        Coin.FeeTypes.Medium
+                        Constants.FeeTypes.Medium
                     );
 
                     assert.strictEqual(typeof tx, 'object');

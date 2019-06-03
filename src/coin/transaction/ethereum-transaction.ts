@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 
 import * as Key from '../key';
 import * as Utils from '../../utils';
-import Constants from '../../constants';
+import * as Constants from '../../constants';
 
 import { CoinInterface, TransactionScheme } from '../';
 import { Transaction } from './transaction';

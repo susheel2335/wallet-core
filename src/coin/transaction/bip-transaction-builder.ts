@@ -1,7 +1,7 @@
 import BitcoinJS from 'bitcoinjs-lib';
 import BigNumber from 'bignumber.js';
 
-import Constants from '../../constants';
+import * as Constants from '../../constants';
 import * as Coin from '../';
 import * as Utils from '../../utils';
 import * as Key from '../key';

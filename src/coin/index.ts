@@ -10,7 +10,6 @@ import { CoinInterface } from './coin-interface';
 export { Key, Defined, Private, Options, Transaction, CoinInterface };
 export { ScriptType, Unit, BalanceScheme, TransactionScheme, SignInputData };
 export { parseAddressByCoin } from './helper';
-export { FeeTypes, CalculateFeeResponse } from './fee';
 export { BIPGenericCoin } from './bip-generic-coin';
 
 export const coinMap = {};

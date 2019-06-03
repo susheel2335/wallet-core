@@ -4,7 +4,7 @@ import { BalanceScheme, TransactionScheme, Unit } from '../entities';
 import { FormatInterface, EthereumKeyFormat } from '../key';
 import * as Options from '../options';
 import * as Private from '../private';
-import Constants from '../../constants';
+import * as Constants from '../../constants';
 
 export class Ethereum implements CoinInterface {
     public readonly minValue: BigNumber = new BigNumber(1).div(Constants.WEI_PER_COIN);

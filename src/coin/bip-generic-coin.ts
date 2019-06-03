@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import BitcoinJS from 'bitcoinjs-lib';
 
-import Constants from '../constants';
+import * as Constants from '../constants';
 import * as Coin from './';
 
 export abstract class BIPGenericCoin implements Coin.CoinInterface {
