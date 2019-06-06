@@ -1,6 +1,6 @@
 {
     "name": "@plark/wallet-core",
-    "version": "0.4.40",
+    "version": "0.4.41",
     "description": "Plark Wallet Core for work with common cryptocurrencies like Bitcoin, Ethereum, Dash, Litecoin",
     "keywords": [
         "bitcoin",
