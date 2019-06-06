@@ -1,6 +1,6 @@
 import { filter, get } from 'lodash';
 import BigNumber from 'bignumber.js';
-import { IEthereumNetworkClient, GasPrice } from '../../../../networking/clients';
+import { IEthereumNetworkClient } from '../../../../networking/clients';
 import { Coin, Constants } from '../../../../';
 import { Entity } from '../../../';
 import { AbstractPrivateProvider } from './abstract-private-provider';
@@ -52,7 +52,7 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
     public async getGasPrice(feeType: Constants.FeeTypes = Constants.FeeTypes.Medium): Promise<BigNumber> {
         const networkClient = this.wdProvider.getNetworkProvider().getClient(0);
 
-        const gasPrices: GasPrice = await (networkClient as IEthereumNetworkClient).getGasPrice();
+        const gasPrices: plarkcore.GasPrice = await (networkClient as IEthereumNetworkClient).getGasPrice();
 
         let gasPriceGWEI = gasPrices.standard;
         switch (feeType) {

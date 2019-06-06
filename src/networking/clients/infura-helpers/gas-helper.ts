@@ -1,19 +1,18 @@
 import BigNumber from 'bignumber.js';
 import { Constants, Utils } from '../../../';
-import { GasPrice } from '../network-client';
 import InfuraNetworkClient from '../infura-network-client';
 
 export default class GasHelper {
     protected client: InfuraNetworkClient;
 
-    private gasPriceCache?: GasPrice;
+    private gasPriceCache?: plarkcore.GasPrice;
     private gasPriceTimeout?: number;
 
     public constructor(client: InfuraNetworkClient) {
         this.client = client;
     }
 
-    public async getGasPrice(): Promise<GasPrice> {
+    public async getGasPrice(): Promise<plarkcore.GasPrice> {
         if (this.gasPriceExpired()) {
             this.gasPriceCache = await this.fetchGasPrice();
         }
@@ -29,7 +28,7 @@ export default class GasHelper {
         return this.gasPriceTimeout - 3 * 60 * 1000 <= new Date().getTime();
     }
 
-    protected async fetchGasPrice(): Promise<GasPrice> {
+    protected async fetchGasPrice(): Promise<plarkcore.GasPrice> {
         const standardGasPrice = new BigNumber(4).div(Constants.WEI_PER_COIN);
         const defaultGasPrice = {
             low: standardGasPrice,
@@ -49,7 +48,7 @@ export default class GasHelper {
                 low: gasPrices.div(2),
                 standard: gasPrices,
                 high: gasPrices.times(4),
-            } as GasPrice;
+            } as plarkcore.GasPrice;
         } catch (error) {
             return defaultGasPrice;
         }

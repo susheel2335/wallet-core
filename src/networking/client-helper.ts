@@ -1,27 +1,27 @@
 import * as Coin from '../coin';
-import * as Api from './api';
+import { AdapterType } from '../constants';
 import * as Clients from './clients';
 import * as Adapter from './adapter';
 
-export function createClient(coin: Coin.CoinInterface, params: Api.TAdapterOption): Clients.NetworkClient {
+export function createClient(coin: Coin.CoinInterface, params: plarkcore.AdapterOption): Clients.NetworkClient {
     switch (params.type) {
-        case Adapter.AdapterType.INSIGHT:
+        case AdapterType.INSIGHT:
             return new Clients.InsightNetworkClient(coin, params);
 
-        case Adapter.AdapterType.BLOCKBOOK:
+        case AdapterType.BLOCKBOOK:
             return new Clients.BlockbookNetworkClient(coin, params);
 
-        case Adapter.AdapterType.INFURA:
+        case AdapterType.INFURA:
             return new Clients.InfuraNetworkClient(coin, params);
 
-        case Adapter.AdapterType.BLOCKCYPHER_BIP:
+        case AdapterType.BLOCKCYPHER_BIP:
             return new Clients.BlockcypherBIPNetworkClient(coin, params);
 
-        case Adapter.AdapterType.ETHERSCAN: {
+        case AdapterType.ETHERSCAN: {
             throw new Error('Etherscan is temporary disabled.');
         }
 
-        case Adapter.AdapterType.BLOCKCYPHER_ETHER:
+        case AdapterType.BLOCKCYPHER_ETHER:
             throw new Error('You have to implement BLOCKCYPHER_ETHER');
     }
 

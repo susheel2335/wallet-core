@@ -2,7 +2,6 @@ import BigNumber from 'bignumber.js';
 import { union, get } from 'lodash';
 import * as Wallet from '../../../wallet';
 import { blockbook } from '../../api';
-import { FeeRecord } from '../network-client';
 import BlockbookNetworkClient from '../blockbook-network-client';
 import WSClient from './ws-client';
 
@@ -11,14 +10,14 @@ import WSClient from './ws-client';
  */
 class FeeHelper {
     protected client: BlockbookNetworkClient;
-    protected feeCache?: FeeRecord;
+    protected feeCache?: plarkcore.FeeRecord;
     protected feeTimeout?: number;
 
     public constructor(client: BlockbookNetworkClient) {
         this.client = client;
     }
 
-    public async getFee(): Promise<FeeRecord> {
+    public async getFee(): Promise<plarkcore.FeeRecord> {
         if (this.isFeeExpired()) {
             this.feeCache = {
                 low: await this.resolveFee(12, 'lowFeePerByte'),

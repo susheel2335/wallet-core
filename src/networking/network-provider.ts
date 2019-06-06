@@ -4,7 +4,7 @@ import * as Networking from './';
 import { createClient } from './client-helper';
 
 export type ClientUnit = {
-    options: Networking.Api.TAdapterOption;
+    options: plarkcore.AdapterOption;
     client: Networking.Clients.INetworkClient;
     banned: boolean;
 };
@@ -49,7 +49,7 @@ export class NetworkProvider implements INetworkProvider {
             throw new Error(`No providers for ${coin.getUnit()}`);
         }
 
-        forEach(clientOptions, (props: Networking.Api.TAdapterOption) => {
+        forEach(clientOptions, (props: plarkcore.AdapterOption) => {
             const client = createClient(this.coin, props);
             let clientUnit = {
                 client: client,

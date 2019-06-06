@@ -2,8 +2,8 @@ import Axios, { AxiosInstance, AxiosResponse } from 'axios';
 
 import * as Coin from '../../coin';
 import * as Wallet from '../../wallet';
-import { FeeRecord, NetworkClient } from './network-client';
-import { TAdapterOption, blockbook } from '../api';
+import { NetworkClient } from './network-client';
+import { blockbook } from '../api';
 import { BlockbookTrackerProvider } from './tracker';
 import { FeeHelper, WSClient, TransactionHelper } from './blockbook-helpers';
 
@@ -16,7 +16,7 @@ export default class BlockbookNetworkClient extends NetworkClient {
     protected wsClient: WSClient;
     protected trackerClient?: plarkcore.ITrackerClient;
 
-    public constructor(coin: Coin.CoinInterface, options: TAdapterOption) {
+    public constructor(coin: Coin.CoinInterface, options: plarkcore.AdapterOption) {
         if (false === (coin instanceof Coin.BIPGenericCoin)) {
             throw new Error('Insight network for BIP Coin only');
         }
@@ -50,7 +50,7 @@ export default class BlockbookNetworkClient extends NetworkClient {
     }
 
 
-    public async getFeesPerKB(): Promise<FeeRecord> {
+    public async getFeesPerKB(): Promise<plarkcore.FeeRecord> {
         return this.feeHelper.getFee();
     }
 

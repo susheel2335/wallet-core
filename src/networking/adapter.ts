@@ -1,19 +1,8 @@
-export { getNetworkAdapter, getNetworkAdapters } from './utils';
+import { AdapterType, INFURA_APP_ID } from '../constants';
 import * as Coin from '../coin';
-import * as Constants from '../constants';
-import { TAdapterOption } from './api';
 
-export enum AdapterType {
-    INSIGHT = 'insight',
-    BLOCKBOOK = 'blockbook',
-    ETHERSCAN = 'etherscan',
-    // a symbiosis of two explorer - infura and etherscan
-    INFURA = 'infura',
-    BLOCKCYPHER_BIP = 'blockcypher-bip',
-    BLOCKCYPHER_ETHER = 'blockcypher-ether'
-}
-
-export const AdapterMap: Record<string, TAdapterOption[]> = {};
+export { getNetworkAdapter, getNetworkAdapters } from './utils';
+export const AdapterMap: Record<string, plarkcore.AdapterOption[]> = {};
 
 // Bitcoin
 AdapterMap[Coin.Unit.BTC] = [
@@ -103,8 +92,8 @@ AdapterMap[Coin.Unit.DASHt] = [
 AdapterMap[Coin.Unit.ETH] = [
     {
         type: AdapterType.INFURA,
-        url: `https://mainnet.infura.io/v3/${Constants.INFURA_APP_ID}`,
-        wsUrl: `wss://mainnet.infura.io/ws/v3/${Constants.INFURA_APP_ID}`,
+        url: `https://mainnet.infura.io/v3/${INFURA_APP_ID}`,
+        wsUrl: `wss://mainnet.infura.io/ws/v3/${INFURA_APP_ID}`,
         network: 'mainnet',
     },
 ];
@@ -113,8 +102,8 @@ AdapterMap[Coin.Unit.ETH] = [
 AdapterMap[Coin.Unit.ETHt] = [
     {
         type: AdapterType.INFURA,
-        url: `https://ropsten.infura.io/v3/${Constants.INFURA_APP_ID}`,
-        wsUrl: `wss://ropsten.infura.io/ws/v3/${Constants.INFURA_APP_ID}`,
+        url: `https://ropsten.infura.io/v3/${INFURA_APP_ID}`,
+        wsUrl: `wss://ropsten.infura.io/ws/v3/${INFURA_APP_ID}`,
         network: 'ropsten',
     },
 ];

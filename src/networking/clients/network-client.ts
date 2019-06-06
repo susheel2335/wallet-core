@@ -6,10 +6,6 @@ import * as Tracker from './tracker';
 
 export { Tracker };
 
-export type FeeType = 'low' | 'standard' | 'high';
-export type FeeRecord = Record<FeeType, BigNumber>;
-export type GasPrice = FeeRecord;
-
 export interface INetworkClient extends plarkcore.Destructible {
     getCoin(): Coin.CoinInterface;
 
@@ -17,7 +13,7 @@ export interface INetworkClient extends plarkcore.Destructible {
 
     getWSUrl(): string;
 
-    getOptions(): Api.TAdapterOption;
+    getOptions(): plarkcore.AdapterOption;
 
     getInfo(): Promise<plarkcore.BlockchainInfo>;
 
@@ -35,7 +31,7 @@ export interface INetworkClient extends plarkcore.Destructible {
 }
 
 export interface IEthereumNetworkClient extends INetworkClient {
-    getGasPrice(): Promise<GasPrice>;
+    getGasPrice(): Promise<plarkcore.GasPrice>;
 
     estimateGas(option: plarkcore.eth.EstimateGasRequestOptions): Promise<BigNumber>;
 }
@@ -43,11 +39,15 @@ export interface IEthereumNetworkClient extends INetworkClient {
 
 export abstract class NetworkClient implements INetworkClient {
     public readonly coin: Coin.CoinInterface;
-    public readonly options: Api.TAdapterOption;
+    public readonly options: plarkcore.AdapterOption;
     protected onBlocksCbs: plarkcore.NewBlockCallback[] = [];
     protected onAddrTXCbs: Record<string, plarkcore.NewTxCallback[]> = {};
 
-    public constructor(coin: Coin.CoinInterface, options: Api.TAdapterOption) {
+    /**
+     * @param {CoinInterface}   coin
+     * @param {plarkcore.AdapterOption}  options
+     */
+    public constructor(coin: Coin.CoinInterface, options: plarkcore.AdapterOption) {
         this.coin = coin;
         this.options = options;
     }
@@ -78,7 +78,7 @@ export abstract class NetworkClient implements INetworkClient {
         return !!this.getWSUrl();
     }
 
-    public getOptions(): Api.TAdapterOption {
+    public getOptions(): plarkcore.AdapterOption {
         return this.options;
     }
 

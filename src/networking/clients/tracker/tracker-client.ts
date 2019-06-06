@@ -12,9 +12,6 @@ export enum TrackerEvent {
     Tx = 'tx'
 }
 
-export interface ITrackerClient extends plarkcore.Destructible, EventEmitter {
-}
-
 export interface IAddressTrackEvent {
     addrs: Buffer[];
     callback?: plarkcore.NewTxCallback;

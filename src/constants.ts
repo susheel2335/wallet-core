@@ -6,6 +6,16 @@ export enum FeeTypes {
     High = 'high'
 }
 
+export enum AdapterType {
+    INSIGHT = 'insight',
+    BLOCKBOOK = 'blockbook',
+    ETHERSCAN = 'etherscan',
+    // a symbiosis of two explorer - infura and etherscan
+    INFURA = 'infura',
+    BLOCKCYPHER_BIP = 'blockcypher-bip',
+    BLOCKCYPHER_ETHER = 'blockcypher-ether'
+}
+
 export const ETHERSCAN_API_KEY = 'PY4P1BMTRKT3E2J1IQGVEFVVNGZ5FTSUMG';
 export const INFURA_APP_ID = '19d88e5db236483ab0e0c4e2e20f4244';
 

@@ -3,10 +3,10 @@ import BigNumber from 'bignumber.js';
 import Axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 
 import { Coin, Wallet, Constants } from '../../';
-import { TAdapterOption, Infura, Etherscan } from '../api';
+import { Infura, Etherscan } from '../api';
 import { wrapLimiterMethod as infuraWrap } from '../limmiters/infura';
 import { wrapLimiterMethod as etherscanWrap } from '../limmiters/etherscan';
-import { NetworkClient, IEthereumNetworkClient, GasPrice } from './network-client';
+import { NetworkClient, IEthereumNetworkClient } from './network-client';
 import { InfuraTrackerProvider } from './tracker';
 import { GasHelper } from './infura-helpers';
 
@@ -18,7 +18,7 @@ export default class InfuraNetworkClient extends NetworkClient implements IEther
     protected trackerClient: InfuraTrackerProvider;
     protected gasHelper: GasHelper;
 
-    public constructor(coin: Coin.CoinInterface, options: TAdapterOption) {
+    public constructor(coin: Coin.CoinInterface, options: plarkcore.AdapterOption) {
         super(coin, options);
 
         if (false === (coin instanceof Coin.Defined.Ethereum)) {
@@ -175,7 +175,7 @@ export default class InfuraNetworkClient extends NetworkClient implements IEther
     }
 
 
-    public async getGasPrice(): Promise<GasPrice> {
+    public async getGasPrice(): Promise<plarkcore.GasPrice> {
         return this.gasHelper.getGasPrice();
     }
 

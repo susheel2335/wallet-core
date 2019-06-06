@@ -2,14 +2,14 @@ import { forEach, orderBy } from 'lodash';
 import Axios, { AxiosInstance } from 'axios';
 
 import { Coin, Wallet } from '../../';
-import { TAdapterOption, Blockcypher } from '../api';
+import { Blockcypher } from '../api';
 import { wrapLimiterMethod } from '../limmiters/blockcypher';
 import { NetworkClient } from './network-client';
 
 export class BlockcypherBIPNetworkClient extends NetworkClient {
     protected client: AxiosInstance;
 
-    constructor(coin: Coin.CoinInterface, options: TAdapterOption) {
+    constructor(coin: Coin.CoinInterface, options: plarkcore.AdapterOption) {
         super(coin, options);
 
         this.client = Axios.create({

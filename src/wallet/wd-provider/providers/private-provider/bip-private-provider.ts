@@ -4,7 +4,7 @@ import BitcoinJS from 'bitcoinjs-lib';
 import { Coin, Constants, HD } from '../../../../';
 import { Entity } from '../../../';
 import { AbstractPrivateProvider } from './abstract-private-provider';
-import { FeeRecord, InsightNetworkClient, BlockbookNetworkClient } from '../../../../networking/clients';
+import { InsightNetworkClient, BlockbookNetworkClient } from '../../../../networking/clients';
 
 import coinSelect, { CoinSelectResult } from 'coinselect';
 
@@ -18,7 +18,7 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
         let networkClient = this.wdProvider.getNetworkProvider().getClient(0);
 
         if (networkClient instanceof InsightNetworkClient || networkClient instanceof BlockbookNetworkClient) {
-            const fees: FeeRecord = await networkClient.getFeesPerKB();
+            const fees: plarkcore.FeeRecord = await networkClient.getFeesPerKB();
             let responseFee: BigNumber = fees.standard;
 
             switch (feeType) {

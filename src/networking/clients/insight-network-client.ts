@@ -4,9 +4,9 @@ import { forEach, orderBy } from 'lodash';
 import Axios, { AxiosInstance, AxiosResponse } from 'axios';
 import * as Coin from '../../coin';
 import * as Wallet from '../../wallet';
-import { TAdapterOption, Insight } from '../api';
+import { Insight } from '../api';
 
-import { FeeRecord, NetworkClient } from './network-client';
+import { NetworkClient } from './network-client';
 import { InsightTrackerProvider } from './tracker';
 
 export default class InsightNetworkClient extends NetworkClient {
@@ -15,7 +15,13 @@ export default class InsightNetworkClient extends NetworkClient {
 
     protected trackerClient?: plarkcore.ITrackerClient;
 
-    public constructor(coin: Coin.CoinInterface, options: TAdapterOption) {
+    /**
+     * InsightNetworkClient constructor.
+     *
+     * @param {CoinInterface}       coin
+     * @param {plarkcore.AdapterOption}      options
+     */
+    public constructor(coin: Coin.CoinInterface, options: plarkcore.AdapterOption) {
         if (false === (coin instanceof Coin.BIPGenericCoin)) {
             throw new Error('Insight network for BIP Coin only');
         }
@@ -30,7 +36,13 @@ export default class InsightNetworkClient extends NetworkClient {
         this.limiter = new Bottleneck(1, 500);
     }
 
-
+    /**
+     * This function return transaction by TXID it if exists in blockchain network
+     *
+     * @param {string}      txid
+     *
+     * @return {Promise<BIPTransaction|undefined>}
+     */
     public async getTx(txid: string): Promise<Wallet.Entity.BIPTransaction | undefined> {
         const data: any = await this.sendRequest(`/tx/${txid}`);
         const tx: Insight.Transaction = data as Insight.Transaction;
@@ -39,7 +51,10 @@ export default class InsightNetworkClient extends NetworkClient {
     }
 
 
-    public async getFeesPerKB(): Promise<FeeRecord> {
+    /**
+     * @return {Promise<plarkcore.FeeRecord>}
+     */
+    public async getFeesPerKB(): Promise<plarkcore.FeeRecord> {
         const resolveFeePerByte = (data, index, defaultFeeProp: string): BigNumber => {
             if (data[index] > 0) {
                 return new BigNumber(data[index]).div(1024).decimalPlaces(8);
@@ -125,6 +140,7 @@ export default class InsightNetworkClient extends NetworkClient {
             this.trackerClient.onDisconnect(() => {
                 delete this.trackerClient;
             });
+
             this.trackerClient.destruct();
         }
 

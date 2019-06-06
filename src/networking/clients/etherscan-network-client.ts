@@ -2,8 +2,8 @@ import { forEach } from 'lodash';
 import BigNumber from 'bignumber.js';
 import EtherscanApi, { EtherscanApiClient } from 'etherscan-api';
 import { Coin, Wallet, Constants } from '../../';
-import { TAdapterOption, Etherscan } from '../api';
-import { NetworkClient, IEthereumNetworkClient, GasPrice } from './network-client';
+import { Etherscan } from '../api';
+import { NetworkClient, IEthereumNetworkClient } from './network-client';
 
 
 export default class EtherscanNetworkClient extends NetworkClient implements IEthereumNetworkClient {
@@ -13,9 +13,9 @@ export default class EtherscanNetworkClient extends NetworkClient implements IEt
      * Constructor of EtherscanNetworkClient.
      *
      * @param {CoinInterface} coin
-     * @param {TAdapterOption} options
+     * @param {plarkcore.AdapterOption} options
      */
-    public constructor(coin: Coin.CoinInterface, options: TAdapterOption) {
+    public constructor(coin: Coin.CoinInterface, options: plarkcore.AdapterOption) {
         super(coin, options);
 
         if (false === (coin instanceof Coin.Defined.Ethereum)) {
@@ -72,9 +72,9 @@ export default class EtherscanNetworkClient extends NetworkClient implements IEt
     /**
      * Find and get GAS Price of Ethereum
      *
-     * @returns {Promise<GasPrice>}
+     * @returns {Promise<plarkcore.GasPrice>}
      */
-    public async getGasPrice(): Promise<GasPrice> {
+    public async getGasPrice(): Promise<plarkcore.GasPrice> {
         const res = await this.etherscanClient.proxy.eth_gasPrice();
 
         const estimateGasPrice = new BigNumber(res.result).div(Constants.WEI_PER_COIN);
@@ -83,7 +83,7 @@ export default class EtherscanNetworkClient extends NetworkClient implements IEt
             low: estimateGasPrice.div(2),
             standard: estimateGasPrice,
             high: estimateGasPrice.times(5),
-        } as GasPrice;
+        } as plarkcore.GasPrice;
     }
 
 

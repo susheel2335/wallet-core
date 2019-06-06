@@ -9,6 +9,18 @@ declare global {
         type NewTxCallback = (tx: Wallet.Entity.WalletTransaction) => void;
         type NewBlockCallback = (block: Wallet.Entity.Block) => void;
 
+        type FeeType = 'low' | 'standard' | 'high';
+        type FeeRecord = Record<FeeType, BigNumber>;
+        type GasPrice = FeeRecord;
+
+        type AdapterOption = {
+            type: Constants.AdapterType;
+            url: string;
+            wsUrl?: string;
+
+            [key: string]: any;
+        };
+
         interface Destructible {
             destruct(): void;
         }
