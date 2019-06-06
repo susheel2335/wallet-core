@@ -13,25 +13,6 @@ export enum TrackerEvent {
 }
 
 export interface ITrackerClient extends plarkcore.Destructible, EventEmitter {
-    start(): Promise<void>;
-
-    stop(): void;
-
-    isStated(): boolean;
-
-    onConnect(callback): ITrackerClient;
-
-    onDisconnect(callback: (...args: any[]) => void): ITrackerClient;
-
-    onBlock(callback: plarkcore.NewBlockCallback): ITrackerClient;
-
-    onAddrsTx(addrs: string[], callback: plarkcore.NewTxCallback): ITrackerClient;
-
-    onTransactionConfirm(txid: string, callback: plarkcore.NewTxCallback): ITrackerClient;
-
-    onConnectionError(callback: (...args: any[]) => void): ITrackerClient;
-
-    isAddrTrack(addr: string | Buffer): boolean;
 }
 
 export interface IAddressTrackEvent {
@@ -39,7 +20,7 @@ export interface IAddressTrackEvent {
     callback?: plarkcore.NewTxCallback;
 }
 
-export class TrackerClient<T extends INetworkClient> extends EventEmitter implements ITrackerClient {
+export class TrackerClient<T extends INetworkClient> extends EventEmitter implements plarkcore.ITrackerClient {
     protected debug: debug.IDebugger;
     protected isStarted: boolean;
     protected readonly networkClient: T;
@@ -96,37 +77,37 @@ export class TrackerClient<T extends INetworkClient> extends EventEmitter implem
         this.isStarted = false;
     }
 
-    public onConnect(callback): ITrackerClient {
+    public onConnect(callback): plarkcore.ITrackerClient {
         this.on(TrackerEvent.Connect, callback);
 
         return this;
     }
 
-    public onDisconnect(callback): ITrackerClient {
+    public onDisconnect(callback): plarkcore.ITrackerClient {
         this.on(TrackerEvent.Disconnect, callback);
 
         return this;
     }
 
-    public onConnectionError(callback): ITrackerClient {
+    public onConnectionError(callback): plarkcore.ITrackerClient {
         this.on(TrackerEvent.ConnectionError, callback);
 
         return this;
     }
 
-    public onBlock(callback: plarkcore.NewBlockCallback): ITrackerClient {
+    public onBlock(callback: plarkcore.NewBlockCallback): plarkcore.ITrackerClient {
         this.on(TrackerEvent.Block, callback);
 
         return this;
     }
 
-    public onTransactionConfirm(txid: string, callback: plarkcore.NewTxCallback): ITrackerClient {
+    public onTransactionConfirm(txid: string, callback: plarkcore.NewTxCallback): plarkcore.ITrackerClient {
         this.once(`tx.${txid}`, callback);
 
         return this;
     }
 
-    public onAddrsTx(addrs: string[], callback: plarkcore.NewTxCallback): ITrackerClient {
+    public onAddrsTx(addrs: string[], callback: plarkcore.NewTxCallback): plarkcore.ITrackerClient {
         const coinKeyFormatter = this.networkClient.getCoin().getKeyFormat();
 
         const addrBuffers: Buffer[] = map(addrs, (addr: string) => {
@@ -141,6 +122,13 @@ export class TrackerClient<T extends INetworkClient> extends EventEmitter implem
         return this;
     }
 
+    /**
+     * Check the address track or not
+     *
+     * @param {string|Buffer} address
+     *
+     * @return {boolean}
+     */
     public isAddrTrack(address: string | Buffer): boolean {
         if (!address) {
             // For the case, when no FROM or TO in transaction

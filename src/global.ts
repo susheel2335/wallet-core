@@ -13,6 +13,29 @@ declare global {
             destruct(): void;
         }
 
+        interface ITrackerClient extends Destructible, EventEmitter {
+            start(): Promise<void>;
+
+            stop(): void;
+
+            isStated(): boolean;
+
+            onConnect(callback): ITrackerClient;
+
+            onDisconnect(callback: (...args: any[]) => void): ITrackerClient;
+
+            onBlock(callback: NewBlockCallback): ITrackerClient;
+
+            onAddrsTx(addrs: string[], callback: NewTxCallback): ITrackerClient;
+
+            onTransactionConfirm(txid: string, callback: NewTxCallback): ITrackerClient;
+
+            onConnectionError(callback: (...args: any[]) => void): ITrackerClient;
+
+            isAddrTrack(addr: string | Buffer): boolean;
+        }
+
+
         type BlockchainInfo = {
             blockHeight: number;
             difficulty: number;

@@ -1,7 +1,7 @@
 import { forEach, chunk } from 'lodash';
 import { Wallet } from '../../../';
 import { BlockbookNetworkClient } from '../';
-import { ITrackerClient, TrackerClient, TrackerEvent } from './tracker-client';
+import { TrackerClient, TrackerEvent } from './tracker-client';
 
 export default class BlockbookTrackerProvider extends TrackerClient<BlockbookNetworkClient> {
     public constructor(networkClient: BlockbookNetworkClient) {
@@ -57,7 +57,7 @@ export default class BlockbookTrackerProvider extends TrackerClient<BlockbookNet
     };
 
 
-    public onAddrsTx(addrs: string[], callback: plarkcore.NewTxCallback): ITrackerClient {
+    public onAddrsTx(addrs: string[], callback: plarkcore.NewTxCallback): plarkcore.ITrackerClient {
         const addressChunks = chunk(addrs, 20);
         super.onAddrsTx(addrs, callback);
 

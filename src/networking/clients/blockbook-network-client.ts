@@ -4,7 +4,7 @@ import * as Coin from '../../coin';
 import * as Wallet from '../../wallet';
 import { FeeRecord, NetworkClient } from './network-client';
 import { TAdapterOption, blockbook } from '../api';
-import { ITrackerClient, BlockbookTrackerProvider } from './tracker';
+import { BlockbookTrackerProvider } from './tracker';
 import { FeeHelper, WSClient, TransactionHelper } from './blockbook-helpers';
 
 
@@ -14,7 +14,7 @@ export default class BlockbookNetworkClient extends NetworkClient {
     protected feeHelper: FeeHelper;
     protected txHelper: TransactionHelper;
     protected wsClient: WSClient;
-    protected trackerClient?: ITrackerClient;
+    protected trackerClient?: plarkcore.ITrackerClient;
 
     public constructor(coin: Coin.CoinInterface, options: TAdapterOption) {
         if (false === (coin instanceof Coin.BIPGenericCoin)) {
@@ -116,7 +116,7 @@ export default class BlockbookNetworkClient extends NetworkClient {
     }
 
 
-    public getTracker(): ITrackerClient {
+    public getTracker(): plarkcore.ITrackerClient {
         if (!this.trackerClient) {
             this.trackerClient = new BlockbookTrackerProvider(this);
         }

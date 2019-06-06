@@ -7,13 +7,13 @@ import * as Wallet from '../../wallet';
 import { TAdapterOption, Insight } from '../api';
 
 import { FeeRecord, NetworkClient } from './network-client';
-import { ITrackerClient, InsightTrackerProvider } from './tracker';
+import { InsightTrackerProvider } from './tracker';
 
 export default class InsightNetworkClient extends NetworkClient {
     protected client: AxiosInstance;
     protected limiter: Bottleneck;
 
-    protected trackerClient?: ITrackerClient;
+    protected trackerClient?: plarkcore.ITrackerClient;
 
     public constructor(coin: Coin.CoinInterface, options: TAdapterOption) {
         if (false === (coin instanceof Coin.BIPGenericCoin)) {
@@ -111,7 +111,7 @@ export default class InsightNetworkClient extends NetworkClient {
     }
 
 
-    public getTracker(): ITrackerClient {
+    public getTracker(): plarkcore.ITrackerClient {
         if (!this.trackerClient) {
             this.trackerClient = new InsightTrackerProvider(this);
         }

@@ -31,7 +31,7 @@ export interface INetworkClient extends plarkcore.Destructible {
 
     broadCastTransaction(transaction: Coin.Transaction.Transaction): Promise<string>;
 
-    getTracker(): Tracker.ITrackerClient;
+    getTracker(): plarkcore.ITrackerClient;
 }
 
 export interface IEthereumNetworkClient extends INetworkClient {
@@ -85,7 +85,7 @@ export abstract class NetworkClient implements INetworkClient {
     /**
      * @todo Must be implement this method for
      */
-    public getTracker(): Tracker.ITrackerClient {
+    public getTracker(): plarkcore.ITrackerClient {
         throw new Error('Tracker Client must be implement!');
     }
 

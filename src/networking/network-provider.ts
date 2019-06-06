@@ -22,7 +22,7 @@ export interface INetworkProvider extends plarkcore.Destructible {
 
     getBulkAddrTxs(address: string[]): Promise<Wallet.Entity.WalletTransaction[]>;
 
-    getTracker(): Networking.Clients.Tracker.ITrackerClient;
+    getTracker(): plarkcore.ITrackerClient;
 
     onNewBlock(callback: plarkcore.NewBlockCallback): void;
 
@@ -112,7 +112,7 @@ export class NetworkProvider implements INetworkProvider {
     }
 
 
-    public getTracker(): Networking.Clients.Tracker.ITrackerClient {
+    public getTracker(): plarkcore.ITrackerClient {
         return this.clientList[0].client.getTracker();
     }
 
