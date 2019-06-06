@@ -1,7 +1,6 @@
 import { map, find } from 'lodash';
 import { EventEmitter } from 'events';
 import { Wallet, Debug } from '../../../';
-import { Destructible } from '../../../utils';
 import { INetworkClient } from '../';
 
 export enum TrackerEvent {
@@ -13,16 +12,22 @@ export enum TrackerEvent {
     Tx = 'tx'
 }
 
-export interface ITrackerClient extends Destructible, EventEmitter {
+export interface ITrackerClient extends plarkcore.Destructible, EventEmitter {
+    start(): Promise<void>;
+
+    stop(): void;
+
+    isStated(): boolean;
+
     onConnect(callback): ITrackerClient;
+
+    onDisconnect(callback: (...args: any[]) => void): ITrackerClient;
 
     onBlock(callback: plarkcore.NewBlockCallback): ITrackerClient;
 
     onAddrsTx(addrs: string[], callback: plarkcore.NewTxCallback): ITrackerClient;
 
     onTransactionConfirm(txid: string, callback: plarkcore.NewTxCallback): ITrackerClient;
-
-    onDisconnect(callback: (...args: any[]) => void): ITrackerClient;
 
     onConnectionError(callback: (...args: any[]) => void): ITrackerClient;
 
@@ -34,23 +39,62 @@ export interface IAddressTrackEvent {
     callback?: plarkcore.NewTxCallback;
 }
 
-
 export class TrackerClient<T extends INetworkClient> extends EventEmitter implements ITrackerClient {
     protected debug: debug.IDebugger;
+    protected isStarted: boolean;
     protected readonly networkClient: T;
     protected addrTxEvents: IAddressTrackEvent = {
         addrs: [],
         callback: undefined,
     };
 
-
+    /**
+     * TrackerClient constructor
+     *
+     * @param {INetworkClient}      networkClient
+     */
     public constructor(networkClient: T) {
         super();
 
+        this.isStarted = false;
         this.networkClient = networkClient;
         this.debug = Debug.create('TRACKER_CLIENT::' + this.networkClient.getCoin().getUnit().toString());
     }
 
+    /**
+     * Return info whether TrackerClient is started or not
+     *
+     * @return {boolean}
+     */
+    public isStated(): boolean {
+        return this.isStarted;
+    }
+
+    /**
+     * Function to start Track blockchain
+     *
+     * @return {Promise<void>}
+     */
+    public async start(): Promise<void> {
+        if (this.isStarted) {
+            return;
+        }
+
+        this.isStarted = true;
+    }
+
+    /**
+     * Function to stop Track blockchain
+     *
+     * @return {void}
+     */
+    public stop(): void {
+        if (!this.isStarted) {
+            return;
+        }
+
+        this.isStarted = false;
+    }
 
     public onConnect(callback): ITrackerClient {
         this.on(TrackerEvent.Connect, callback);
@@ -58,13 +102,11 @@ export class TrackerClient<T extends INetworkClient> extends EventEmitter implem
         return this;
     }
 
-
     public onDisconnect(callback): ITrackerClient {
         this.on(TrackerEvent.Disconnect, callback);
 
         return this;
     }
-
 
     public onConnectionError(callback): ITrackerClient {
         this.on(TrackerEvent.ConnectionError, callback);
@@ -72,20 +114,17 @@ export class TrackerClient<T extends INetworkClient> extends EventEmitter implem
         return this;
     }
 
-
     public onBlock(callback: plarkcore.NewBlockCallback): ITrackerClient {
         this.on(TrackerEvent.Block, callback);
 
         return this;
     }
 
-
     public onTransactionConfirm(txid: string, callback: plarkcore.NewTxCallback): ITrackerClient {
         this.once(`tx.${txid}`, callback);
 
         return this;
     }
-
 
     public onAddrsTx(addrs: string[], callback: plarkcore.NewTxCallback): ITrackerClient {
         const coinKeyFormatter = this.networkClient.getCoin().getKeyFormat();
@@ -101,7 +140,6 @@ export class TrackerClient<T extends INetworkClient> extends EventEmitter implem
 
         return this;
     }
-
 
     public isAddrTrack(address: string | Buffer): boolean {
         if (!address) {
@@ -135,16 +173,13 @@ export class TrackerClient<T extends INetworkClient> extends EventEmitter implem
         return this.emit(TrackerEvent.Block, block);
     }
 
-
     protected fireConnect(): boolean {
         return this.emit(TrackerEvent.Connect);
     }
 
-
     protected fireDisconnect(): boolean {
         return this.emit(TrackerEvent.Disconnect);
     }
-
 
     protected fireConnectionError(error: Error): boolean {
         return this.emit(TrackerEvent.ConnectionError, error);
@@ -155,6 +190,8 @@ export class TrackerClient<T extends INetworkClient> extends EventEmitter implem
     }
 
     public destruct() {
+        this.stop();
+
         this.addrTxEvents = { addrs: [], callback: undefined };
 
         this.removeAllListeners('tx.*');

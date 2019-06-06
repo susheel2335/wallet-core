@@ -1,8 +1,6 @@
 import BigNumber from 'bignumber.js';
 import * as EthereumJsUtil from 'ethereumjs-util';
 import * as Crypto from './crypto';
-
-export { default as Destructible }  from './destructible';
 export { Crypto };
 
 

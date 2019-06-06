@@ -2,7 +2,6 @@ import { forEach } from 'lodash';
 import { Coin, Wallet, Debug } from '../';
 import * as Networking from './';
 import { createClient } from './client-helper';
-import { Destructible } from '../utils';
 
 export type ClientUnit = {
     options: Networking.Api.TAdapterOption;
@@ -10,7 +9,7 @@ export type ClientUnit = {
     banned: boolean;
 };
 
-export interface INetworkProvider extends Destructible {
+export interface INetworkProvider extends plarkcore.Destructible {
     getCoin(): Coin.CoinInterface;
 
     getClient(index?: number): Networking.Clients.INetworkClient;

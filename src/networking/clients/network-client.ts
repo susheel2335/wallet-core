@@ -1,7 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { forEach, map, findIndex } from 'lodash';
 import { Coin, Wallet } from '../../';
-import { Destructible } from '../../utils';
 import { Api } from '../';
 import * as Tracker from './tracker';
 
@@ -11,7 +10,7 @@ export type FeeType = 'low' | 'standard' | 'high';
 export type FeeRecord = Record<FeeType, BigNumber>;
 export type GasPrice = FeeRecord;
 
-export interface INetworkClient extends Destructible {
+export interface INetworkClient extends plarkcore.Destructible {
     getCoin(): Coin.CoinInterface;
 
     getApiUrl(): string;

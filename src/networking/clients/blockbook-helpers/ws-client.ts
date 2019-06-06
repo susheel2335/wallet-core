@@ -1,7 +1,6 @@
 import io from 'socket.io-client';
-import { Destructible } from '../../../utils';
 
-export default class WsClient implements Destructible {
+export default class WsClient implements plarkcore.Destructible {
     protected wsUrl: string;
     protected ws: SocketIOClient.Socket;
 

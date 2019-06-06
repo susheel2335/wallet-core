@@ -3,7 +3,6 @@ import { EventEmitter } from 'events';
 import { Coin, Networking } from '../../';
 import * as Entity from '../entity';
 
-import { Destructible } from '../../utils';
 import { BalanceCalculator } from './providers/balance-calculator';
 import { AddressProvider } from './providers/address-provider';
 import { TransactionProvider } from './providers/transaction-provider';
@@ -12,7 +11,7 @@ import { PrivateProvider, createPrivateProvider } from './providers/private-prov
 
 export type WalletDataListener = (newWd: Entity.WalletData, oldWd: Entity.WalletData) => void;
 
-export class WDProvider extends EventEmitter implements Destructible {
+export class WDProvider extends EventEmitter implements plarkcore.Destructible {
     protected walletData: Entity.WalletData;
     protected eventListeners: WalletDataListener[] = [];
     protected networkProvider: Networking.INetworkProvider;

@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import { EventEmitter } from 'events';
 import * as Constants from './constants';
 import * as Wallet from './wallet';
 import * as Coin from './coin';
@@ -7,6 +8,10 @@ declare global {
     namespace plarkcore {
         type NewTxCallback = (tx: Wallet.Entity.WalletTransaction) => void;
         type NewBlockCallback = (block: Wallet.Entity.Block) => void;
+
+        interface Destructible {
+            destruct(): void;
+        }
 
         type BlockchainInfo = {
             blockHeight: number;
@@ -39,7 +44,6 @@ declare global {
                 data?: Buffer;
             };
         }
-
 
         namespace bip {
 
