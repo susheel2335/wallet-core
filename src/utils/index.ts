@@ -1,111 +1,113 @@
 import BigNumber from 'bignumber.js';
 import * as EthereumJsUtil from 'ethereumjs-util';
-import * as Crypto from './crypto';
-export { Crypto };
+import * as crp  from './crypto';
 
+export namespace Utils {
+    export import Crypto = crp.Crypto;
 
-export function isHexPrefixed(hex: string): boolean {
-    return hex.slice(0, 2) === '0x';
-}
-
-/**
- * @param {string} hex
- * @param {number} length Length in bytes, undefined for any
- * @param {number} prefix 0 - no prefix, 1 - required prefix, 2 - optional
- * @returns {boolean}
- */
-export function isHexValid(hex: string, length?: number, prefix: number = 0): boolean {
-
-    if (!/^(0x)?([0-9a-fA-F]+)?$/i.test(hex)) {
-        return false;
+    export function isHexPrefixed(hex: string): boolean {
+        return hex.slice(0, 2) === '0x';
     }
 
-    let isPrefixed = isHexPrefixed(hex);
-    if (prefix != 2 && (!!prefix) != isPrefixed) {
-        return false;
-    }
+    /**
+     * @param {string} hex
+     * @param {number} length Length in bytes, undefined for any
+     * @param {number} prefix 0 - no prefix, 1 - required prefix, 2 - optional
+     * @returns {boolean}
+     */
+    export function isHexValid(hex: string, length?: number, prefix: number = 0): boolean {
 
-    if (length) {
-        length *= 2;
-        if (isPrefixed) {
-            length += 2;
-        }
-
-        if (hex.length != length) {
+        if (!/^(0x)?([0-9a-fA-F]+)?$/i.test(hex)) {
             return false;
         }
-    } else {
-        let minLength = isPrefixed ? 2 : 0;
-        if (hex.length < minLength || hex.length % 2 != 0) {
+
+        let isPrefixed = isHexPrefixed(hex);
+        if (prefix != 2 && (!!prefix) != isPrefixed) {
             return false;
         }
+
+        if (length) {
+            length *= 2;
+            if (isPrefixed) {
+                length += 2;
+            }
+
+            if (hex.length != length) {
+                return false;
+            }
+        } else {
+            let minLength = isPrefixed ? 2 : 0;
+            if (hex.length < minLength || hex.length % 2 != 0) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
-    return true;
-}
+    export function addHexPrefix(hex: string | Buffer): string {
+        if (hex instanceof Buffer) {
+            hex = hex.toString('hex');
+        }
 
-
-export function addHexPrefix(hex: string | Buffer): string {
-    if (hex instanceof Buffer) {
-        hex = hex.toString('hex');
+        return EthereumJsUtil.addHexPrefix(hex);
     }
 
-    return EthereumJsUtil.addHexPrefix(hex);
-}
-
-export function padHexToEven(a: string): string {
-    if (a.length % 2) a = '0' + a;
-    return a;
-}
-
-export function hexToBuffer(hex: string): Buffer {
-    if (!isHexValid(hex, undefined, 2)) {
-        throw new TypeError(`Invalid hex string ${hex}`);
+    export function padHexToEven(a: string): string {
+        if (a.length % 2) a = '0' + a;
+        return a;
     }
 
-    if (isHexPrefixed(hex)) {
-        hex = hex.slice(2);
+    export function hexToBuffer(hex: string): Buffer {
+        if (!isHexValid(hex, undefined, 2)) {
+            throw new TypeError(`Invalid hex string ${hex}`);
+        }
+
+        if (isHexPrefixed(hex)) {
+            hex = hex.slice(2);
+        }
+
+        return Buffer.from(hex.toLowerCase(), 'hex');
     }
 
-    return Buffer.from(hex.toLowerCase(), 'hex');
-}
-
-export function validateAmountValue(value: BigNumber, minValue: BigNumber, allowZero: boolean = true) {
-    if (value.isNegative()) {
-        throw new RangeError("Value cannot be negative");
-    }
-    if (value.decimalPlaces() > minValue.decimalPlaces()) {
-        throw new RangeError(`Value (${value}) has more decimals than min value (${minValue})`);
-    }
-    if (!allowZero && value.isZero()) {
-        throw new RangeError("Value cannot be zero");
-    }
-    return value;
-}
-
-
-export function bigNumberToBuffer(value: BigNumber): Buffer {
-    if (!value.isInteger()) {
-        throw new Error("Value must be integer");
+    export function validateAmountValue(value: BigNumber, minValue: BigNumber, allowZero: boolean = true) {
+        if (value.isNegative()) {
+            throw new RangeError("Value cannot be negative");
+        }
+        if (value.decimalPlaces() > minValue.decimalPlaces()) {
+            throw new RangeError(`Value (${value}) has more decimals than min value (${minValue})`);
+        }
+        if (!allowZero && value.isZero()) {
+            throw new RangeError("Value cannot be zero");
+        }
+        return value;
     }
 
-    return hexToBuffer(padHexToEven(value.toString(16)));
+
+    export function bigNumberToBuffer(value: BigNumber): Buffer {
+        if (!value.isInteger()) {
+            throw new Error("Value must be integer");
+        }
+
+        return hexToBuffer(padHexToEven(value.toString(16)));
+    }
+
+    export function bufferToBigNumber(buffer: Buffer): BigNumber {
+        return new BigNumber(buffer.toString('hex'), 16);
+    }
+
+    /**
+     * @param {number | BigNumber} number
+     */
+    export function numberToHex(number: number | BigNumber): string {
+        return "0x" + (new BigNumber(number).toString(16));
+    }
+
+    /**
+     * @param hexNumber
+     */
+    export function hexToBigNumber(hexNumber: string): BigNumber {
+        return new BigNumber(hexNumber);
+    }
 }
 
-export function bufferToBigNumber(buffer: Buffer): BigNumber {
-    return new BigNumber(buffer.toString('hex'), 16);
-}
-
-/**
- * @param {number | BigNumber} number
- */
-export function numberToHex(number: number | BigNumber): string {
-    return "0x" + (new BigNumber(number).toString(16));
-}
-
-/**
- * @param hexNumber
- */
-export function hexToBigNumber(hexNumber: string): BigNumber {
-    return new BigNumber(hexNumber);
-}

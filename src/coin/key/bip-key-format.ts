@@ -1,7 +1,7 @@
 import BitcoinJS from 'bitcoinjs-lib';
 import WIF from 'wif';
+import { Utils } from '../../utils';
 import * as Key from './';
-import * as Utils from '../../utils';
 import { BIPCoinOptions } from '../options';
 import { AddressFormat } from './';
 

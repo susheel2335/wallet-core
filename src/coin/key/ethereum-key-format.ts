@@ -1,6 +1,6 @@
 import * as EthereumJsUtil from 'ethereumjs-util';
+import { Utils } from '../../utils';
 import * as Key from './';
-import * as Utils from '../../utils';
 
 export class EthereumKeyFormat implements Key.FormatInterface {
 

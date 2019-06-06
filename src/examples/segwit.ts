@@ -1,5 +1,5 @@
+import { Utils } from '../utils';
 import * as Coin from '../coin';
-import * as Utils from '../utils';
 import BitcoinJS from 'bitcoinjs-lib';
 
 const buffer = Utils.hexToBuffer('0014cf60e9db2a932d47ed305151135b7a68bdeae44e');

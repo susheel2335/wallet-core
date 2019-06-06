@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 
+import { Utils } from '../../utils';
 import * as Key from '../key';
-import * as Utils from '../../utils';
 import * as Constants from '../../constants';
 
 import { CoinInterface, TransactionScheme } from '../';

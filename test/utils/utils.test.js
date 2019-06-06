@@ -1,44 +1,35 @@
-import * as Berrywallet from '../lib';
+import assert from 'assert';
+import * as plark from '../../lib';
 
-const testUtilsMethods = () => {
+describe('Utils tests', () => {
 
-    const Utils = Berrywallet.Utils;
+    const Utils = plark.Utils;
     const bufferControlString = 'What a Fuck???';
     const controlHex = '576861742061204675636b3f3f3f';
 
     describe('Method hexToBuffer', () => {
-        it('Empty', (done, reject) => {
-            if (!new Buffer('').equals(Utils.hexToBuffer('0x'))) {
-                throw new Error('Can not use it!');
-            }
-
-            done();
+        it('Empty', () => {
+            assert.ok(
+                new Buffer('')
+                    .equals(Utils.hexToBuffer('0x'))
+            );
         });
 
-        it('Equals control string', (done, reject) => {
-            if (!new Buffer(bufferControlString).equals(Utils.hexToBuffer('0x' + controlHex))) {
-                throw new Error('Can not use it!');
-            }
-
-            done();
+        it('Equals control string', () => {
+            assert.ok(
+                new Buffer(bufferControlString)
+                    .equals(Utils.hexToBuffer('0x' + controlHex))
+            );
         });
     });
 
     describe('Method addHexPrefix', () => {
-        it('Empty', (done, reject) => {
-            if ('0x' !== Utils.addHexPrefix('')) {
-                throw new Error('Can not use it!');
-            }
-
-            done();
+        it('Empty', () => {
+            assert.strictEqual(Utils.addHexPrefix(''), '0x');
         });
 
-        it('Empty Buffer', (done, reject) => {
-            if ('0x' !== Utils.addHexPrefix(new Buffer(''))) {
-                throw new Error('Can not use it!');
-            }
-
-            done();
+        it('Empty Buffer', () => {
+            assert.strictEqual(Utils.addHexPrefix(new Buffer('')), '0x');
         });
 
         it('FF string value', (done, reject) => {
@@ -76,6 +67,4 @@ const testUtilsMethods = () => {
             done();
         });
     });
-};
-
-describe('Utils tests', testUtilsMethods);
+});
