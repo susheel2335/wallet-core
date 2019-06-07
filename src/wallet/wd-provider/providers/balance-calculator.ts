@@ -1,5 +1,6 @@
 import { find, forEach } from 'lodash';
 import BigNumber from 'bignumber.js';
+import { ScriptType } from 'coinselect';
 
 import * as Constants from '../../../constants';
 import * as Coin from '../../../coin';
@@ -103,9 +104,7 @@ export class BalanceCalculator {
                         prevScript: out.scriptPubKey,
                         prevScriptType: out.scriptType,
                         confirmed: tx.blockHeight && tx.blockHeight > 0,
-
-                        /* @deprecated */
-                        script: { length: 120 },
+                        type: chooseScriptType(out.scriptType),
                     });
                 }
             });
@@ -159,6 +158,21 @@ export class BalanceCalculator {
 
         return wdBalance;
     }
+}
+
+
+function chooseScriptType(scriptType: Coin.ScriptType): ScriptType {
+    switch (scriptType) {
+        case Coin.ScriptType.WitnessPubKeyHash:
+        case Coin.ScriptType.WitnessScriptHash:
+        case Coin.ScriptType.WitnessCommitment:
+            return 'BECH32';
+
+        case Coin.ScriptType.ScriptHash:
+            return 'P2SH';
+    }
+
+    return 'LEGACY';
 }
 
 

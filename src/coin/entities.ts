@@ -2,11 +2,11 @@
 export enum ScriptType {
     WitnessPubKeyHash = 'witnesspubkeyhash',
     WitnessScriptHash = 'witnessscripthash',
+    WitnessCommitment = 'witnesscommitment',
     PubKeyHash = 'pubkeyhash',
     ScriptHash = 'scripthash',
     Multisig = 'multisig',
     PubKey = 'pubkey',
-    WitnessCommitment = 'witnesscommitment',
     NullData = 'nulldata',
     NonStandard = 'nonstandard'
 }
