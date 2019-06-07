@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { forEach, map, findIndex } from 'lodash';
-import { Coin, Wallet } from '../../';
-import { Api } from '../';
+import * as Coin from 'coin';
+import { Wallet } from '../../';
 import * as Tracker from './tracker';
 
 export { Tracker };

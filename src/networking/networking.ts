@@ -1,4 +1,4 @@
-import { Coin } from '../';
+import * as Coin from 'coin';
 import * as Adapter from './adapter';
 import * as Api from './api';
 import * as Clients from './clients';

@@ -1,7 +1,7 @@
 import { forEach, orderBy } from 'lodash';
 import Axios, { AxiosInstance } from 'axios';
-
-import { Coin, Wallet } from '../../';
+import * as Coin from 'coin';
+import { Wallet } from '../../';
 import { Blockcypher } from '../api';
 import { wrapLimiterMethod } from '../limmiters/blockcypher';
 import { NetworkClient } from './network-client';

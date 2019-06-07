@@ -1,4 +1,4 @@
-import * as Coin from './';
+import * as Coin from './coin';
 import * as HD from '../hd';
 
 export interface NodeInterface {

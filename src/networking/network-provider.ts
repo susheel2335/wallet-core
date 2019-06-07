@@ -1,6 +1,7 @@
 import { forEach } from 'lodash';
-import { Coin, Wallet, Debug } from '../';
-import * as Networking from './';
+import * as Coin from 'coin';
+import * as Networking from 'networking';
+import { Wallet, Debug } from '../';
 import { createClient } from './client-helper';
 
 export type ClientUnit = {

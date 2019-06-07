@@ -1,8 +1,8 @@
 import BigNumber from 'bignumber.js';
 import { EventEmitter } from 'events';
-import * as Constants from './constants';
+import * as Coin from 'coin';
 import * as Wallet from './wallet';
-import * as Coin from './coin';
+import * as Constants from './constants';
 
 declare global {
     namespace plarkcore {

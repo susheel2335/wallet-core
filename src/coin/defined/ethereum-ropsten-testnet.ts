@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import * as Coin from '../';
+import * as Coin from 'coin';
 import { Ethereum } from './ethereum';
 import * as Constants from '../../constants';
 

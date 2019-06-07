@@ -1,0 +1,6 @@
+{
+    "name": "hd",
+    "private": true,
+    "main": "index.ts",
+    "types": "index.ts"
+}
