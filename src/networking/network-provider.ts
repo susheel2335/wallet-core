@@ -1,19 +1,20 @@
 import { forEach } from 'lodash';
-import * as Coin from 'coin';
-import * as Networking from 'networking';
-import { Wallet, Debug } from '../';
+import { Debug } from '../';
+import * as Coin from '../coin';
+import * as Wallet from '../wallet';
+import { Clients, Adapter } from './';
 import { createClient } from './client-helper';
 
 export type ClientUnit = {
     options: plarkcore.AdapterOption;
-    client: Networking.Clients.INetworkClient;
+    client: Clients.INetworkClient;
     banned: boolean;
 };
 
 export interface INetworkProvider extends plarkcore.Destructible {
     getCoin(): Coin.CoinInterface;
 
-    getClient(index?: number): Networking.Clients.INetworkClient;
+    getClient(index?: number): Clients.INetworkClient;
 
     broadCastTransaction(transaction: Coin.Transaction.Transaction): Promise<string>;
 
@@ -44,7 +45,7 @@ export class NetworkProvider implements INetworkProvider {
     public constructor(protected readonly coin: Coin.CoinInterface) {
         this.debug = Debug.create('NetworkProvider:' + this.coin.getUnit());
 
-        const clientOptions = Networking.Adapter.getNetworkAdapters(coin);
+        const clientOptions = Adapter.getNetworkAdapters(coin);
 
         if (clientOptions.length < 1) {
             throw new Error(`No providers for ${coin.getUnit()}`);
@@ -133,7 +134,7 @@ export class NetworkProvider implements INetworkProvider {
     }
 
 
-    public getClient(index: number = 0): Networking.Clients.INetworkClient {
+    public getClient(index: number = 0): Clients.INetworkClient {
         return this.clientList[index].client;
     }
 

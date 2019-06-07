@@ -1,8 +1,7 @@
 import { forEach, orderBy } from 'lodash';
 import BitcoinJS from 'bitcoinjs-lib';
 import BigNumber from 'bignumber.js';
-import * as Coin from 'coin';
-import { Wallet, Utils } from '../../';
+import { Coin, Wallet, Utils } from '../../';
 
 export type Network = {
     info: {

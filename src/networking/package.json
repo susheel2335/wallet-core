@@ -1,6 +1,0 @@
-{
-    "name": "networking",
-    "private": true,
-    "main": "networking.ts",
-    "types": "networking.ts"
-}

@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { EventEmitter } from 'events';
-import * as Coin from 'coin';
+import * as Coin from './coin';
 import * as Wallet from './wallet';
 import * as Constants from './constants';
 

@@ -1,8 +1,8 @@
 import { filter, get } from 'lodash';
 import BigNumber from 'bignumber.js';
-import * as Networking from 'networking';
-import * as Coin from 'coin';
-import { Constants } from '../../../../';
+import * as Constants from '../../../../constants';
+import * as Coin from '../../../../coin';
+import * as Networking from '../../../../networking';
 import { Entity } from '../../../';
 import { AbstractPrivateProvider } from './abstract-private-provider';
 

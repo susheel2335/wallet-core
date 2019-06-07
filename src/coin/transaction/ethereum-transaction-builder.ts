@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { Utils } from '../../utils';
 import * as Constants from '../../constants';
-import * as Coin from '../coin';
+import * as Coin from '../';
 import * as Key from '../key';
 
 import { TransactionBuilder } from './tx-builder';

@@ -1,8 +1,7 @@
 import { forEach } from 'lodash';
 import BigNumber from 'bignumber.js';
 import EtherscanApi, { EtherscanApiClient } from 'etherscan-api';
-import * as Coin from 'coin';
-import { Wallet, Constants } from '../../';
+import { Coin, Wallet, Constants } from '../../';
 import { Etherscan } from '../api';
 import { NetworkClient, IEthereumNetworkClient } from './network-client';
 

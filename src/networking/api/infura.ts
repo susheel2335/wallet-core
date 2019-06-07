@@ -1,7 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { map, forEach } from 'lodash';
-import * as Coin from 'coin';
-import { Constants, Utils, Wallet } from '../../';
+import { Coin, Constants, Utils, Wallet } from '../../';
 
 export interface JsonRPCResponse {
     id: number;

@@ -1,8 +1,7 @@
 import { forEach } from 'lodash';
 import BitcoinJS from 'bitcoinjs-lib';
 import BigNumber from 'bignumber.js';
-import * as Coin from 'coin';
-import { Wallet, Utils, Constants } from '../../';
+import { Coin, Wallet, Utils, Constants } from '../../';
 
 namespace blockbook {
     export type Info = {

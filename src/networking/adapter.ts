@@ -1,5 +1,5 @@
 import { AdapterType, INFURA_APP_ID } from '../constants';
-import * as Coin from 'coin';
+import * as Coin from '../coin';
 
 export { getNetworkAdapter, getNetworkAdapters } from './utils';
 export const AdapterMap: Record<string, plarkcore.AdapterOption[]> = {};

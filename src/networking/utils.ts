@@ -1,4 +1,4 @@
-import * as Coin from 'coin';
+import * as Coin from '../coin';
 import { AdapterMap } from './adapter';
 
 export function getNetworkAdapter(coin: Coin.CoinInterface, index: number = 0): plarkcore.AdapterOption {

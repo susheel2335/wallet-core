@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 import Bottleneck from 'bottleneck';
 import { forEach, orderBy } from 'lodash';
 import Axios, { AxiosInstance, AxiosResponse } from 'axios';
-import * as Coin from 'coin';
+import * as Coin from '../../coin';
 import * as Wallet from '../../wallet';
 import { Insight } from '../api';
 
