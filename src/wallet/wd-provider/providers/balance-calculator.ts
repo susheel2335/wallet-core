@@ -12,7 +12,6 @@ export interface InputUnit {
 }
 
 export class BalanceCalculator {
-
     private readonly coin: Coin.CoinInterface;
     private readonly wdProvider: Wallet.Provider.WDProvider;
 

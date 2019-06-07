@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { CoinSelectUtxo } from 'coinselect';
+import { CoinUtxo } from 'coinselect';
 import { Coin, HD } from '../../';
 
 export type Block = {
@@ -42,7 +42,7 @@ export type BIPOutput = {
     value: string;
     scriptPubKey: string;
     scriptType: Coin.ScriptType;  // @TODO Need declare specific script types
-    addresses?: string[];         // @TODO Need find why there is used an Array instead of primitive
+    addresses?: string[];         // @TODO Need find why there is used an Array instead of primitive string
 };
 
 
@@ -78,7 +78,7 @@ export type WalletData = {
 };
 
 
-export type UnspentTXOutput = CoinSelectUtxo & {
+export type UnspentTXOutput = CoinUtxo & {
     txid: string;
     vout: number;
     addresses: string[];

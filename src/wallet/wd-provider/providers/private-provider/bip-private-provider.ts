@@ -41,7 +41,12 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
         return coin.defaultFeePerByte.times(Constants.SATOSHI_PER_COIN).toNumber();
     }
 
-
+    /**
+     * @param {WDBalance}       balance
+     * @param {string}          address
+     * @param {BigNumber}       value
+     * @param {FeeTypes}        feeType
+     */
     protected async calculateOptimalInputs(
         balance: Entity.WDBalance,
         address: string,
@@ -51,7 +56,8 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
 
         const coin = this.wdProvider.coin as Coin.BIPGenericCoin;
 
-        const possibleInputs: Entity.UnspentTXOutput[] = filter(balance.utxo, { confirmed: true }) as any[];
+        const possibleInputs: Entity.UnspentTXOutput[]
+            = filter(balance.utxo, { confirmed: true }) as any[];
 
         const targetOutput = [{
             address: address,
@@ -127,7 +133,7 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
 
             const walletAddress = this.wdProvider.address.get(address);
             if (!walletAddress) {
-                throw new Error(`Address '${inp.address}' not found in WalletData`);
+                throw new Error(`Address '${inp.addresses[0]}' not found in WalletData`);
             }
 
             txBuilder.addInput(inp.txid, inp.vout, undefined, Buffer.from(inp.prevScript, 'hex'));

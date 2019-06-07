@@ -1,7 +1,6 @@
 typings
 lib
 node_modules
-package-lock.json
 *.tgz
 
 .idea
@@ -36,6 +35,5 @@ Temporary Items
 .apdisk
 
 yarn-error.log
-yarn.lock
 .npmrc
 /coverage/
