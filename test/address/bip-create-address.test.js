@@ -1,4 +1,4 @@
-import { Coin, HD } from '../../lib';
+import { Coin, HD } from '../../';
 import BitcoinJS from 'bitcoinjs-lib';
 import assert from 'assert';
 

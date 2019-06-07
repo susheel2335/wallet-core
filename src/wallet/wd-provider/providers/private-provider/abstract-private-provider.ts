@@ -6,7 +6,6 @@ import { SimpleProvider } from '../simple-provider';
 import { PrivateProvider } from './';
 
 export abstract class AbstractPrivateProvider extends SimpleProvider implements PrivateProvider {
-
     protected readonly seed: Buffer;
     protected readonly privateCoin: Coin.Private.MasterNodeInterface;
 
@@ -18,11 +17,28 @@ export abstract class AbstractPrivateProvider extends SimpleProvider implements 
     }
 
 
-    public abstract calculateFee(
+    public abstract calculateFee<Options = any>(
         value: BigNumber,
         address: Coin.Key.Address,
         feeType: Constants.FeeTypes,
+        options?: Options
     ): Promise<plarkcore.CalculateFeeResponse>;
+
+
+    /**
+     * Method to calculate max value and fee to send
+     *
+     * @param {Address}     address
+     * @param {FeeTypes}    feeType
+     * @param {any}         options
+     *
+     * @return {Promise<CalculateMaxResponse>}
+     */
+    public abstract calculateMax<Options = any>(
+        address: Coin.Key.Address,
+        feeType: Constants.FeeTypes,
+        options?: Options
+    ): Promise<plarkcore.CalculateMaxResponse>;
 
 
     public abstract createTransaction<Options = any>(

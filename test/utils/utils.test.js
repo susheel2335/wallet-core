@@ -1,5 +1,5 @@
 import assert from 'assert';
-import * as plark from '../../lib';
+import * as plark from '../../';
 
 describe('Utils tests', () => {
 

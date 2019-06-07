@@ -1,5 +1,5 @@
-import { Coin, HD } from '../../lib';
 import assert from 'assert';
+import { Coin, HD } from '../../';
 
 import { seed } from '../fixtures/seed';
 

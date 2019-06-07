@@ -63,6 +63,15 @@ declare global {
             [key: string]: any;
         };
 
+        type CalculateMaxResponse = {
+            coin: Coin.Unit;
+            amount: BigNumber;
+            fee: BigNumber;
+            feeType: Constants.FeeTypes;
+
+            [key: string]: any;
+        };
+
         namespace eth {
             type EthTransactionRequestOptions = {
                 data?: Buffer;

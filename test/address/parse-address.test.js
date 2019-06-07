@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { Coin } from '../../lib';
+import { Coin } from '../../';
 
 const coinAddresses = {
     [Coin.Unit.BTC]: [

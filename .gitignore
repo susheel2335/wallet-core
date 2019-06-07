@@ -37,3 +37,4 @@ Temporary Items
 yarn-error.log
 .npmrc
 /coverage/
+.rpt2_cache

@@ -1,3 +1,4 @@
-import { Networking, Coin } from '../../lib';
+import { Networking, Coin } from '../../';
 
-const networkAdapter = Networking.Adapter.getNetworkAdapter(Coin.makeCoin(Coin.Unit.BTC), 0);
+const networkAdapter
+    = Networking.Adapter.getNetworkAdapter(Coin.makeCoin(Coin.Unit.BTC), 0);

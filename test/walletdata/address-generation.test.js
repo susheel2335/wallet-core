@@ -1,6 +1,6 @@
 import assert from 'assert';
 import BigNumber from 'bignumber.js';
-import { Coin, HD, Wallet, Networking, Constants } from '../../lib';
+import { Coin, HD, Wallet, Networking, Constants } from '../../';
 import { seed } from '../fixtures/seed';
 
 const coinCases = {

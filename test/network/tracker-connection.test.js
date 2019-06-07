@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { Coin, Networking } from '../../lib';
+import { Coin, Networking } from '../../';
 
 const coins = [
     Coin.Unit.BTC,

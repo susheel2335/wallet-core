@@ -1,7 +1,7 @@
 import BitcoinJS from 'bitcoinjs-lib';
 import BigNumber from 'bignumber.js';
 import assert from 'assert';
-import { Coin, HD } from '../../lib';
+import { Coin, HD } from '../../';
 import { seed } from '../fixtures/seed';
 
 const transactions = [

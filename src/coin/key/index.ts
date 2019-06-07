@@ -38,7 +38,6 @@ export class Address {
     protected readonly data: Buffer;
     protected readonly formatter: FormatInterface;
 
-
     public constructor(format: AddressFormat, data: Buffer, formatter: FormatInterface) {
         this.format = format;
         this.data = data;
@@ -86,17 +85,14 @@ export class Private {
     protected readonly key: Buffer;
     protected readonly formatter: FormatInterface;
 
-
     public constructor(key: Buffer, formatter: FormatInterface) {
         this.key = key;
         this.formatter = formatter;
     }
 
-
     public toBuffer(): Buffer {
         return this.key;
     }
-
 
     public toString(options?: CoinOptionsInterface): string {
         return this.formatter.formatPrivateKey(this.toBuffer(), options);

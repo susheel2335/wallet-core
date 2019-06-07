@@ -10,42 +10,62 @@ export interface PrivateProvider {
      * Method return {Coin.Private.NodeInterface} of specific address from WalletData
      *
      * @param {WalletAddress} wdAddress
-     * @returns {NodeInterface}
+     *
+     * @return {NodeInterface}
      */
     deriveAddressNode(wdAddress: Entity.WalletAddress): Coin.Private.NodeInterface;
+
 
     /**
      * Method create and return {Entity.WalletAddress} for current WalletData,
      * derived by current private coin
      *
-     * @param {AddressType} type
+     * @param {AddressType}     type
      *
      * @returns {WalletAddress}
      */
     deriveNew(type: HD.BIP44.AddressType): Entity.WalletAddress;
 
+
     /**
-     * @param {BigNumber} value
-     * @param {Address} address
-     * @param {FeeTypes} feeType
-     * @param {any} options
+     * @param {BigNumber}       value
+     * @param {Address}         address
+     * @param {FeeTypes}        feeType
+     * @param {any}             options
      *
-     * @returns {Promise<CalculateFeeResponse>}
+     * @return {Promise<CalculateFeeResponse>}
      */
     calculateFee<Options = any>(
         value: BigNumber,
         address: Coin.Key.Address,
         feeType: Constants.FeeTypes,
-        options?: Options
+        options?: Options,
     ): Promise<plarkcore.CalculateFeeResponse>;
+
+
+    /**
+     * Method to calculate max value and fee to send
+     *
+     * @param {Address}         address
+     * @param {FeeTypes}        feeType
+     * @param {any}             options
+     *
+     * @return {Promise<CalculateMaxResponse>}
+     */
+    calculateMax<Options = any>(
+        address: Coin.Key.Address,
+        feeType: Constants.FeeTypes,
+        options?: Options,
+    ): Promise<plarkcore.CalculateMaxResponse>;
+
 
     /**
      * Create transaction to specific address with some value
      *
-     * @param {Address} address
-     * @param {BigNumber} value
-     * @param {FeeTypes} feeType
-     * @param {any} options
+     * @param {Address}         address
+     * @param {BigNumber}       value
+     * @param {FeeTypes}        feeType
+     * @param {any}             options
      *
      * @returns {Promise<Transaction>}
      */
@@ -56,18 +76,23 @@ export interface PrivateProvider {
         options?: Options,
     ): Promise<Coin.Transaction.Transaction>;
 
+
     /**
      * Broadcast transaction to Network
      *
-     * @param {Transaction} transaction
+     * @param {Transaction}     transaction
+     *
+     * @return {Promise<string>}
      */
     broadcastTransaction(transaction: Coin.Transaction.Transaction): Promise<string>;
 }
 
 
 /**
- * @param {Buffer} seed
- * @param {WDProvider} wdProvider
+ * @param {Buffer}              seed
+ * @param {WDProvider}          wdProvider
+ *
+ * @return {PrivateProvider}
  */
 export function createPrivateProvider(seed: Buffer, wdProvider: Provider.WDProvider): PrivateProvider {
     switch (wdProvider.coin.getTransactionScheme()) {

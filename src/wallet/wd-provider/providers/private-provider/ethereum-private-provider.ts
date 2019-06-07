@@ -6,6 +6,10 @@ import { Entity } from '../../../';
 import { AbstractPrivateProvider } from './abstract-private-provider';
 
 export class EthereumPrivateProvider extends AbstractPrivateProvider {
+
+    /**
+     * @param {WalletAddress}   fromAddress
+     */
     public getTxNonce(fromAddress: Entity.WalletAddress) {
         return filter(
             this.wdProvider.tx.list(),
@@ -92,6 +96,23 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
             gasLimit: gasLimit.toString(),
             gasPrice: gasPrice.toString(),
         };
+    }
+
+    /**
+     * Method to calculate max value and fee to send
+     *
+     * @param {Address}     address
+     * @param {FeeTypes}    feeType
+     * @param {any}         options
+     *
+     * @return {Promise<CalculateMaxResponse>}
+     */
+    public calculateMax<Options = any>(
+        address: Coin.Key.Address,
+        feeType: Constants.FeeTypes,
+        options?: Options,
+    ): Promise<plarkcore.CalculateMaxResponse> {
+        throw new Error('calculateMax for EthereumPrivateProvider did not implemented, yet.');
     }
 
     /**

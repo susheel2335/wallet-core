@@ -82,12 +82,14 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
     }
 
 
-    public async calculateFee(
+    public async calculateFee<Options = any>(
         value: BigNumber,
         address: Coin.Key.Address,
         feeType: Constants.FeeTypes = Constants.FeeTypes.Medium,
+        options?: Options,
     ): Promise<plarkcore.CalculateFeeResponse> {
         const balance = this.wdProvider.balance;
+
         let { inputs = [], outputs = [], fee = 0 }
             = await this.calculateOptimalInputs(balance, address.toString(), value, feeType);
 
@@ -100,14 +102,30 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
         };
     }
 
+    /**
+     * Method to calculate max value and fee to send
+     *
+     * @param {Address}     address
+     * @param {FeeTypes}    feeType
+     * @param {any}         options
+     *
+     * @return {Promise<CalculateMaxResponse>}
+     */
+    public calculateMax<Options = any>(
+        address: Coin.Key.Address,
+        feeType: Constants.FeeTypes,
+        options?: Options,
+    ): Promise<plarkcore.CalculateMaxResponse> {
+        throw new Error('calculateMax for BIPPrivateProvider did not implemented, yet.');
+    }
+
 
     public async createTransaction<O = any>(
         address: Coin.Key.Address,
         value: BigNumber,
         feeType: Constants.FeeTypes = Constants.FeeTypes.Medium,
-        options?: O
+        options?: O,
     ): Promise<Coin.Transaction.Transaction> {
-
         const balance = this.wdProvider.balance;
 
         const coin = this.wdProvider.coin as Coin.BIPGenericCoin;

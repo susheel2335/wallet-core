@@ -1,9 +1,9 @@
-import * as Berrywallet from '../lib';
+import * as Plark from '../';
 import assert from 'assert';
 import _ from 'lodash';
 
-const Coin = Berrywallet.Coin;
-// const Utils = Berrywallet.Utils;
+const Coin = Plark.Coin;
+// const Utils = Plark.Utils;
 
 const coinsToTest = {
     [Coin.Unit.BTC]: {
