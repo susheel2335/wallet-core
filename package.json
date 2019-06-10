@@ -1,6 +1,6 @@
 {
     "name": "@plark/wallet-core",
-    "version": "0.5.1",
+    "version": "0.5.2",
     "description": "Plark Wallet Core for work with common cryptocurrencies like Bitcoin, Ethereum, Dash, Litecoin",
     "keywords": [
         "bitcoin",
@@ -17,15 +17,14 @@
     "types": "lib/index.d.ts",
     "license": "LGPL-3.0",
     "scripts": {
-        "build": "npm run clear && npm run build:ts",
+        "build": "npm run clear && npm run build:rollup && gulp packages",
         "clear": "rm -rf ./lib",
-        "build:ts": "tsc --esModuleInterop",
         "build:gulp": "gulp",
+        "build:rollup": "rollup --config rollup.config.js",
         "test": "mocha -t 5000 --recursive --no-warnings",
         "tag:patch": "yarn version --new-version patch",
         "tag:minor": "yarn version --new-version minor",
-        "publish:alpha": "yarn publish --tag next",
-        "rollup": "npm run clear && rollup --config rollup.config.js && gulp packages"
+        "publish:alpha": "yarn publish --tag next"
     },
     "dependencies": {
         "axios": "0.18.0",

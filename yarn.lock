@@ -1272,7 +1272,7 @@ code-point-at@^1.0.0:
 
 "coinselect@https://github.com/plark-app/coinselect.git":
   version "3.1.11"
-  resolved "https://github.com/plark-app/coinselect.git#c310365034c80dd4af572bf6bfb637c11cb44465"
+  resolved "https://github.com/plark-app/coinselect.git#6a15d2aa357d370c473290f7a53ad7baffbfc29b"
 
 collection-visit@^1.0.0:
   version "1.0.0"

@@ -1,7 +1,8 @@
 import { forEach, map } from 'lodash';
 import BigNumber from 'bignumber.js';
 import BitcoinJS from 'bitcoinjs-lib';
-import { Coin, Constants } from '../';
+import * as Coin from '../coin';
+import * as Constants from '../constants';
 import { INetworkProvider } from '../networking';
 import { BalanceException } from './exceptions';
 import { WDProvider } from './wd-provider';

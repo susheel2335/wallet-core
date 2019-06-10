@@ -8,20 +8,25 @@ const coinCases = {
     [Coin.Unit.BTCt]: {
         generateTransaction: true,
         calculateFee: true,
+        calculateMax: true,
     },
     [Coin.Unit.LTC]: {},
     [Coin.Unit.LTCt]: {
         calculateFee: true,
+        calculateMax: true,
     },
     [Coin.Unit.DASH]: {},
     [Coin.Unit.DASHt]: {
         calculateFee: true,
+        calculateMax: true,
     },
     [Coin.Unit.ETH]: {
         calculateFee: true,
+        calculateMax: true,
     },
     [Coin.Unit.ETHt]: {
         calculateFee: true,
+        calculateMax: true,
     }
 };
 
@@ -34,6 +39,7 @@ describe('Generate WalletData', () => {
 
             let networkProvider;
             let wdProvider;
+            let balanceAmount;
 
             before(async function () {
                 this.timeout(15000);
@@ -42,6 +48,11 @@ describe('Generate WalletData', () => {
 
                 const wdGenerator = Wallet.Generator.createGenerator(coin, seed, networkProvider);
                 wdProvider = await wdGenerator.fill();
+
+                try {
+                    balanceAmount = Wallet.calculateBalance(wdProvider.balance);
+                } catch (error) {
+                }
             });
 
             after(function () {
@@ -60,13 +71,10 @@ describe('Generate WalletData', () => {
             });
 
 
-            if ('calculateFee' in cases) {
+            if (cases.calculateFee) {
                 it(`Can calculate fee`, async () => {
                     const address = wdProvider.address.last(HD.BIP44.AddressType.CHANGE);
                     let toAddress = coin.getKeyFormat().parseAddress(address.address);
-                    if (coin.getUnit() === 'ETH') {
-                        toAddress = '0xa4838435696987d30e697019a1735493f886ce66';
-                    }
 
                     const feeResponse = await wdProvider.getPrivate(seed).calculateFee(
                         new BigNumber(0.01),
@@ -78,7 +86,30 @@ describe('Generate WalletData', () => {
                 });
             }
 
-            if ('generateTransaction' in cases) {
+
+            if (cases.calculateMax) {
+                it(`Can calculate max amount`, async () => {
+                    if (!balanceAmount || balanceAmount < 0.001) {
+                        return;
+                    }
+
+                    const address = wdProvider.address.last(HD.BIP44.AddressType.CHANGE);
+                    let toAddress = coin.getKeyFormat().parseAddress(address.address);
+
+                    const maxAmountResponse = await wdProvider.getPrivate(seed).calculateMax(
+                        toAddress,
+                        Constants.FeeTypes.Medium
+                    );
+
+                    assert.strictEqual(typeof maxAmountResponse, 'object');
+                    assert.strictEqual(
+                        maxAmountResponse.amount.plus(maxAmountResponse.fee).toString(),
+                        maxAmountResponse.balance
+                    );
+                });
+            }
+
+            if (cases.generateTransaction) {
                 it(`Can generate Transaction`, async () => {
                     const address = wdProvider.address.last(HD.BIP44.AddressType.CHANGE);
                     let toAddress = coin.getKeyFormat().parseAddress(address.address);

@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import * as Constants from '../../../../constants';
 import * as Coin from '../../../../coin';
 import * as Networking from '../../../../networking';
-import { Entity } from '../../../';
+import { Entity, calculateBalance } from '../../../';
 import { AbstractPrivateProvider } from './abstract-private-provider';
 
 type IEthereumNetworkClient = Networking.Clients.IEthereumNetworkClient;
@@ -59,8 +59,8 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
     public async getGasPrice(feeType: Constants.FeeTypes = Constants.FeeTypes.Medium): Promise<BigNumber> {
         const networkClient = this.wdProvider.getNetworkProvider().getClient(0);
 
-        const gasPrices: plarkcore.GasPrice = await (networkClient as IEthereumNetworkClient)
-            .getGasPrice();
+        const gasPrices: plarkcore.GasPrice
+            = await (networkClient as IEthereumNetworkClient).getGasPrice();
 
         let gasPriceGWEI = gasPrices.standard;
         switch (feeType) {
@@ -111,12 +111,33 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
      *
      * @return {Promise<CalculateMaxResponse>}
      */
-    public calculateMax<Options = any>(
+    public async calculateMax<Options = any>(
         address: Coin.Key.Address,
         feeType: Constants.FeeTypes,
         options?: Options,
     ): Promise<plarkcore.CalculateMaxResponse> {
-        throw new Error('calculateMax for EthereumPrivateProvider did not implemented, yet.');
+        const [gasPrice, gasLimit]: BigNumber[] = await Promise.all([
+            this.getGasPrice(feeType),
+            this.getGasLimit({ to: address }),
+        ]);
+
+        const balance = new BigNumber(calculateBalance(this.wdProvider.balance));
+        const fee = gasLimit.times(gasPrice.div(Constants.GWEI_PER_COIN));
+        const amount = balance.minus(fee);
+
+        if (amount.isLessThanOrEqualTo(0)) {
+            throw new Error('Insufficient funds');
+        }
+
+        return {
+            fee,
+            amount,
+            coin: this.getCoin().getUnit(),
+            feeType: feeType,
+            gasLimit: gasLimit.toString(),
+            gasPrice: gasPrice.toString(),
+            balance: balance.toNumber(),
+        };
     }
 
     /**

@@ -2,11 +2,11 @@ import { forEach, filter } from 'lodash';
 import BigNumber from 'bignumber.js';
 import BitcoinJS from 'bitcoinjs-lib';
 import { Coin, Constants, HD } from '../../../../';
-import { Entity } from '../../../';
+import { calculateBalance, Entity } from '../../../';
 import { AbstractPrivateProvider } from './abstract-private-provider';
 import { InsightNetworkClient, BlockbookNetworkClient } from '../../../../networking/clients';
 
-import coinSelect, { CoinSelectResult } from 'coinselect';
+import coinSelect, { CoinSelectResult, coinSplit } from 'coinselect';
 
 export class BIPPrivateProvider extends AbstractPrivateProvider {
     protected getCoin(): Coin.BIPGenericCoin {
@@ -111,12 +111,44 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
      *
      * @return {Promise<CalculateMaxResponse>}
      */
-    public calculateMax<Options = any>(
+    public async calculateMax<Options = any>(
         address: Coin.Key.Address,
         feeType: Constants.FeeTypes,
         options?: Options,
     ): Promise<plarkcore.CalculateMaxResponse> {
-        throw new Error('calculateMax for BIPPrivateProvider did not implemented, yet.');
+
+        const coin = this.wdProvider.coin as Coin.BIPGenericCoin;
+        const balance = this.wdProvider.balance;
+
+        const possibleInputs: Entity.UnspentTXOutput[]
+            = filter(balance.utxo, { confirmed: true }) as any[];
+
+        const targetOutput = [{
+            address: address.toString(),
+            script: BitcoinJS.address.toOutputScript(address.toString(), this.getCoin().networkInfo()),
+        }];
+
+        const feeRate = await this.getFee(coin, feeType);
+        const { inputs = [], outputs = [], fee = 0 } = coinSplit(possibleInputs, targetOutput, feeRate);
+
+        const feeNum = new BigNumber(fee.toFixed(8)).div(Constants.SATOSHI_PER_COIN);
+        const balanceNum = new BigNumber(calculateBalance(this.wdProvider.balance));
+
+        if (!inputs || inputs.length === 0) {
+            throw new Error('Insufficient funds');
+        }
+
+        if (feeNum.isGreaterThanOrEqualTo(balanceNum)) {
+            throw new Error('Insufficient funds');
+        }
+
+        return {
+            fee: feeNum,
+            amount: balanceNum.minus(feeNum),
+            coin: this.getCoin().getUnit(),
+            feeType: feeType,
+            balance: balanceNum.toString(),
+        };
     }
 
 

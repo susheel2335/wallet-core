@@ -30,6 +30,7 @@ export interface INetworkClient extends plarkcore.Destructible {
     getTracker(): plarkcore.ITrackerClient;
 }
 
+
 export interface IEthereumNetworkClient extends INetworkClient {
     getGasPrice(): Promise<plarkcore.GasPrice>;
 

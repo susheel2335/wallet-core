@@ -1,17 +1,31 @@
 import BigNumber from 'bignumber.js';
+import { get } from 'lodash';
 import { Constants, Utils } from '../../../';
 import InfuraNetworkClient from '../infura-network-client';
+import { crypto } from 'bitcoinjs-lib';
 
+/**
+ * GasHelper is a provider of check and cache Gas Price and Gas estimation
+ */
 export default class GasHelper {
     protected client: InfuraNetworkClient;
 
     private gasPriceCache?: plarkcore.GasPrice;
     private gasPriceTimeout?: number;
+    private estimateGasCache: Record<string, [number, BigNumber]> = {};
 
+    /**
+     * GasHelper constructor.
+     *
+     * @param {InfuraNetworkClient}     client
+     */
     public constructor(client: InfuraNetworkClient) {
         this.client = client;
     }
 
+    /**
+     * @return {plarkcore.GasPrice}
+     */
     public async getGasPrice(): Promise<plarkcore.GasPrice> {
         if (this.gasPriceExpired()) {
             this.gasPriceCache = await this.fetchGasPrice();
@@ -20,7 +34,12 @@ export default class GasHelper {
         return this.gasPriceCache;
     }
 
-    protected gasPriceExpired() {
+    /**
+     * Check if GasPrice expired or not
+     *
+     * @return {boolean}
+     */
+    protected gasPriceExpired(): boolean {
         if (!this.gasPriceTimeout || !this.gasPriceCache) {
             return true;
         }
@@ -28,6 +47,9 @@ export default class GasHelper {
         return this.gasPriceTimeout - 3 * 60 * 1000 <= new Date().getTime();
     }
 
+    /**
+     * @return {plarkcore.GasPrice}
+     */
     protected async fetchGasPrice(): Promise<plarkcore.GasPrice> {
         const standardGasPrice = new BigNumber(4).div(Constants.WEI_PER_COIN);
         const defaultGasPrice = {
@@ -54,7 +76,39 @@ export default class GasHelper {
         }
     }
 
+
+    /**
+     * @param {EstimateGasRequestOptions}   options
+     *
+     * @return {BigNumber}
+     *
+     * @TODO Need complete functional with Gas Price by extending functional
+     *       and made it more abstract
+     */
     public async estimateGas(options: plarkcore.eth.EstimateGasRequestOptions): Promise<BigNumber> {
+        const key = crypto
+            .sha1(
+                Buffer.from(JSON.stringify({ to: options.to, data: options.data })),
+            )
+            .toString('hex');
+
+        const [timeout, value] = get(this.estimateGasCache, key, [undefined, undefined]);
+
+        if (value) return value;
+
+        let newValue = await this.fetchEstimateGas(options);
+        this.estimateGasCache[key] = [new Date().getTime(), newValue];
+
+        return newValue;
+    }
+
+
+    /**
+     * @param {EstimateGasRequestOptions}   options
+     *
+     * @return {BigNumber}
+     */
+    public async fetchEstimateGas(options: plarkcore.eth.EstimateGasRequestOptions): Promise<BigNumber> {
         const { to, from, value, data, gas, gasPrice } = options;
 
         const requestData: any = {};
