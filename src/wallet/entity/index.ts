@@ -15,6 +15,7 @@ export type WalletAddress = {
     address: string;
     type: HD.BIP44.AddressType;
     index: number;
+    account?: number;
 };
 
 
@@ -73,6 +74,7 @@ export type EtherTransaction = WalletTransaction & {
 
 export type WalletData = {
     coin: Coin.Unit;
+    accountIndex?: number;
     txs: Record<string, WalletTransaction>;
     addresses: WalletAddress[];
 };

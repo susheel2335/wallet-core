@@ -1,5 +1,5 @@
 import { filter, find, first, sumBy } from 'lodash';
-import * as HD from '../../../hd';
+import HD from '../../../hd';
 import * as Coin from '../../../coin';
 import * as Entity from '../../entity';
 import { SimpleProvider } from './simple-provider';
@@ -16,6 +16,7 @@ export class AddressProvider extends SimpleProvider {
             address: address,
             type: type,
             index: index,
+            account: this.wdProvider.accountIndex,
         };
 
         this.setData({

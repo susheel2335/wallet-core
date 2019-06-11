@@ -1,4 +1,4 @@
-import { forEach } from 'lodash';
+import { forEach, get } from 'lodash';
 import * as Coin from '../../coin';
 import { INetworkProvider } from '../../networking';
 import * as Provider from '../wd-provider';
@@ -9,7 +9,6 @@ export interface WDGeneratorInterface {
 }
 
 export abstract class WDGenerator implements WDGeneratorInterface {
-
     protected readonly coin: Coin.CoinInterface;
     protected readonly seed: Buffer;
     protected readonly wdProvider: Provider.WDProvider;
@@ -23,7 +22,9 @@ export abstract class WDGenerator implements WDGeneratorInterface {
         this.coin = coin;
         this.seed = seed;
 
-        this.wdProvider = Provider.WDProvider.makeEmpty(this.coin, networkProvider);
+        const accountIndex = get(options, 'accountIndex', 0);
+
+        this.wdProvider = Provider.WDProvider.makeEmpty(this.coin, networkProvider, accountIndex);
     }
 
     protected fillAddrsTxs(txs: Entity.WalletTransaction[]) {

@@ -1,9 +1,8 @@
 import BitcoinJS from 'bitcoinjs-lib';
 import WIF from 'wif';
 import { Utils } from '../../utils';
-import * as Key from './';
 import { BIPCoinOptions } from '../options';
-import { AddressFormat } from './';
+import { AddressFormat, FormatInterface, Private, Public, Address, getRedeemScript } from './key-utils';
 
 type ParsedAddressData = {
     version: number;
@@ -13,7 +12,7 @@ type ParsedAddressData = {
     data?: Buffer;
 };
 
-export class BIPKeyFormat implements Key.FormatInterface {
+export class BIPKeyFormat implements FormatInterface {
 
     private readonly network: BitcoinJS.Network;
     private readonly options: BIPCoinOptions;
@@ -50,7 +49,7 @@ export class BIPKeyFormat implements Key.FormatInterface {
     }
 
 
-    public parseAddress(address: string): Key.Address {
+    public parseAddress(address: string): Address {
         let addr: ParsedAddressData = undefined;
         try {
             try {
@@ -68,7 +67,7 @@ export class BIPKeyFormat implements Key.FormatInterface {
                     );
                 }
 
-                return new Key.Address(Key.AddressFormat.BECH32, addr.data, this);
+                return new Address(AddressFormat.BECH32, addr.data, this);
             }
         } catch (e) {
             throw new TypeError(
@@ -78,10 +77,10 @@ export class BIPKeyFormat implements Key.FormatInterface {
 
         switch (addr.version) {
             case this.network.pubKeyHash:
-                return new Key.Address(Key.AddressFormat.P2PKH, addr.hash, this);
+                return new Address(AddressFormat.P2PKH, addr.hash, this);
 
             case this.network.scriptHash:
-                return new Key.Address(Key.AddressFormat.P2SH, addr.hash, this);
+                return new Address(AddressFormat.P2SH, addr.hash, this);
         }
 
         throw new TypeError(
@@ -90,18 +89,18 @@ export class BIPKeyFormat implements Key.FormatInterface {
     }
 
 
-    public parsePublicKey(publicKey: string): Key.Public {
+    public parsePublicKey(publicKey: string): Public {
         if (!this.isValidPublicKey(publicKey)) {
             throw new TypeError(`Public key ${publicKey} is not valid`);
         }
 
         let buf = Buffer.from(publicKey, 'hex');
 
-        return new Key.Public(buf, this);
+        return new Public(buf, this);
     }
 
 
-    public parsePrivateKey(privateKey: string): Key.Private {
+    public parsePrivateKey(privateKey: string): Private {
         let wif: any;
         try {
             wif = WIF.decode(privateKey);
@@ -113,11 +112,11 @@ export class BIPKeyFormat implements Key.FormatInterface {
             throw new TypeError(`Invalid ${this.network.wif} privkey ${privateKey}.`);
         }
 
-        return new Key.Private(wif.privateKey, this);
+        return new Private(wif.privateKey, this);
     }
 
 
-    public publicToAddress(publicKey: Key.Public, format: AddressFormat = AddressFormat.P2PKH): Key.Address {
+    public publicToAddress(publicKey: Public, format: AddressFormat = AddressFormat.P2PKH): Address {
         let data;
 
         switch (format) {
@@ -127,7 +126,7 @@ export class BIPKeyFormat implements Key.FormatInterface {
             }
 
             case AddressFormat.P2SH: {
-                const redeemScript = Key.getRedeemScript(publicKey.toBuffer());
+                const redeemScript = getRedeemScript(publicKey.toBuffer());
 
                 const hash = BitcoinJS.script.scriptHash.output.encode(
                     Utils.Crypto.hash160(redeemScript),
@@ -144,7 +143,7 @@ export class BIPKeyFormat implements Key.FormatInterface {
                     throw new TypeError('Coin not support SegWit address');
                 }
 
-                const redeemScript = Key.getRedeemScript(publicKey.toBuffer());
+                const redeemScript = getRedeemScript(publicKey.toBuffer());
 
                 /* Bicycle make of pure gold */
                 const publicKeyScript = BitcoinJS.address.fromOutputScript(redeemScript);
@@ -154,20 +153,20 @@ export class BIPKeyFormat implements Key.FormatInterface {
 
         }
 
-        return new Key.Address(format, data, this);
+        return new Address(format, data, this);
     }
 
 
-    public formatAddress(address: Key.Address, options?: any): string {
+    public formatAddress(address: Address, options?: any): string {
 
         switch (address.getFormat()) {
-            case Key.AddressFormat.P2PKH:
+            case AddressFormat.P2PKH:
                 return BitcoinJS.address.toBase58Check(address.getData(), this.network.pubKeyHash);
 
-            case Key.AddressFormat.P2SH:
+            case AddressFormat.P2SH:
                 return BitcoinJS.address.toBase58Check(address.getData(), this.network.scriptHash);
 
-            case Key.AddressFormat.BECH32:
+            case AddressFormat.BECH32:
                 if (!this.network.bech32) {
                     throw new TypeError('Coin not support SegWit address');
                 }

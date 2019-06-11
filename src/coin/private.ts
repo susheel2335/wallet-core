@@ -1,5 +1,5 @@
 import * as Coin from './';
-import * as HD from '../hd';
+import HD from '../hd';
 
 export interface NodeInterface {
     getNode(): HD.Node.NodeInterface;
@@ -60,21 +60,19 @@ export class BasicNode implements NodeInterface {
 }
 
 export class BasicMasterNode extends BasicNode implements MasterNodeInterface {
-
-    private accountNodeCache = {};
+    private nodeCache: Record<string, Coin.Private.BasicNode> = {};
 
     public deriveAddress(addressType: HD.BIP44.AddressType = HD.BIP44.AddressType.RECEIVE,
                          index: number = 0,
                          accountIndex: number = 0): BasicNode {
 
-        if (!(accountIndex in this.accountNodeCache)) {
-            let accountPath = HD.BIP44.getAccountHDPath(this.getCoin().getHDCoinType(), accountIndex);
-            this.accountNodeCache[accountIndex] = this.derivePath(accountPath);
+        let addressTypePath = HD.BIP44.getAddressTypeHDPath(this.getCoin().getHDCoinType(), accountIndex, addressType);
+        
+        if (!(addressTypePath in this.nodeCache)) {
+            this.nodeCache[addressTypePath] = this.derivePath(addressTypePath);
         }
 
-        let derivePath = HD.BIP44.getHDPathFromAccount(addressType, index);
-
-        return this.accountNodeCache[accountIndex].derivePath(derivePath);
+        return this.nodeCache[addressTypePath].derivePath(`${index}`);
     }
 
     public static fromSeedBuffer(seed: Buffer, coin: Coin.CoinInterface): BasicMasterNode {

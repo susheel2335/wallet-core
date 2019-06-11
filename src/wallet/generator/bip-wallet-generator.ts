@@ -1,14 +1,18 @@
 import { times } from 'lodash';
 import Bottleneck from 'bottleneck';
-import { INetworkProvider } from '../../networking';
+import * as Networking  from '../../networking';
+import * as Coin from '../../coin';
+import * as Constants from '../../constants';
+import HD from '../../hd';
+import * as Wallet from '../../wallet';
+
 import { WDGenerator } from './wd-generator';
-import { Coin, Wallet, HD, Constants } from '../../';
 
 export class BIPWalletGenerator extends WDGenerator {
     protected readonly limiter: Bottleneck;
 
 
-    public constructor(coin: Coin.CoinInterface, seed: Buffer, networkProvider: INetworkProvider, option: any = {}) {
+    public constructor(coin: Coin.CoinInterface, seed: Buffer, networkProvider: Networking.INetworkProvider, option: any = {}) {
         super(coin, seed, networkProvider, option);
 
         this.limiter = new Bottleneck(1, option.addressTime || 100);

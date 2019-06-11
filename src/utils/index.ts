@@ -1,9 +1,9 @@
 import BigNumber from 'bignumber.js';
 import * as EthereumJsUtil from 'ethereumjs-util';
-import * as crp  from './crypto';
+import crp from './crypto';
 
 export namespace Utils {
-    export import Crypto = crp.Crypto;
+    export import Crypto = crp;
 
     export function isHexPrefixed(hex: string): boolean {
         return hex.slice(0, 2) === '0x';

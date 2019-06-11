@@ -19,6 +19,14 @@ export function getAccountHDPath(coinType: number, accountIndex: number): string
 }
 
 
+export function getAddressTypeHDPath(coinType: number,
+                                     accountIndex: number,
+                                     addressType: AddressType
+): string {
+    return `m/${PURPOSE}'/${coinType}'/${accountIndex}'/${addressType}`;
+}
+
+
 export function getHDPathFromAccount(addressType: AddressType = AddressType.RECEIVE, index: number = 0): string {
     return `${addressType}/${index}`;
 }

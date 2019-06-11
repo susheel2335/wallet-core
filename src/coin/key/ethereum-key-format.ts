@@ -1,8 +1,8 @@
 import * as EthereumJsUtil from 'ethereumjs-util';
 import { Utils } from '../../utils';
-import * as Key from './';
+import { FormatInterface, Address, Public, Private, AddressFormat } from './key-utils';
 
-export class EthereumKeyFormat implements Key.FormatInterface {
+export class EthereumKeyFormat implements FormatInterface {
 
     public isValidAddress(address: string): boolean {
         return EthereumJsUtil.isValidAddress(address);
@@ -26,41 +26,41 @@ export class EthereumKeyFormat implements Key.FormatInterface {
     }
 
 
-    public parseAddress(address: string): Key.Address {
+    public parseAddress(address: string): Address {
         if (!this.isValidAddress(address)) {
             throw new TypeError(`Invalid address ${address}`);
         }
 
-        return new Key.Address(Key.AddressFormat.P2PKH, Utils.hexToBuffer(address), this);
+        return new Address(AddressFormat.P2PKH, Utils.hexToBuffer(address), this);
     }
 
 
-    public parsePublicKey(publicKey: string): Key.Public {
+    public parsePublicKey(publicKey: string): Public {
         if (!this.isValidAddress(publicKey)) {
             throw new TypeError(`Invalid public key ${publicKey}`);
         }
 
-        return new Key.Public(Utils.hexToBuffer(publicKey), this);
+        return new Public(Utils.hexToBuffer(publicKey), this);
     }
 
 
-    public parsePrivateKey(privateKey: string): Key.Private {
+    public parsePrivateKey(privateKey: string): Private {
         if (!this.isValidPrivateKey(privateKey)) {
             throw new TypeError(`Invalid private key ${privateKey}`);
         }
 
-        return new Key.Private(Utils.hexToBuffer(privateKey), this);
+        return new Private(Utils.hexToBuffer(privateKey), this);
     }
 
 
-    public publicToAddress(publicKey: Key.Public): Key.Address {
+    public publicToAddress(publicKey: Public): Address {
         let addressBuffer = EthereumJsUtil.pubToAddress(publicKey.toBuffer(), true) as Buffer;
 
-        return new Key.Address(Key.AddressFormat.P2PKH, addressBuffer, this);
+        return new Address(AddressFormat.P2PKH, addressBuffer, this);
     }
 
 
-    public formatAddress(keyAddr: Key.Address, options?: any): string {
+    public formatAddress(keyAddr: Address, options?: any): string {
         let address = EthereumJsUtil.addHexPrefix(keyAddr.getData().toString('hex'));
 
         let checkSummed = (options && 'checksummed' in options) ? options.checksummed : false;

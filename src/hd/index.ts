@@ -1,4 +1,9 @@
-import * as BIP44 from './bip44';
-import * as Node from './node';
+import * as bip44 from './bip44';
+import * as node from './node';
 
-export { BIP44, Node };
+namespace HD {
+    export import BIP44 = bip44;
+    export import Node = node;
+}
+
+export default HD;

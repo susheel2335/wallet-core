@@ -33,10 +33,15 @@ export class WDProvider extends EventEmitter implements plarkcore.Destructible {
     }
 
 
-    public static makeEmpty(coin: Coin.CoinInterface, networkProvider?: Networking.INetworkProvider): WDProvider {
+    public static makeEmpty(
+        coin: Coin.CoinInterface,
+        networkProvider: Networking.INetworkProvider,
+        accountIndex: number = 0
+    ): WDProvider {
         const emptyData = {
             coin: coin.getUnit(),
             addresses: [],
+            accountIndex: accountIndex,
             txs: {},
         };
 
@@ -46,6 +51,11 @@ export class WDProvider extends EventEmitter implements plarkcore.Destructible {
 
     public get coin(): Coin.CoinInterface {
         return Coin.makeCoin(this.walletData.coin);
+    }
+
+
+    public get accountIndex(): number {
+        return this.walletData.accountIndex || 0;
     }
 
 

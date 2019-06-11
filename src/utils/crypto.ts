@@ -1,6 +1,6 @@
 import CreateHash from 'create-hash';
 
-export namespace Crypto {
+namespace Crypto {
     /**
      * @param {Buffer}  buffer
      */
@@ -24,3 +24,5 @@ export namespace Crypto {
         return sha256(sha256(buffer));
     }
 }
+
+export default Crypto;

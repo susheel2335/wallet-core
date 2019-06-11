@@ -1,4 +1,4 @@
-import * as HD from '../../hd';
+import HD from '../../hd';
 import * as Wallet from '../';
 import { WDGenerator } from './wd-generator';
 

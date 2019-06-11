@@ -7,8 +7,8 @@ BigNumber.config({
 
 import * as Constants from './constants';
 import * as Debug from './debugger';
+import HD from './hd';
 import * as Coin from './coin';
-import * as HD from './hd';
 import * as Networking from './networking';
 import * as Wallet from './wallet';
 

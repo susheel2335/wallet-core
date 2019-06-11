@@ -9,10 +9,14 @@ import * as Constants from '../../constants';
 export class Ethereum implements CoinInterface {
     public readonly minValue: BigNumber = new BigNumber(1).div(Constants.WEI_PER_COIN);
 
-    public readonly defaultGasLimit: number = 53000; //default transaction gas limit
-    public readonly defaultGasPrice: BigNumber = new BigNumber(8).div(Constants.GWEI_PER_COIN); //8 GWei
+    // Default transaction gas limit
+    public readonly defaultGasLimit: number = 53000;
 
-    public readonly chainId: number = 1; // mainnet Tx EIP155
+    // Default Gas Price set to 8 GWei
+    public readonly defaultGasPrice: BigNumber = new BigNumber(8).div(Constants.GWEI_PER_COIN);
+
+    // Mainnet Tx EIP155
+    public readonly chainId: number = 1;
 
     public constructor(protected options?: Options.EthereumOptions) {
     }

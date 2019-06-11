@@ -16,12 +16,11 @@ export abstract class AbstractPrivateProvider extends SimpleProvider implements 
         this.privateCoin = this.wdProvider.coin.makePrivateFromSeed(seed);
     }
 
-
     public abstract calculateFee<Options = any>(
         value: BigNumber,
         address: Coin.Key.Address,
         feeType: Constants.FeeTypes,
-        options?: Options
+        options?: Options,
     ): Promise<plarkcore.CalculateFeeResponse>;
 
 
@@ -37,7 +36,7 @@ export abstract class AbstractPrivateProvider extends SimpleProvider implements 
     public abstract calculateMax<Options = any>(
         address: Coin.Key.Address,
         feeType: Constants.FeeTypes,
-        options?: Options
+        options?: Options,
     ): Promise<plarkcore.CalculateMaxResponse>;
 
 
@@ -50,18 +49,22 @@ export abstract class AbstractPrivateProvider extends SimpleProvider implements 
 
 
     public deriveAddressNode(wdAddress: Entity.WalletAddress): Coin.Private.NodeInterface {
-        return this.privateCoin.deriveAddress(wdAddress.type, wdAddress.index);
+        return this.privateCoin
+            .deriveAddress(wdAddress.type, wdAddress.index, wdAddress.account);
     }
 
 
     public deriveNew(type: HD.BIP44.AddressType): Entity.WalletAddress {
-
         const addrProvider = this.wdProvider.address;
 
         const newAddrIndex = addrProvider.count(type);
-        const derivedAddress = this.privateCoin.deriveAddress(type, newAddrIndex);
+        const derivedAddress = this.privateCoin.deriveAddress(type, newAddrIndex, this.wdProvider.accountIndex);
 
-        return addrProvider.add(derivedAddress.getPublicKey().toAddress().toString(), type, newAddrIndex);
+        return addrProvider.add(
+            derivedAddress.getPublicKey().toAddress().toString(),
+            type,
+            newAddrIndex,
+        );
     }
 
 
