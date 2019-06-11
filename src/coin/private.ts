@@ -67,7 +67,7 @@ export class BasicMasterNode extends BasicNode implements MasterNodeInterface {
                          accountIndex: number = 0): BasicNode {
 
         let addressTypePath = HD.BIP44.getAddressTypeHDPath(this.getCoin().getHDCoinType(), accountIndex, addressType);
-        
+
         if (!(addressTypePath in this.nodeCache)) {
             this.nodeCache[addressTypePath] = this.derivePath(addressTypePath);
         }

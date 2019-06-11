@@ -1,6 +1,8 @@
 import BigNumber from 'bignumber.js';
 import { CoinUtxo } from 'coinselect';
-import { Coin, HD } from '../../';
+import * as Coin from '../../coin';
+import HD from '../../hd';
+
 
 export type Block = {
     hash: string;
