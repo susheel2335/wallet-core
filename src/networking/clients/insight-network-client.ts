@@ -33,7 +33,10 @@ export default class InsightNetworkClient extends NetworkClient {
             timeout: 10000,
         });
 
-        this.limiter = new Bottleneck(1, 500);
+        this.limiter = new Bottleneck({
+            maxConcurrent: 1,
+            minTime: 500,
+        });
     }
 
     /**
@@ -144,7 +147,10 @@ export default class InsightNetworkClient extends NetworkClient {
             this.trackerClient.destruct();
         }
 
-        this.limiter.stopAll();
+        this.limiter.stop({
+            dropWaitingJobs: true,
+        });
+
         delete this.client;
     }
 
@@ -171,7 +177,7 @@ export default class InsightNetworkClient extends NetworkClient {
 
 
     protected wrapperLimiter<R>(cb: () => PromiseLike<R>, priority: number = 5): Promise<R> {
-        return this.limiter.schedulePriority(priority, cb);
+        return this.limiter.schedule({ priority: priority }, cb);
     }
 
 

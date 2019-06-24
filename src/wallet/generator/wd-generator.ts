@@ -1,6 +1,6 @@
 import { forEach, get } from 'lodash';
 import * as Coin from '../../coin';
-import { INetworkProvider } from '../../networking';
+import * as Networking  from '../../networking';
 import * as Provider from '../wd-provider';
 import * as Entity from '../entity';
 
@@ -16,7 +16,7 @@ export abstract class WDGenerator implements WDGeneratorInterface {
     public constructor(
         coin: Coin.CoinInterface,
         seed: Buffer,
-        networkProvider: INetworkProvider,
+        networkProvider: Networking.INetworkProvider,
         options: any = {},
     ) {
         this.coin = coin;

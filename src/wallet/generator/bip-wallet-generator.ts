@@ -1,9 +1,9 @@
 import { times } from 'lodash';
 import Bottleneck from 'bottleneck';
-import * as Networking  from '../../networking';
-import * as Coin from '../../coin';
-import * as Constants from '../../constants';
 import HD from '../../hd';
+import * as Constants from '../../constants';
+import * as Networking from '../../networking';
+import * as Coin from '../../coin';
 import * as Wallet from '../../wallet';
 
 import { WDGenerator } from './wd-generator';
@@ -11,11 +11,13 @@ import { WDGenerator } from './wd-generator';
 export class BIPWalletGenerator extends WDGenerator {
     protected readonly limiter: Bottleneck;
 
-
     public constructor(coin: Coin.CoinInterface, seed: Buffer, networkProvider: Networking.INetworkProvider, option: any = {}) {
         super(coin, seed, networkProvider, option);
 
-        this.limiter = new Bottleneck(1, option.addressTime || 100);
+        this.limiter = new Bottleneck({
+            maxConcurrent: 1,
+            minTime: option.addressTime || 100,
+        });
     }
 
 
@@ -27,7 +29,9 @@ export class BIPWalletGenerator extends WDGenerator {
 
         times(addressCount, () => {
             addrsPromises.push(
-                this.limiter.schedule(async () => privateProvider.deriveNew(addressType).address),
+                this.limiter.schedule(
+                    async () => privateProvider.deriveNew(addressType).address,
+                ),
             );
         });
 
