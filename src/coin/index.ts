@@ -5,7 +5,7 @@ import * as Defined from './defined';
 import * as Private from './private';
 import * as Options from './options';
 import * as Transaction from './transaction';
-import { CoinInterface } from './coin-interface';
+import CoinInterface from './coin-interface';
 
 export { Key, Defined, Private, Options, Transaction, CoinInterface };
 export { ScriptType, Unit, BalanceScheme, TransactionScheme, SignInputData };

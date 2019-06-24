@@ -1,9 +1,11 @@
-export { Bitcoin } from './bitcoin';
-export { Litecoin }from './litecoin';
-export { Ethereum } from './ethereum';
-export { Dash } from './dash';
+export { default as Bitcoin } from './bitcoin';
+export { default as BitcoinTestnet } from './bitcoin-testnet';
 
-export { BitcoinTestnet } from './bitcoin-testnet';
-export { LitecoinTestnet } from './litecoin-testnet';
-export { EthereumRopstenTestnet } from './ethereum-ropsten-testnet';
-export { DashTestnet } from './dash-testnet';
+export { default as Litecoin }from './litecoin';
+export { default as LitecoinTestnet } from './litecoin-testnet';
+
+export { default as Dash } from './dash';
+export { default as DashTestnet } from './dash-testnet';
+
+export { default as Ethereum } from './ethereum';
+export { default as EthereumRopstenTestnet } from './ethereum-ropsten-testnet';

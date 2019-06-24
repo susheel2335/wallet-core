@@ -1,12 +1,13 @@
-import { Constants, Coin } from '../../';
-import { Network } from 'bitcoinjs-lib';
-import { BIPGenericCoin } from '../bip-generic-coin';
 import BigNumber from 'bignumber.js';
+import BitcoinJS from 'bitcoinjs-lib';
+import * as Constants from '../../constants';
+import { Unit } from '../entities';
+import { BIPGenericCoin } from '../bip-generic-coin';
 
-export class Litecoin extends BIPGenericCoin {
+export default class Litecoin extends BIPGenericCoin {
 
-    public getUnit(): Coin.Unit {
-        return Coin.Unit.LTC;
+    public getUnit(): Unit {
+        return Unit.LTC;
     }
 
     public getName(): string {
@@ -17,7 +18,7 @@ export class Litecoin extends BIPGenericCoin {
         return 2;
     }
 
-    public networkInfo(): Network {
+    public networkInfo(): BitcoinJS.Network {
         return {
             bip32: {
                 "public": 0x019da462,

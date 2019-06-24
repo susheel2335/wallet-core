@@ -1,10 +1,10 @@
 import BigNumber from 'bignumber.js';
 import * as Constants from '../../constants';
 import * as Coin from '../../coin';
-import { Ethereum } from './ethereum';
+import Ethereum from './ethereum';
 
 
-export class EthereumRopstenTestnet extends Ethereum {
+export default class EthereumRopstenTestnet extends Ethereum {
     public readonly defaultGasPrice: BigNumber = new BigNumber(8).div(Constants.GWEI_PER_COIN); //5 GWei
 
     public readonly chainId: number = 3;

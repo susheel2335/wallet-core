@@ -1,37 +1,41 @@
 import BigNumber from 'bignumber.js';
 import BitcoinJS from 'bitcoinjs-lib';
-
 import * as Constants from '../constants';
-import * as Coin from './';
+import * as Key from './key';
+import * as Options from './options';
+import * as Private from './private';
+import { BalanceScheme, TransactionScheme, Unit } from './entities';
+import CoinInterface from './coin-interface';
 
-export abstract class BIPGenericCoin implements Coin.CoinInterface {
+
+export abstract class BIPGenericCoin implements CoinInterface {
 
     public readonly minValue: BigNumber = new BigNumber(1).div(Constants.SATOSHI_PER_COIN);
 
-    private readonly hdKeyFormat: Coin.Key.FormatInterface;
+    private readonly hdKeyFormat: Key.FormatInterface;
 
-    protected options: Coin.Options.BIPCoinOptions;
+    protected options: Options.BIPCoinOptions;
 
-    public constructor(options?: Coin.Options.BIPCoinOptions) {
+    public constructor(options?: Options.BIPCoinOptions) {
         if (!options) {
-            options = new Coin.Options.BIPCoinOptions();
+            options = new Options.BIPCoinOptions();
         }
 
         this.options = options;
 
-        this.hdKeyFormat = new Coin.Key.BIPKeyFormat(this.networkInfo(), options);
+        this.hdKeyFormat = new Key.BIPKeyFormat(this.networkInfo(), options);
     }
 
-    public getOptions(): Coin.Options.BIPCoinOptions {
+    public getOptions(): Options.BIPCoinOptions {
         return this.options;
     }
 
-    public getBalanceScheme(): Coin.BalanceScheme {
-        return Coin.BalanceScheme.UTXO;
+    public getBalanceScheme(): BalanceScheme {
+        return BalanceScheme.UTXO;
     }
 
-    public getTransactionScheme(): Coin.TransactionScheme {
-        return Coin.TransactionScheme.INPUTS_OUTPUTS;
+    public getTransactionScheme(): TransactionScheme {
+        return TransactionScheme.INPUTS_OUTPUTS;
     }
 
     public isMultiAddressAccount(): boolean {
@@ -42,12 +46,12 @@ export abstract class BIPGenericCoin implements Coin.CoinInterface {
         return true;
     }
 
-    public getKeyFormat(): Coin.Key.FormatInterface {
+    public getKeyFormat(): Key.FormatInterface {
         return this.hdKeyFormat;
     }
 
-    public makePrivateFromSeed(seed: Buffer): Coin.Private.BasicMasterNode {
-        return Coin.Private.BasicMasterNode.fromSeedBuffer(seed, this);
+    public makePrivateFromSeed(seed: Buffer): Private.BasicMasterNode {
+        return Private.BasicMasterNode.fromSeedBuffer(seed, this);
     }
 
     public get lowFeePerByte(): BigNumber {
@@ -66,7 +70,7 @@ export abstract class BIPGenericCoin implements Coin.CoinInterface {
         return this.networkInfo().bech32 !== undefined;
     }
 
-    public abstract getUnit(): Coin.Unit;
+    public abstract getUnit(): Unit;
 
     public abstract getName(): string;
 

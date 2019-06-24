@@ -6,7 +6,7 @@ import * as Options from '../options';
 import * as Private from '../private';
 import * as Constants from '../../constants';
 
-export class Ethereum implements CoinInterface {
+export default class Ethereum implements CoinInterface {
     public readonly minValue: BigNumber = new BigNumber(1).div(Constants.WEI_PER_COIN);
 
     // Default transaction gas limit

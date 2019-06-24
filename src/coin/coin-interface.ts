@@ -6,7 +6,7 @@ import * as Options from './options';
 import * as Key from './key';
 import * as Private from './private';
 
-export interface CoinInterface {
+export default interface CoinInterface {
     readonly minValue: BigNumber;
 
     getOptions(): Options.CoinOptionsInterface;
@@ -33,5 +33,12 @@ export interface CoinInterface {
 
     isBIPType(): boolean;
 
-    makePrivateFromSeed(seed: Buffer): Private.MasterNodeInterface
+    /**
+     * Method to create private key from seed
+     *
+     * @param {Buffer}      seed
+     *
+     * @return {MasterNodeInterface}
+     */
+    makePrivateFromSeed(seed: Buffer): Private.MasterNodeInterface;
 }

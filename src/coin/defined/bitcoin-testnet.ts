@@ -1,13 +1,13 @@
 import BigNumber from 'bignumber.js';
 import { Network } from 'bitcoinjs-lib';
-import { Constants, Coin } from '../../';
-
+import * as Constants from '../../constants';
+import { Unit } from '../entities';
 import { BIPGenericCoin } from '../bip-generic-coin';
 
-export class BitcoinTestnet extends BIPGenericCoin {
+export default class BitcoinTestnet extends BIPGenericCoin {
 
-    public getUnit(): Coin.Unit {
-        return Coin.Unit.BTCt;
+    public getUnit(): Unit {
+        return Unit.BTCt;
     }
 
     public getName(): string {

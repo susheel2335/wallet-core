@@ -16,8 +16,6 @@ export default class WsClient implements plarkcore.Destructible {
             autoConnect: false,
             transports: ['websocket'],
         });
-
-        this.init();
     }
 
 

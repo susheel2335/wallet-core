@@ -1,12 +1,13 @@
 import BigNumber from 'bignumber.js';
 import BitcoinJS from 'bitcoinjs-lib';
-import { Constants, Coin } from '../../';
+import { Unit } from '../entities';
+import * as Constants from '../../constants';
 import { BIPGenericCoin } from '../bip-generic-coin';
 
-export class Bitcoin extends BIPGenericCoin {
+export default class Bitcoin extends BIPGenericCoin {
 
-    public getUnit(): Coin.Unit {
-        return Coin.Unit.BTC;
+    public getUnit(): Unit {
+        return Unit.BTC;
     }
 
     public getName(): string {

@@ -48,8 +48,8 @@ AdapterMap[Coin.Unit.LTC] = [
         wsUrl: 'wss://ltc.insight.plark.io/',
         version: '0.4.4',
     }, {
-        type: AdapterType.INSIGHT,
-        url: 'https://ltc1.trezor.io/api',
+        type: AdapterType.BLOCKBOOK,
+        url: 'https://ltc1.trezor.io/api/',
         wsUrl: 'wss://ltc1.trezor.io/',
         version: '0.1.1',
     },
