@@ -37,13 +37,13 @@ export default class WsClient implements plarkcore.Destructible {
             return this.openingPromise;
         }
 
-        this._openWebSocket();
+        this.__openWS();
 
         this.openingPromise = new Promise<SocketIOClient.Socket>((resolve, reject) => {
             this.ws.once('connect', () => {
                 delete this.openingPromise;
                 this.isOpen = true;
-
+                
                 resolve(this.ws);
             });
 
@@ -54,6 +54,15 @@ export default class WsClient implements plarkcore.Destructible {
                 this.__closeWS();
 
                 reject();
+            });
+
+            this.ws.once('connect_error', (error) => {
+                console.warn('Connection Error!');
+
+                delete this.openingPromise;
+                this.__closeWS();
+
+                reject(error.message);
             });
         });
 
@@ -76,14 +85,14 @@ export default class WsClient implements plarkcore.Destructible {
     }
 
 
-    protected _openWebSocket(): void {
+    protected __openWS(): void {
         this.ws.once('disconnect', this.__closeWS);
 
         this.ws.open();
     }
 
 
-    private __closeWS = () => {
+    protected __closeWS = () => {
         this.isOpen = false;
 
         this.ws.close();

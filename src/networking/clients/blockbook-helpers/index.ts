@@ -74,7 +74,7 @@ class TransactionHelper {
 
             return blockbook.toWalletTx(tx, this.client.coin);
         } catch (error) {
-            return;
+            throw error;
         }
     }
 
