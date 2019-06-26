@@ -129,12 +129,18 @@ export default class InsightNetworkClient extends NetworkClient {
     }
 
 
+    /** @deprecated */
     public getTracker(): plarkcore.ITrackerClient {
         if (!this.trackerClient) {
             this.trackerClient = new InsightTrackerProvider(this);
         }
 
         return this.trackerClient;
+    }
+
+
+    public createTracker(): plarkcore.ITrackerClient {
+        return new InsightTrackerProvider(this)
     }
 
 

@@ -26,7 +26,6 @@ const client = Networking.firstNetworkClient(coin.coin);
 
     console.log(`Found ${txs.length} TXS`);
 
-    const tracker = client.getTracker();
+    const tracker = client.createTracker();
     tracker.onBlock((block) => console.log(block));
-
 })();

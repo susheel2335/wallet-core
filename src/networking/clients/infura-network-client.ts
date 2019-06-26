@@ -7,7 +7,7 @@ import { Infura, Etherscan } from '../api';
 import { wrapLimiterMethod as infuraWrap } from '../limmiters/infura';
 import { wrapLimiterMethod as etherscanWrap } from '../limmiters/etherscan';
 import { NetworkClient, IEthereumNetworkClient } from './network-client';
-import { InfuraTrackerProvider } from './tracker';
+import { BlockbookTrackerProvider, InfuraTrackerProvider } from './tracker';
 import { GasHelper } from './infura-helpers';
 
 const EtherscanApi = require('etherscan-api');
@@ -226,13 +226,18 @@ export default class InfuraNetworkClient extends NetworkClient implements IEther
         });
     }
 
-
+    /** @deprecated */
     public getTracker(): plarkcore.ITrackerClient {
         if (!this.trackerClient) {
             this.trackerClient = new InfuraTrackerProvider(this);
         }
 
         return this.trackerClient;
+    }
+
+
+    public createTracker(): plarkcore.ITrackerClient {
+        return new InfuraTrackerProvider(this);
     }
 
 

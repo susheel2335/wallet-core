@@ -7,12 +7,15 @@ const handleNewBlock = (block: Wallet.Entity.Block) => {
     console.log(`${coin.getUnit()} :: ${block.height} :: TX count: ${block.txids.length}`);
 };
 
-networkProvider.onNewBlock(handleNewBlock);
 
-networkProvider.getTracker().onConnectionError((error) => {
+const tracker = networkProvider.createTracker();
+
+tracker.onBlock(handleNewBlock);
+
+tracker.onConnectionError((error) => {
     console.log("It's disconnection error!!!!");
 });
 
-networkProvider.getTracker().onConnect(() => {
+tracker.onConnect(() => {
     console.log(`${coin.getUnit()} :: Connected!`);
 });

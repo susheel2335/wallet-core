@@ -27,6 +27,9 @@ export interface INetworkClient extends plarkcore.Destructible {
 
     broadCastTransaction(transaction: Coin.Transaction.Transaction): Promise<string>;
 
+    createTracker(): plarkcore.ITrackerClient;
+
+    /** @deprecated */
     getTracker(): plarkcore.ITrackerClient;
 }
 
@@ -67,36 +70,45 @@ export abstract class NetworkClient implements INetworkClient {
         return this.coin;
     }
 
+
     public getApiUrl(): string {
         return this.options.url;
     }
+
 
     public getWSUrl(): string {
         return this.options.wsUrl as string;
     }
 
+
     public enabledWS(): boolean {
         return !!this.getWSUrl();
     }
+
 
     public getOptions(): plarkcore.AdapterOption {
         return this.options;
     }
 
-    /**
-     * @todo Must be implement this method for
-     */
+
+    /** @deprecated */
     public getTracker(): plarkcore.ITrackerClient {
         throw new Error('Tracker Client must be implement!');
     }
+
+
+    public createTracker(): plarkcore.ITrackerClient {
+        throw new Error('Tracker Client generator must be implement!');
+    }
+
 
     public async getBulkAddrsTxs(addrs: string[]): Promise<Wallet.Entity.WalletTransaction[]> {
         const promiseMap = map(addrs, (addr: string) => {
             return this.getAddressTxs(addr);
         });
 
-
-        const txChunks: Wallet.Entity.WalletTransaction[][] = await Promise.all(promiseMap);
+        const txChunks: Wallet.Entity.WalletTransaction[][]
+            = await Promise.all(promiseMap);
 
         const txList = [];
 
@@ -113,6 +125,7 @@ export abstract class NetworkClient implements INetworkClient {
 
         return txList;
     }
+
 
     public destruct() {
         this.onBlocksCbs = [];

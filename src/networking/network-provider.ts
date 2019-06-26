@@ -1,8 +1,9 @@
 import { forEach } from 'lodash';
-import { Debug } from '../';
+import * as Debug from '../debugger';
 import * as Coin from '../coin';
 import * as Wallet from '../wallet';
-import { Clients, Adapter } from './';
+import * as Clients from './clients';
+import * as Adapter from './adapter';
 import { createClient } from './client-helper';
 
 export type ClientUnit = {
@@ -24,23 +25,30 @@ export interface INetworkProvider extends plarkcore.Destructible {
 
     getBulkAddrTxs(address: string[]): Promise<Wallet.Entity.WalletTransaction[]>;
 
-    getTracker(): plarkcore.ITrackerClient;
-
-    onNewBlock(callback: plarkcore.NewBlockCallback): void;
-
-    onAddrsTx(address: string[], callback: plarkcore.NewTxCallback): void;
-
-    onTransactionConfirm(txid: string, callback: plarkcore.NewTxCallback): void;
-
     getLastBlock(): Promise<Wallet.Entity.Block>;
 
+    createTracker(index?: number): plarkcore.ITrackerClient;
+
     destruct(): void;
+
+    /** @deprecated */
+    getTracker(): plarkcore.ITrackerClient;
+
+    /** @deprecated */
+    onNewBlock(callback: plarkcore.NewBlockCallback): void;
+
+    /** @deprecated */
+    onAddrsTx(address: string[], callback: plarkcore.NewTxCallback): void;
+
+    /** @deprecated */
+    onTransactionConfirm(txid: string, callback: plarkcore.NewTxCallback): void;
 }
 
 
 export class NetworkProvider implements INetworkProvider {
     protected clientList: ClientUnit[] = [];
-    protected debug: Debug.BerryDebug;
+    protected debug: plarkcore.BerryDebug;
+
 
     public constructor(protected readonly coin: Coin.CoinInterface) {
         this.debug = Debug.create('NetworkProvider:' + this.coin.getUnit());
@@ -93,6 +101,71 @@ export class NetworkProvider implements INetworkProvider {
     }
 
 
+    public async getLastBlock(): Promise<Wallet.Entity.Block> {
+        throw new Error('Need implement block!');
+    }
+
+
+    public broadCastTransaction(transaction: Coin.Transaction.Transaction): Promise<string> {
+        return this.__callMethod<string>('broadCastTransaction', [transaction]);
+    }
+
+
+    /**
+     * @param {number}      index
+     *
+     * @return {plarkcore.ITrackerClient}
+     */
+    public createTracker(index: number = 0): plarkcore.ITrackerClient {
+        if (index in this.clientList) {
+            return this.clientList[index].client.createTracker();
+        }
+
+        throw new Error(`Client with Index ${index} not found`);
+    }
+
+
+    /** @deprecated */
+    public getTracker(): plarkcore.ITrackerClient {
+        return this.clientList[0].client.getTracker();
+    }
+
+
+    /** @deprecated */
+    public onNewBlock(callback: plarkcore.NewBlockCallback): void {
+        this.getTracker().onBlock(callback);
+    }
+
+
+    /** @deprecated */
+    public onTransactionConfirm(txid: string, callback: plarkcore.NewTxCallback) {
+        this.getTracker().onTransactionConfirm(txid, callback);
+    }
+
+
+    /** @deprecated */
+    public onAddrsTx(addrs: string[], callback: plarkcore.NewTxCallback): void {
+        this.getTracker().onAddrsTx(addrs, callback);
+    }
+
+
+    public getClient(index: number = 0): Clients.INetworkClient {
+        return this.clientList[index].client;
+    }
+
+    public destruct() {
+        for (let i in this.clientList) {
+            if (this.clientList[i].client) {
+                this.clientList[i].client.destruct();
+            }
+
+            delete this.clientList[i];
+        }
+
+        this.clientList = [];
+    }
+
+
     protected async __callMethod<T = any>(method: string, params: any[]): Promise<T> {
         const errors = [];
         for (let info of this.clientList) {
@@ -106,54 +179,6 @@ export class NetworkProvider implements INetworkProvider {
         }
 
         this.catchError(method, errors[0]);
-    }
-
-
-    public broadCastTransaction(transaction: Coin.Transaction.Transaction): Promise<string> {
-        return this.__callMethod<string>('broadCastTransaction', [transaction]);
-    }
-
-
-    public getTracker(): plarkcore.ITrackerClient {
-        return this.clientList[0].client.getTracker();
-    }
-
-
-    public onNewBlock(callback: plarkcore.NewBlockCallback): void {
-        this.getTracker().onBlock(callback);
-    }
-
-
-    public onTransactionConfirm(txid: string, callback: plarkcore.NewTxCallback) {
-        this.getTracker().onTransactionConfirm(txid, callback);
-    }
-
-
-    public onAddrsTx(addrs: string[], callback: plarkcore.NewTxCallback): void {
-        this.getTracker().onAddrsTx(addrs, callback);
-    }
-
-
-    public getClient(index: number = 0): Clients.INetworkClient {
-        return this.clientList[index].client;
-    }
-
-
-    public async getLastBlock(): Promise<Wallet.Entity.Block> {
-        throw new Error('Need implement block!');
-    }
-
-
-    public destruct() {
-        for (let i in this.clientList) {
-            if (this.clientList[i].client) {
-                this.clientList[i].client.destruct();
-            }
-
-            delete this.clientList[i];
-        }
-
-        this.clientList = [];
     }
 
 

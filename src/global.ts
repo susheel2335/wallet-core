@@ -8,6 +8,7 @@ declare global {
     namespace plarkcore {
         type NewTxCallback = (tx: Wallet.Entity.WalletTransaction) => void;
         type NewBlockCallback = (block: Wallet.Entity.Block) => void;
+        type BerryDebug = (message?: any, ...optionalParams: any[]) => void;
 
         type FeeType = 'low' | 'standard' | 'high';
         type FeeRecord = Record<FeeType, BigNumber>;

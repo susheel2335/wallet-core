@@ -102,9 +102,11 @@ export default class BlockbookNetworkClient extends NetworkClient {
         return this.txHelper.getTx(txid);
     }
 
+
     public async getBulkAddrsTxs(addrs: string[]): Promise<Wallet.Entity.BIPTransaction[]> {
         return this.txHelper.getBulkAddrsTxs(addrs);
     }
+
 
     public async getAddressTxs(address: string): Promise<Wallet.Entity.BIPTransaction[]> {
         return this.txHelper.getBulkAddrsTxs([address]);
@@ -116,12 +118,18 @@ export default class BlockbookNetworkClient extends NetworkClient {
     }
 
 
+    /** @deprecated */
     public getTracker(): plarkcore.ITrackerClient {
         if (!this.trackerClient) {
             this.trackerClient = new BlockbookTrackerProvider(this);
         }
 
         return this.trackerClient;
+    }
+
+
+    public createTracker(): plarkcore.ITrackerClient {
+        return new BlockbookTrackerProvider(this);
     }
 
 

@@ -17,7 +17,6 @@ describe('Tracker Connection', function () {
         const coin = Coin.makeCoin(coinUnit);
 
         describe(`Tracker for ${coin.getUnit()}`, function () {
-
             let networkClient;
             let tracker;
 
@@ -26,7 +25,7 @@ describe('Tracker Connection', function () {
 
             before(function () {
                 networkClient = Networking.firstNetworkClient(coin);
-                tracker = networkClient.getTracker();
+                tracker = networkClient.createTracker();
 
                 connectionPromise = new Promise(resolve => {
                     tracker.onConnect(() => resolve());
@@ -49,6 +48,7 @@ describe('Tracker Connection', function () {
                 } catch (error) {
                     console.error(error.message);
                 } finally {
+                    tracker.destruct();
                     networkClient.destruct();
                 }
             });
