@@ -8,13 +8,13 @@ export const AdapterMap: Record<string, plarkcore.AdapterOption[]> = {};
 AdapterMap[Coin.Unit.BTC] = [
     {
         type: AdapterType.BLOCKBOOK,
-        url: 'https://btc1.trezor.io/api/',
-        wsUrl: 'wss://btc1.trezor.io',
+        url: 'https://btc.blockbook.plark.io/api/',
+        wsUrl: 'wss://btc.blockbook.plark.io',
         version: '0.1.1',
     }, {
         type: AdapterType.BLOCKBOOK,
-        url: 'https://btc.blockbook.plark.io/api/',
-        wsUrl: 'wss://btc.blockbook.plark.io',
+        url: 'https://btc1.trezor.io/api/',
+        wsUrl: 'wss://btc1.trezor.io',
         version: '0.1.1',
     }, {
         type: AdapterType.INSIGHT,

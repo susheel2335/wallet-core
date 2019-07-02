@@ -31,14 +31,12 @@ export default class InsightTrackerProvider extends TrackerClient<InsightNetwork
         this._openSocketConnection();
     }
 
-
     public destruct() {
         this.enableReconnect = false;
         super.destruct();
 
         this.__removeSocketConnection();
     }
-
 
     protected _openSocketConnection() {
         this.socket.on('block', this.__onHandleBlock);
@@ -47,9 +45,7 @@ export default class InsightTrackerProvider extends TrackerClient<InsightNetwork
         this.socket.once('connect', () => {
             this.debug('Socket connected!');
 
-            setTimeout(() => {
-                !this.connected && this.fireConnect();
-            }, 500);
+            this.socket.connected && !this.connected && this.fireConnect();
         });
 
         this.socket.once('error', (error) => {
@@ -75,7 +71,6 @@ export default class InsightTrackerProvider extends TrackerClient<InsightNetwork
         this.socket.open();
     }
 
-
     protected fireConnect(): boolean {
         if (!this.socket.connected) {
             throw new Error('No socket connection for ' + this.networkClient.getWSUrl());
@@ -87,7 +82,6 @@ export default class InsightTrackerProvider extends TrackerClient<InsightNetwork
         return super.fireConnect();
     }
 
-
     protected fireNewBlock(block: Wallet.Entity.Block): boolean {
         forEach(block.txids, async (txid) => {
             if (this.listenerCount('tx.' + txid) === 0) return;
@@ -98,7 +92,6 @@ export default class InsightTrackerProvider extends TrackerClient<InsightNetwork
 
         return super.fireNewBlock(block);
     }
-
 
     private __onHandleBlock = async (blockHash: string) => {
         try {
@@ -112,7 +105,6 @@ export default class InsightTrackerProvider extends TrackerClient<InsightNetwork
             );
         }
     };
-
 
     private __onHandleTransaction = async (tx: any) => {
         const { callback, addrs } = this.addrTxEvents;
@@ -134,7 +126,6 @@ export default class InsightTrackerProvider extends TrackerClient<InsightNetwork
         }
     };
 
-
     private __reconnectSocket() {
         if (!this.enableReconnect) {
             return;
@@ -146,7 +137,6 @@ export default class InsightTrackerProvider extends TrackerClient<InsightNetwork
 
         this.debug('Start reconnecting...');
     }
-
 
     private __removeSocketConnection() {
         this.connected = false;
