@@ -45,7 +45,11 @@ export default class InsightTrackerProvider extends TrackerClient<InsightNetwork
         this.socket.once('connect', () => {
             this.debug('Socket connected!');
 
-            this.socket.connected && !this.connected && this.fireConnect();
+            if (this.socket.connected) {
+                this.fireConnect();
+            } else {
+                this.__reconnectSocket();
+            }
         });
 
         this.socket.once('error', (error) => {
@@ -141,8 +145,9 @@ export default class InsightTrackerProvider extends TrackerClient<InsightNetwork
     private __removeSocketConnection() {
         this.connected = false;
 
+        this.socket.removeAllListeners();
         this.socket.once('disconnect', () => {
-            this.socket.removeAllListeners();
+            this.fireDisconnect();
         });
 
         this.socket.disconnect();
