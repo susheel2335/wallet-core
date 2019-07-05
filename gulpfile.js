@@ -3,8 +3,6 @@ const path = require('path');
 const flatten = require('gulp-flatten');
 const jeditor = require('gulp-json-editor');
 
-gulp.task('default', ['packages']);
-
 gulp.task(
     'definitions',
     copyTask({
