@@ -40,24 +40,26 @@ export function createWDProvider(walletData: Entity.WalletData, networkProvider:
 }
 
 
-export function coinTxToWalletTx(txid: string,
-                                 coinTx: Coin.Transaction.Transaction,
-                                 coin: Coin.CoinInterface): Entity.WalletTransaction {
+export function coinTxToWalletTx(
+    txid: string,
+    coinTx: Coin.Transaction.Transaction,
+    coin: Coin.CoinInterface,
+): plarkcore.blockchain.CommonTransaction {
 
     if (false === coinTx.isSigned) {
         throw new Error('Transaction must be signed');
     }
 
-    const walletTransaction: Entity.WalletTransaction = {
+    const walletTransaction: plarkcore.blockchain.CommonTransaction = {
         coin: coin.getUnit(),
         txid: txid,
         receiveTime: new Date().getTime(),
-    } as Entity.WalletTransaction;
+    } as plarkcore.blockchain.CommonTransaction;
 
     switch (coin.getTransactionScheme()) {
         case Coin.TransactionScheme.INPUTS_OUTPUTS: {
             return mapBIPTransaction(
-                walletTransaction as Entity.BIPTransaction,
+                walletTransaction as plarkcore.bip.BIPTransaction,
                 coinTx as Coin.Transaction.BIPTransaction,
                 coin as Coin.BIPGenericCoin,
             );
@@ -65,7 +67,7 @@ export function coinTxToWalletTx(txid: string,
 
         case Coin.TransactionScheme.FROM_TO: {
             return mapEtherTransaction(
-                walletTransaction as Entity.EtherTransaction,
+                walletTransaction as plarkcore.eth.EtherTransaction,
                 coinTx as Coin.Transaction.EthereumTransaction,
                 coin,
             );
@@ -76,9 +78,11 @@ export function coinTxToWalletTx(txid: string,
 }
 
 
-function mapBIPTransaction(walletTransaction: Entity.BIPTransaction,
-                           coinTx: Coin.Transaction.BIPTransaction,
-                           coin: Coin.BIPGenericCoin): Entity.BIPTransaction {
+function mapBIPTransaction(
+    walletTransaction: plarkcore.bip.BIPTransaction,
+    coinTx: Coin.Transaction.BIPTransaction,
+    coin: Coin.BIPGenericCoin,
+): plarkcore.bip.BIPTransaction {
 
     walletTransaction.version = coinTx.version;
     walletTransaction.lockTime = coinTx.bitcoinJsTransaction.locktime;
@@ -89,10 +93,10 @@ function mapBIPTransaction(walletTransaction: Entity.BIPTransaction,
             prevOutIndex: input.index,
             sequence: input.sequence,
             scriptSig: input.script.toString('hex'),
-        } as Entity.BIPInput;
+        } as plarkcore.bip.Input;
     });
 
-    walletTransaction.outputs = map(coinTx.outputs, (output: BitcoinJS.Out): Entity.BIPOutput => {
+    walletTransaction.outputs = map(coinTx.outputs, (output: BitcoinJS.Out) => {
         let address;
         try {
             address = BitcoinJS.address.fromOutputScript(output.script, coin.networkInfo());
@@ -106,16 +110,18 @@ function mapBIPTransaction(walletTransaction: Entity.BIPTransaction,
             scriptPubKey: output.script.toString('hex'),
             addresses: address ? [address] : [],
             scriptType: scriptType,
-        };
+        } as plarkcore.bip.Output;
     });
 
     return walletTransaction;
 }
 
 
-function mapEtherTransaction(walletTransaction: Entity.EtherTransaction,
-                             coinTx: Coin.Transaction.EthereumTransaction,
-                             coin: Coin.CoinInterface): Entity.EtherTransaction {
+function mapEtherTransaction(
+    walletTransaction: plarkcore.eth.EtherTransaction,
+    coinTx: Coin.Transaction.EthereumTransaction,
+    coin: Coin.CoinInterface,
+): plarkcore.eth.EtherTransaction {
 
     walletTransaction.from = coinTx.from.toString();
     walletTransaction.to = coinTx.to.toString();

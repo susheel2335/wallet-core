@@ -7,7 +7,7 @@ import { Infura, Etherscan } from '../api';
 import { wrapLimiterMethod as infuraWrap } from '../limmiters/infura';
 import { wrapLimiterMethod as etherscanWrap } from '../limmiters/etherscan';
 import { NetworkClient, IEthereumNetworkClient } from './network-client';
-import { BlockbookTrackerProvider, InfuraTrackerProvider } from './tracker';
+import { InfuraTrackerProvider } from './tracker';
 import { GasHelper } from './infura-helpers';
 
 const EtherscanApi = require('etherscan-api');
@@ -136,7 +136,7 @@ export default class InfuraNetworkClient extends NetworkClient implements IEther
     }
 
 
-    public async getBlock(blockHash: string): Promise<Wallet.Entity.Block> {
+    public async getBlock(blockHash: string): Promise<plarkcore.blockchain.CommonBlock> {
         const response = await this.sendRequest('eth_getBlockByHash', [blockHash, true]);
 
         const blockRes: Infura.Block = response.result;
@@ -150,14 +150,14 @@ export default class InfuraNetworkClient extends NetworkClient implements IEther
             height: new BigNumber(blockRes.number).toNumber(),
             txids: map(blockRes.transactions, tx => tx.hash),
             original: blockRes,
-        } as Wallet.Entity.Block;
+        } as plarkcore.blockchain.CommonBlock;
     }
 
 
     public async getBlockByNumber(
         blockNumber: number | string,
         options: AxiosRequestConfig = {},
-    ): Promise<Wallet.Entity.Block | undefined> {
+    ): Promise<plarkcore.blockchain.CommonBlock | undefined> {
         const response = await this.sendRequest('eth_getBlockByNumber', [blockNumber, true], options);
 
         const blockRes: Infura.Block = response.result;
@@ -171,7 +171,7 @@ export default class InfuraNetworkClient extends NetworkClient implements IEther
             height: new BigNumber(blockRes.number).toNumber(),
             txids: map(blockRes.transactions, tx => tx.hash),
             original: blockRes,
-        } as Wallet.Entity.Block;
+        } as plarkcore.blockchain.CommonBlock;
     }
 
 

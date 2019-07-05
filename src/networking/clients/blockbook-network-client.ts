@@ -67,7 +67,7 @@ export default class BlockbookNetworkClient extends NetworkClient {
     }
 
 
-    public async getBlock(blockHash: string): Promise<Wallet.Entity.Block> {
+    public async getBlock(blockHash: string): Promise<plarkcore.blockchain.CommonBlock> {
         let pageIndex = 1;
 
         const firstBlockPage = await this.sendApiRequest<blockbook.Block>(`/v2/block/${blockHash}`);
@@ -78,7 +78,7 @@ export default class BlockbookNetworkClient extends NetworkClient {
             time: firstBlockPage.time * 1000,
             txids: firstBlockPage.txs.map(tx => tx.txid),
             original: undefined,
-        } as Wallet.Entity.Block;
+        } as plarkcore.blockchain.CommonBlock;
 
 
         while (pageIndex > firstBlockPage.page) {
@@ -98,17 +98,17 @@ export default class BlockbookNetworkClient extends NetworkClient {
     }
 
 
-    public async getTx(txid: string): Promise<Wallet.Entity.BIPTransaction | undefined> {
+    public async getTx(txid: string): Promise<plarkcore.bip.BIPTransaction | undefined> {
         return this.txHelper.getTx(txid);
     }
 
 
-    public async getBulkAddrsTxs(addrs: string[]): Promise<Wallet.Entity.BIPTransaction[]> {
+    public async getBulkAddrsTxs(addrs: string[]): Promise<plarkcore.bip.BIPTransaction[]> {
         return this.txHelper.getBulkAddrsTxs(addrs);
     }
 
 
-    public async getAddressTxs(address: string): Promise<Wallet.Entity.BIPTransaction[]> {
+    public async getAddressTxs(address: string): Promise<plarkcore.bip.BIPTransaction[]> {
         return this.txHelper.getBulkAddrsTxs([address]);
     }
 

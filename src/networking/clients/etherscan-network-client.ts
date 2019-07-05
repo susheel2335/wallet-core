@@ -32,9 +32,9 @@ export default class EtherscanNetworkClient extends NetworkClient implements IEt
      * Get Transaction information by TX Hash
      *
      * @param {string} txid
-     * @returns {WalletTransaction}
+     * @returns {CommonTransaction}
      */
-    public async getTx(txid: string): Promise<Wallet.Entity.WalletTransaction | undefined> {
+    public async getTx(txid: string): Promise<plarkcore.blockchain.CommonTransaction | undefined> {
         let response: any;
 
         try {
@@ -58,10 +58,10 @@ export default class EtherscanNetworkClient extends NetworkClient implements IEt
             gasLimit: tx.gas,
             data: tx.input,
             nonce: tx.nonce,
-        } as Wallet.Entity.EtherTransaction;
+        } as plarkcore.eth.EtherTransaction;
     }
 
-    public getBlock(blockHash: string): Promise<Wallet.Entity.Block> {
+    public getBlock(blockHash: string): Promise<plarkcore.blockchain.CommonBlock> {
         throw new Error('Must be implement');
     }
 

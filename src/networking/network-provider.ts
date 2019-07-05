@@ -25,7 +25,7 @@ export interface INetworkProvider extends plarkcore.Destructible {
 
     getBulkAddrTxs(address: string[]): Promise<Wallet.Entity.WalletTransaction[]>;
 
-    getLastBlock(): Promise<Wallet.Entity.Block>;
+    getLastBlock(): Promise<plarkcore.blockchain.CommonBlock>;
 
     createTracker(index?: number): plarkcore.ITrackerClient;
 
@@ -101,7 +101,7 @@ export class NetworkProvider implements INetworkProvider {
     }
 
 
-    public async getLastBlock(): Promise<Wallet.Entity.Block> {
+    public async getLastBlock(): Promise<plarkcore.blockchain.CommonBlock> {
         throw new Error('Need implement block!');
     }
 

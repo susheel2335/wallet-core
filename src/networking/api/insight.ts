@@ -119,8 +119,8 @@ export type Block = {
     poolInfo: any;
 };
 
-export function toWalletTx(tx: Transaction, coin: Coin.CoinInterface): Wallet.Entity.BIPTransaction {
-    const txData: Wallet.Entity.BIPTransaction = {
+export function toWalletTx(tx: Transaction, coin: Coin.CoinInterface): plarkcore.bip.BIPTransaction {
+    const txData: plarkcore.bip.BIPTransaction = {
         coin: coin.getUnit(),
         txid: tx.txid,
         blockHeight: (+tx.blockheight > 0) ? tx.blockheight : undefined,
@@ -130,7 +130,7 @@ export function toWalletTx(tx: Transaction, coin: Coin.CoinInterface): Wallet.En
         lockTime: tx.locktime,
         inputs: [],
         outputs: [],
-    } as Wallet.Entity.BIPTransaction;
+    } as plarkcore.bip.BIPTransaction;
 
     forEach(orderBy(tx.vin, 'n', 'asc'), (vin: Input) => {
         if (!vin.txid) return;

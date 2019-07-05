@@ -79,7 +79,7 @@ export interface TransactionReceipt {
  * @param {CoinInterface} coin
  * @param {number} blockTime
  *
- * @returns {WalletTransaction}
+ * @returns {CommonTransaction}
  */
 export function toWalletTx(tx: Transaction, coin: Coin.CoinInterface, blockTime: number = undefined): Wallet.Entity.EtherTransaction {
     return {

@@ -42,7 +42,7 @@ export class BlockcypherBIPNetworkClient extends NetworkClient {
     }
 
 
-    public getBlock(blockHash: string): Promise<Wallet.Entity.Block> {
+    public getBlock(blockHash: string): Promise<plarkcore.blockchain.CommonBlock> {
         return wrapLimiterMethod(async () => {
             const response = await this.client.get('/blocks/' + blockHash);
             const block: Blockcypher.Block = response.data;
@@ -73,13 +73,13 @@ export class BlockcypherBIPNetworkClient extends NetworkClient {
     }
 
 
-    public getAddressTxs(address: string): Promise<Wallet.Entity.BIPTransaction[]> {
+    public getAddressTxs(address: string): Promise<plarkcore.bip.BIPTransaction[]> {
         return wrapLimiterMethod(async () => {
             const response = await this.client.get('/addrs/' + address + '/full');
 
             const addressData: Blockcypher.AddressInfo = response.data;
 
-            const txList: Wallet.Entity.BIPTransaction[] = [];
+            const txList: plarkcore.bip.BIPTransaction[] = [];
             const extractTxCallback = (tx: Blockcypher.Transaction) => {
                 txList.push(Blockcypher.toWalletTx(tx, this.coin));
             };

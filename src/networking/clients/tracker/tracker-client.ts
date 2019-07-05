@@ -154,7 +154,7 @@ export class TrackerClient<T extends INetworkClient> extends EventEmitter implem
     }
 
 
-    protected fireNewBlock(block: Wallet.Entity.Block): boolean {
+    protected fireNewBlock(block: plarkcore.blockchain.CommonBlock): boolean {
         return this.emit(TrackerEvent.Block, block);
     }
 

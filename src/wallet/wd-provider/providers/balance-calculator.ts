@@ -70,10 +70,10 @@ export class BalanceCalculator {
         const { txs = {} } = this.wdProvider.getData();
         const inputMap = generateInputMap(txs);
 
-        forEach(txs, (tx: Wallet.Entity.BIPTransaction) => {
+        forEach(txs, (tx: plarkcore.bip.BIPTransaction) => {
             let txBalance = wdBalance.txBalances[tx.txid];
 
-            forEach(tx.outputs, (out: Wallet.Entity.BIPOutput, index: number) => {
+            forEach(tx.outputs, (out: plarkcore.bip.Output, index: number) => {
                 const outAddress = out.addresses[0];
                 // @TODO Need review and change model of calculate addresses data
                 if (!(outAddress in wdBalance.addrBalances)) {
@@ -119,7 +119,7 @@ export class BalanceCalculator {
 
         const { txs = {} } = this.wdProvider.getData();
 
-        forEach(txs, (tx: Wallet.Entity.EtherTransaction) => {
+        forEach(txs, (tx: plarkcore.eth.EtherTransaction) => {
             let txBalance = wdBalance.txBalances[tx.txid];
 
             const txGas = new BigNumber(tx.gasUsed ? tx.gasUsed : tx.gasLimit).times(tx.gasPrice);
@@ -176,11 +176,11 @@ function chooseScriptType(scriptType: Coin.ScriptType): ScriptType {
 }
 
 
-function generateInputMap(txs: Record<string, Wallet.Entity.WalletTransaction>): InputUnit[] {
+function generateInputMap(txs: Record<string, plarkcore.blockchain.CommonTransaction>): InputUnit[] {
     const inputMap: InputUnit[] = [];
 
-    forEach(txs, (tx: Wallet.Entity.BIPTransaction) => {
-        tx.inputs.map((input: Wallet.Entity.BIPInput) => {
+    forEach(txs, (tx: plarkcore.bip.BIPTransaction) => {
+        tx.inputs.map((input: plarkcore.bip.Input) => {
             inputMap.push({
                 txid: tx.txid,
                 prevTxid: input.prevTxid,

@@ -72,7 +72,7 @@ export default class InfuraTrackerProvider extends TrackerClient<InfuraNetworkCl
     }
 
 
-    protected fireNewBlock(block: Wallet.Entity.Block): boolean {
+    protected fireNewBlock(block: plarkcore.blockchain.CommonBlock): boolean {
         this.currentBlockHeight = block.height;
         this.currentBlockTime = block.time;
 
@@ -123,7 +123,7 @@ export default class InfuraTrackerProvider extends TrackerClient<InfuraNetworkCl
     }
 
 
-    protected async trackLastOrNextBlock(): Promise<Wallet.Entity.Block | void> {
+    protected async trackLastOrNextBlock(): Promise<plarkcore.blockchain.CommonBlock | void> {
         if (!this.enableBlockTracking) {
             return;
         }
@@ -134,7 +134,7 @@ export default class InfuraTrackerProvider extends TrackerClient<InfuraNetworkCl
         }
 
         try {
-            const block: Wallet.Entity.Block | undefined = await this.networkClient.getBlockByNumber(
+            const block: plarkcore.blockchain.CommonBlock | undefined = await this.networkClient.getBlockByNumber(
                 blockHeight, {
                     cancelToken: this.cancelTokenSource.token,
                 }

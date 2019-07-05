@@ -86,7 +86,7 @@ export default class InsightTrackerProvider extends TrackerClient<InsightNetwork
         return super.fireConnect();
     }
 
-    protected fireNewBlock(block: Wallet.Entity.Block): boolean {
+    protected fireNewBlock(block: plarkcore.blockchain.CommonBlock): boolean {
         forEach(block.txids, async (txid) => {
             if (this.listenerCount('tx.' + txid) === 0) return;
 
@@ -99,7 +99,7 @@ export default class InsightTrackerProvider extends TrackerClient<InsightNetwork
 
     private __onHandleBlock = async (blockHash: string) => {
         try {
-            const block: Wallet.Entity.Block = await this.networkClient.getBlock(blockHash);
+            const block: plarkcore.blockchain.CommonBlock = await this.networkClient.getBlock(blockHash);
 
             this.fireNewBlock(block);
         } catch (error) {
@@ -125,7 +125,7 @@ export default class InsightTrackerProvider extends TrackerClient<InsightNetwork
         const addr = find(transactionAddrs, (addr) => this.isAddrTrack(addr));
 
         if (addr) {
-            const responseTx: Wallet.Entity.BIPTransaction = await this.networkClient.getTx(tx.txid);
+            const responseTx: plarkcore.bip.BIPTransaction = await this.networkClient.getTx(tx.txid);
             callback(responseTx);
         }
     };

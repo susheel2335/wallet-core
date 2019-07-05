@@ -1,5 +1,4 @@
 import { forEach, chunk } from 'lodash';
-import { Wallet } from '../../../';
 import { BlockbookNetworkClient } from '../';
 import { TrackerClient, TrackerEvent } from './tracker-client';
 
@@ -21,7 +20,7 @@ export default class BlockbookTrackerProvider extends TrackerClient<BlockbookNet
     }
 
 
-    protected fireNewBlock(block: Wallet.Entity.Block): boolean {
+    protected fireNewBlock(block: plarkcore.blockchain.CommonBlock): boolean {
         forEach(block.txids, async (txid) => {
             if (this.listenerCount('tx.' + txid) === 0) return;
 
@@ -52,7 +51,7 @@ export default class BlockbookTrackerProvider extends TrackerClient<BlockbookNet
             return;
         }
 
-        const responseTx: Wallet.Entity.BIPTransaction = await this.networkClient.getTx(data.txid);
+        const responseTx: plarkcore.bip.BIPTransaction = await this.networkClient.getTx(data.txid);
         callback(responseTx);
     };
 

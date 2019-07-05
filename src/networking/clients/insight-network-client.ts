@@ -44,9 +44,9 @@ export default class InsightNetworkClient extends NetworkClient {
      *
      * @param {string}      txid
      *
-     * @return {Promise<BIPTransaction|undefined>}
+     * @return {Promise<plarkcore.bip.BIPTransaction|undefined>}
      */
-    public async getTx(txid: string): Promise<Wallet.Entity.BIPTransaction | undefined> {
+    public async getTx(txid: string): Promise<plarkcore.bip.BIPTransaction | undefined> {
         const data: any = await this.sendRequest(`/tx/${txid}`);
         const tx: Insight.Transaction = data as Insight.Transaction;
 
@@ -97,7 +97,7 @@ export default class InsightNetworkClient extends NetworkClient {
     }
 
 
-    public async getBlock(blockHash: string): Promise<Wallet.Entity.Block> {
+    public async getBlock(blockHash: string): Promise<plarkcore.blockchain.CommonBlock> {
         const block: Insight.Block = await this.sendRequest<Insight.Block>(`/block/${blockHash}`);
 
         return {
@@ -106,7 +106,7 @@ export default class InsightNetworkClient extends NetworkClient {
             time: block.time * 1000,
             txids: block.tx,
             original: block,
-        } as Wallet.Entity.Block;
+        } as plarkcore.blockchain.CommonBlock;
     }
 
 
@@ -119,12 +119,12 @@ export default class InsightNetworkClient extends NetworkClient {
     }
 
 
-    public getAddressTxs(address: string): Promise<Wallet.Entity.BIPTransaction[]> {
+    public getAddressTxs(address: string): Promise<plarkcore.bip.BIPTransaction[]> {
         return this.pureGetAddrsTxs([address], 0, 50);
     }
 
 
-    public getBulkAddrsTxs(addrs: string[]): Promise<Wallet.Entity.WalletTransaction[]> {
+    public getBulkAddrsTxs(addrs: string[]): Promise<plarkcore.bip.BIPTransaction[]> {
         return this.pureGetAddrsTxs(addrs, 0, 50);
     }
 
@@ -161,7 +161,7 @@ export default class InsightNetworkClient extends NetworkClient {
     }
 
 
-    protected async pureGetAddrsTxs(addrs: string[], from: number = 0, limit: number = 50): Promise<Wallet.Entity.BIPTransaction[]> {
+    protected async pureGetAddrsTxs(addrs: string[], from: number = 0, limit: number = 50): Promise<plarkcore.bip.BIPTransaction[]> {
         if (!addrs.length) {
             throw new Error('There is no addresses to request!');
         }
@@ -170,7 +170,7 @@ export default class InsightNetworkClient extends NetworkClient {
             .sendRequest<Insight.Transaction[]>(`/addrs/${addrs.join(',')}/txs?from=${from}&to=${from + limit}`);
 
         const rawTxs: Insight.Transaction[] = data.items;
-        const txList: Wallet.Entity.BIPTransaction[] = [];
+        const txList: plarkcore.bip.BIPTransaction[] = [];
 
         const extractTxCallback = (tx: Insight.Transaction) => {
             txList.push(Insight.toWalletTx(tx, this.coin));

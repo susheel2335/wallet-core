@@ -1,9 +1,9 @@
-import { Coin, Networking, Wallet } from '../';
+import { Coin, Networking } from '../';
 
 const coin = Coin.makeCoin(Coin.Unit.ETH);
 const networkProvider = new Networking.NetworkProvider(coin);
 
-const handleNewBlock = (block: Wallet.Entity.Block) => {
+const handleNewBlock = (block: plarkcore.blockchain.CommonBlock) => {
     console.log(`${coin.getUnit()} :: ${block.height} :: TX count: ${block.txids.length}`);
 };
 

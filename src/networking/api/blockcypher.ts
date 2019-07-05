@@ -124,8 +124,8 @@ namespace blockcypher {
         txs: Transaction[]
     }
 
-    export function toWalletTx(tx: Transaction, coin: Coin.CoinInterface): Wallet.Entity.BIPTransaction {
-        const txData: Wallet.Entity.BIPTransaction = {
+    export function toWalletTx(tx: Transaction, coin: Coin.CoinInterface): plarkcore.bip.BIPTransaction {
+        const txData: plarkcore.bip.BIPTransaction = {
             coin: coin.getUnit(),
             txid: tx.hash,
             blockHeight: (tx.block_height && tx.block_height > 0) ? tx.block_height : undefined,
@@ -135,7 +135,7 @@ namespace blockcypher {
             lockTime: tx.lock_time,
             inputs: [],
             outputs: [],
-        } as Wallet.Entity.BIPTransaction;
+        } as plarkcore.bip.BIPTransaction;
 
         forEach(tx.inputs, (vin: Input) => {
             txData.inputs.push({

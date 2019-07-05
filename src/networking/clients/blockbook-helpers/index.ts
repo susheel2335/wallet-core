@@ -67,7 +67,7 @@ class TransactionHelper {
     }
 
 
-    public async getTx(txid: string): Promise<Wallet.Entity.BIPTransaction | undefined> {
+    public async getTx(txid: string): Promise<plarkcore.bip.BIPTransaction | undefined> {
         try {
             const tx = await this.client.getWSClient()
                 .send<blockbook.Transaction>('getDetailedTransaction', [txid]);
@@ -79,7 +79,7 @@ class TransactionHelper {
     }
 
 
-    public async getBulkAddrsTxs(addrs: string[]): Promise<Wallet.Entity.BIPTransaction[]> {
+    public async getBulkAddrsTxs(addrs: string[]): Promise<plarkcore.bip.BIPTransaction[]> {
         const info = await this.client.getInfo();
 
         const params = {

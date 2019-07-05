@@ -17,7 +17,7 @@ export interface INetworkClient extends plarkcore.Destructible {
 
     getInfo(): Promise<plarkcore.BlockchainInfo>;
 
-    getBlock(blockHash: string): Promise<Wallet.Entity.Block>;
+    getBlock(blockHash: string): Promise<plarkcore.blockchain.CommonBlock>;
 
     getTx(txid: string): Promise<Wallet.Entity.WalletTransaction | undefined>;
 
@@ -60,7 +60,7 @@ export abstract class NetworkClient implements INetworkClient {
 
     public abstract getInfo(): Promise<plarkcore.BlockchainInfo>;
 
-    public abstract getBlock(blockHash: string): Promise<Wallet.Entity.Block>;
+    public abstract getBlock(blockHash: string): Promise<plarkcore.blockchain.CommonBlock>;
 
     public abstract getAddressTxs(address: string): Promise<Wallet.Entity.WalletTransaction[]>;
 

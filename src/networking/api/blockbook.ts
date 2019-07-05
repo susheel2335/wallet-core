@@ -77,8 +77,8 @@ namespace blockbook {
     };
 
 
-    export function toWalletTx(tx: Transaction, coin: Coin.CoinInterface): Wallet.Entity.BIPTransaction {
-        const txData: Wallet.Entity.BIPTransaction = {
+    export function toWalletTx(tx: Transaction, coin: Coin.CoinInterface): plarkcore.bip.BIPTransaction {
+        const txData: plarkcore.bip.BIPTransaction = {
             coin: coin.getUnit(),
             txid: tx.hash,
             scheme: Coin.TransactionScheme.INPUTS_OUTPUTS,
@@ -88,7 +88,7 @@ namespace blockbook {
             lockTime: tx.locktime,
             inputs: [],
             outputs: [],
-        } as Wallet.Entity.BIPTransaction;
+        } as plarkcore.bip.BIPTransaction;
 
 
         forEach(tx.inputs, (vin: Input) => {

@@ -4,15 +4,6 @@ import * as Coin from '../../coin';
 import HD from '../../hd';
 
 
-export type Block = {
-    hash: string;
-    height: number;
-    time: number;
-    txids: string[];
-    original?: any;
-};
-
-
 export type WalletAddress = {
     address: string;
     type: HD.BIP44.AddressType;
@@ -20,7 +11,7 @@ export type WalletAddress = {
     account?: number;
 };
 
-
+/** @deprecated */
 export type WalletTransaction = {
     txid: string;
     coin: Coin.Unit;
@@ -31,32 +22,7 @@ export type WalletTransaction = {
     scheme: Coin.TransactionScheme;
 };
 
-
-export type BIPInput = {
-    prevTxid: string;
-    prevOutIndex: number;
-    scriptSig?: string;
-    sequence: number;
-    witness?: string[];
-};
-
-
-export type BIPOutput = {
-    value: string;
-    scriptPubKey: string;
-    scriptType: Coin.ScriptType;  // @TODO Need declare specific script types
-    addresses?: string[];         // @TODO Need find why there is used an Array instead of primitive string
-};
-
-
-export type BIPTransaction = WalletTransaction & {
-    inputs: BIPInput[];
-    outputs: BIPOutput[];
-    version: number;
-    lockTime: number;
-}
-
-
+/** @deprecated */
 export type EtherTransaction = WalletTransaction & {
     type: 'normal' | 'internal';
     to: string;
