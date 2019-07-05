@@ -1,7 +1,6 @@
 import Axios, { AxiosInstance, AxiosResponse } from 'axios';
 
 import * as Coin from '../../coin';
-import * as Wallet from '../../wallet';
 import { NetworkClient } from './network-client';
 import { blockbook } from '../api';
 import { BlockbookTrackerProvider } from './tracker';

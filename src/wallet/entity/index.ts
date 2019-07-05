@@ -17,7 +17,8 @@ export type WalletTransaction = {
     coin: Coin.Unit;
     blockHash?: string;
     blockHeight?: number;
-    blockTime?: number;         // Unix Timestamp
+    // Unix Timestamp
+    blockTime?: number;
     receiveTime?: number;
     scheme: Coin.TransactionScheme;
 };

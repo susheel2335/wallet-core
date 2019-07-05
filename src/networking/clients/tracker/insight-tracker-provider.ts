@@ -1,6 +1,6 @@
 import { forEach, reduce, find } from 'lodash';
 import { parse as parseUrl } from 'url';
-import { Wallet, Debug } from '../../../';
+import { Debug } from '../../../';
 import { InsightNetworkClient } from '../';
 import { TrackerClient } from './tracker-client';
 

@@ -1,8 +1,5 @@
-import { forEach } from 'lodash';
 import BIP39 from 'bip39';
-import BigNumber from 'bignumber.js';
-
-import { Coin, Wallet, Networking } from '../';
+import { Coin, Networking } from '../';
 
 type CoinInfo = {
     coin: Coin.CoinInterface,
