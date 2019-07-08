@@ -1,9 +1,7 @@
 import BigNumber from 'bignumber.js';
-
 import { Utils } from '../../utils';
 import * as Key from '../key';
 import * as Constants from '../../constants';
-
 import { CoinInterface, TransactionScheme } from '../';
 import { Transaction } from './transaction';
 import { Ethereum } from '../defined';

@@ -1,10 +1,10 @@
 import { filter } from 'lodash';
-import { Entity } from '../../';
 import { SimpleProvider } from './simple-provider';
+import bc = plarkcore.blockchain;
 
-export class TransactionProvider extends SimpleProvider {
+export default class TransactionProvider extends SimpleProvider {
 
-    public add(tx: Entity.WalletTransaction): void {
+    public add(tx: bc.CommonTransaction): void {
         if (tx.coin !== this.getCoin().getUnit()) {
             throw new Error('Impossible adding transaction!');
         }
@@ -41,17 +41,17 @@ export class TransactionProvider extends SimpleProvider {
     }
 
 
-    public list(): Record<string, Entity.WalletTransaction> {
+    public list(): Record<string, bc.CommonTransaction> {
         return this.getWalletData().txs;
     }
 
 
-    public unconfirmedList(): Entity.WalletTransaction[] {
-        return filter(this.getWalletData().txs, (tx: Entity.WalletTransaction): boolean => !tx.blockHeight);
+    public unconfirmedList(): bc.CommonTransaction[] {
+        return filter(this.getWalletData().txs, (tx: bc.CommonTransaction): boolean => !tx.blockHeight);
     }
 
 
-    public get(txid: string): Entity.WalletTransaction | undefined {
+    public get(txid: string): bc.CommonTransaction | undefined {
         return this.list()[txid] || undefined;
     }
 }

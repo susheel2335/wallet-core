@@ -1,7 +1,8 @@
 import assert from 'assert';
 import BigNumber from 'bignumber.js';
-import { Coin, HD, Wallet, Networking, Constants } from '../../';
-import { seed } from '../fixtures/seed';
+import {map} from 'lodash';
+import {Coin, HD, Wallet, Networking, Constants} from '../../';
+import {seed} from '../fixtures/seed';
 
 const coinCases = {
     [Coin.Unit.BTC]: {},
@@ -53,6 +54,10 @@ describe('Generate WalletData', () => {
                     balanceAmount = Wallet.calculateBalance(wdProvider.balance);
                 } catch (error) {
                 }
+
+                console.log(map(wdProvider.balance.txBalances, (txb, txid) => {
+                    return `${txid}: ${txb.fee.toNumber()}`;
+                }));
             });
 
             after(function () {

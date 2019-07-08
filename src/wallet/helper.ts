@@ -3,11 +3,10 @@ import BigNumber from 'bignumber.js';
 import BitcoinJS from 'bitcoinjs-lib';
 import * as Coin from '../coin';
 import * as Constants from '../constants';
+import * as Entity from './entity';
 import { INetworkProvider } from '../networking';
 import { BalanceException } from './exceptions';
 import { WDProvider } from './wd-provider';
-import * as Entity from './entity';
-
 
 export function calculateBalance(balance: Entity.WDBalance, withUnconfirmed = false): number {
     let totalBalance = new BigNumber(0);
@@ -23,7 +22,6 @@ export function calculateBalance(balance: Entity.WDBalance, withUnconfirmed = fa
     return totalBalance.toNumber();
 }
 
-
 export function calculateTxBalance(balance: Entity.WDBalance, txid: string): number {
     const txBalance: Entity.Balance = balance.txBalances[txid];
 
@@ -34,11 +32,9 @@ export function calculateTxBalance(balance: Entity.WDBalance, txid: string): num
     return txBalance.receive.minus(txBalance.spend).toNumber();
 }
 
-
 export function createWDProvider(walletData: Entity.WalletData, networkProvider: INetworkProvider): WDProvider {
     return new WDProvider(walletData, networkProvider);
 }
-
 
 export function coinTxToWalletTx(
     txid: string,
@@ -77,7 +73,6 @@ export function coinTxToWalletTx(
     throw new Error('Invalid transaction scheme');
 }
 
-
 function mapBIPTransaction(
     walletTransaction: plarkcore.bip.BIPTransaction,
     coinTx: Coin.Transaction.BIPTransaction,
@@ -115,7 +110,6 @@ function mapBIPTransaction(
 
     return walletTransaction;
 }
-
 
 function mapEtherTransaction(
     walletTransaction: plarkcore.eth.EtherTransaction,

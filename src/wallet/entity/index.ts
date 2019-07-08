@@ -3,13 +3,12 @@ import { CoinUtxo } from 'coinselect';
 import * as Coin from '../../coin';
 import HD from '../../hd';
 
-
 export type WalletAddress = {
     address: string;
     type: HD.BIP44.AddressType;
     index: number;
     account?: number;
-};
+}
 
 /** @deprecated */
 export type WalletTransaction = {
@@ -21,7 +20,7 @@ export type WalletTransaction = {
     blockTime?: number;
     receiveTime?: number;
     scheme: Coin.TransactionScheme;
-};
+}
 
 /** @deprecated */
 export type EtherTransaction = WalletTransaction & {
@@ -40,14 +39,12 @@ export type EtherTransaction = WalletTransaction & {
     v?: string;
 }
 
-
 export type WalletData = {
     coin: Coin.Unit;
     accountIndex?: number;
-    txs: Record<string, WalletTransaction>;
+    txs: Record<string, plarkcore.blockchain.CommonTransaction>;
     addresses: WalletAddress[];
-};
-
+}
 
 export type UnspentTXOutput = CoinUtxo & {
     txid: string;
@@ -57,18 +54,20 @@ export type UnspentTXOutput = CoinUtxo & {
     prevScript: string;
     prevScriptType: Coin.ScriptType;
     witness?: string[];
-};
-
+}
 
 export type Balance = {
     receive: BigNumber;
     spend: BigNumber;
     unconfirmed?: BigNumber;
-};
+}
 
+export type TransactionBalance = Balance & {
+    fee: BigNumber;
+}
 
 export type WDBalance = {
     addrBalances: Record<string, Balance>;
-    txBalances: Record<string, Balance>;
+    txBalances: Record<string, TransactionBalance>;
     utxo: UnspentTXOutput[];
-};
+}

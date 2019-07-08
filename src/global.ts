@@ -47,7 +47,6 @@ declare global {
             isAddrTrack(addr: string | Buffer): boolean;
         }
 
-
         type BlockchainInfo = {
             blockHeight: number;
             difficulty: number;
@@ -70,6 +69,11 @@ declare global {
             feeType: Constants.FeeTypes;
 
             [key: string]: any;
+        };
+
+        type TransactionBalance = {
+            fee: BigNumber;
+            amount: BigNumber;
         };
 
         namespace eth {
