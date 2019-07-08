@@ -88,7 +88,7 @@ export class BalanceCalculator {
                     wdAddressBalance.unconfirmed = wdAddressBalance.unconfirmed.plus(out.value);
                 }
 
-                txBalance.receive = txBalance.receive.minus(out.value);
+                txBalance.receive = txBalance.receive.plus(out.value);
 
                 const spendableInput = find(inputMap, { prevTxid: tx.txid, prevOutIndex: index });
                 if (spendableInput) {
