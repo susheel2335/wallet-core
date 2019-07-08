@@ -54,10 +54,6 @@ describe('Generate WalletData', () => {
                     balanceAmount = Wallet.calculateBalance(wdProvider.balance);
                 } catch (error) {
                 }
-
-                console.log(map(wdProvider.balance.txBalances, (txb, txid) => {
-                    return `${txid}: ${txb.fee.toNumber()}`;
-                }));
             });
 
             after(function () {
