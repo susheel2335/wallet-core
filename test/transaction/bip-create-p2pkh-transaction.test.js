@@ -22,6 +22,31 @@ const transactions = [
         txid: '0d92bd4bcea3b981133b5c81558a672da7cee0cf5372af205a8aea56e0c06263',
     },
     {
+        description: 'P2PKH, P2SH to P2PKH, P2WPH',
+        coin: Coin.Unit.BTC,
+        utxos: [{
+            txid: '902547cf257f3b276c97a568a78e1bccd2521eec087eb6c89c4fa2aea6bf4384',
+            vout: 0,
+            value: 200000,
+            address: [HD.BIP44.AddressType.RECEIVE, 0],
+            addressFormat: Coin.Key.AddressFormat.P2PKH
+        }, {
+            txid: '23eed7e3cea94c0c9ee88de41abebedaec0cc71a346c187b0eb34690f02c2174',
+            vout: 0,
+            value: 300000,
+            address: [HD.BIP44.AddressType.RECEIVE, 1],
+            addressFormat: Coin.Key.AddressFormat.BECH32
+        }],
+        outputs: [{
+            address: '1P2nDouUVFKSdrqCGrBSd3UYRaNr4kaKoh',
+            value: 0.1
+        }, {
+            address: 'bc1qnsupj8eqya02nm8v6tmk93zslu2e2z8chlmcej',
+            value: 0.1
+        }],
+        txid: '09a508f3e8ec2335b46da03fe72fb9224b0d65abe9d5f8a36020788c48a72822',
+    },
+    {
         description: 'P2PKH to P2PKH, P2SH, P2WPH',
         coin: Coin.Unit.BTCt,
         utxos: [{

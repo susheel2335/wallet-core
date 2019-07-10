@@ -1,4 +1,3 @@
 # mocha.opts
 
---recursive ./test/**/*.test.js
 --require babel-core/register

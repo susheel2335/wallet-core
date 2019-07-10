@@ -10,7 +10,7 @@
         "bip32",
         "segwit"
     ],
-    "repository": "https://github.com/plark/wallet-core",
+    "repository": "https://github.com/plark-app/wallet-core",
     "homepage": "https://plark.io",
     "author": "Plark <berry@plark.io>",
     "main": "index.js",
@@ -18,9 +18,9 @@
     "license": "LGPL-3.0",
     "scripts": {
         "build": "npm run clear && npm run build:rollup && gulp packages",
+        "test": "mocha -t 5000 --recursive --no-warnings ./test",
         "clear": "rm -rf ./lib",
         "build:rollup": "rollup --config rollup.config.js",
-        "test": "mocha -t 5000 --recursive --no-warnings",
         "tag:patch": "yarn version --new-version patch",
         "tag:minor": "yarn version --new-version minor",
         "publish:alpha": "yarn publish --tag next"
@@ -67,6 +67,7 @@
         "gulp-json-editor": "2.4.2",
         "istanbul": "0.4.5",
         "jest": "23.5.0",
+        "nyc": "14.1.1",
         "jshint": "2.9.6",
         "mocha": "6.1.4",
         "rollup": "1.14.3",
