@@ -39,3 +39,4 @@ yarn-error.log
 .npmrc
 /coverage/
 .rpt2_cache
+.nyc_output

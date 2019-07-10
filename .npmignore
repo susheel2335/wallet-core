@@ -43,3 +43,4 @@ yarn.lock
 /lib/examples/
 /test/
 .rpt2_cache
+.nyc_output
