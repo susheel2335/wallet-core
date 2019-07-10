@@ -1,6 +1,6 @@
 {
     "name": "@plark/wallet-core",
-    "version": "0.5.10",
+    "version": "0.5.11",
     "description": "Plark Wallet Core for work with common cryptocurrencies like Bitcoin, Ethereum, Dash, Litecoin",
     "keywords": [
         "bitcoin",
@@ -68,9 +68,9 @@
         "gulp-json-editor": "2.4.2",
         "istanbul": "0.4.5",
         "jest": "23.5.0",
-        "nyc": "14.1.1",
         "jshint": "2.9.6",
         "mocha": "6.1.4",
+        "nyc": "14.1.1",
         "rollup": "1.14.3",
         "rollup-plugin-commonjs": "10.0.0",
         "rollup-plugin-typescript2": "0.21.1",
