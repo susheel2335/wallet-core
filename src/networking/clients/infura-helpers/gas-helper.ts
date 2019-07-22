@@ -54,7 +54,7 @@ export default class GasHelper {
         const standardGasPrice = new BigNumber(4).div(Constants.WEI_PER_COIN);
         const defaultGasPrice = {
             low: standardGasPrice,
-            standard: standardGasPrice.times(2),
+            medium: standardGasPrice.times(2),
             high: standardGasPrice.times(4),
         };
 
@@ -68,7 +68,7 @@ export default class GasHelper {
 
             return {
                 low: gasPrices.div(2),
-                standard: gasPrices,
+                medium: gasPrices,
                 high: gasPrices.times(4),
             } as plarkcore.GasPrice;
         } catch (error) {

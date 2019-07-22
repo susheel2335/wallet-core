@@ -52,17 +52,17 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
     }
 
     /**
-     * @param {FeeTypes} feeType
+     * @param {plarkcore.FeeType} feeType
      *
      * @returns {Promise<BigNumber>}
      */
-    public async getGasPrice(feeType: Constants.FeeTypes = Constants.FeeTypes.Medium): Promise<BigNumber> {
+    public async getGasPrice(feeType: plarkcore.FeeType = Constants.FeeTypes.Medium): Promise<BigNumber> {
         const networkClient = this.wdProvider.getNetworkProvider().getClient(0);
 
         const gasPrices: plarkcore.GasPrice
             = await (networkClient as IEthereumNetworkClient).getGasPrice();
 
-        let gasPriceGWEI = gasPrices.standard;
+        let gasPriceGWEI = gasPrices.medium;
         switch (feeType) {
             case Constants.FeeTypes.High:
                 gasPriceGWEI = gasPrices.high;
@@ -77,16 +77,16 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
     }
 
     /**
-     * @param {BigNumber} value
-     * @param {Address} address
-     * @param {FeeTypes} feeType
+     * @param {BigNumber}           value
+     * @param {Address}             address
+     * @param {plarkcore.FeeType}   feeType
      *
      * @returns {Promise<CalculateFeeResponse>}
      */
     public async calculateFee(
         value: BigNumber,
         address: Coin.Key.Address,
-        feeType: Constants.FeeTypes = Constants.FeeTypes.Medium,
+        feeType: plarkcore.FeeType = Constants.FeeTypes.Medium,
     ): Promise<plarkcore.CalculateFeeResponse> {
         const [gasPrice, gasLimit]: BigNumber[] = await Promise.all([
             this.getGasPrice(feeType),
@@ -105,15 +105,15 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
     /**
      * Method to calculate max value and fee to send
      *
-     * @param {Address}     address
-     * @param {FeeTypes}    feeType
-     * @param {any}         options
+     * @param {Address}             address
+     * @param {plarkcore.FeeType}   feeType
+     * @param {any}                 options
      *
      * @return {Promise<CalculateMaxResponse>}
      */
     public async calculateMax<Options = any>(
         address: Coin.Key.Address,
-        feeType: Constants.FeeTypes,
+        feeType: plarkcore.FeeType,
         options?: Options,
     ): Promise<plarkcore.CalculateMaxResponse> {
         const [gasPrice, gasLimit]: BigNumber[] = await Promise.all([
@@ -141,17 +141,17 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
     }
 
     /**
-     * @param {Address} address
-     * @param {BigNumber} value
-     * @param {FeeTypes} feeType
-     * @param {plarkcore.eth.EthTransactionRequestOptions} options
+     * @param {Address}                                     address
+     * @param {BigNumber}                                   value
+     * @param {plarkcore.FeeType}                           feeType
+     * @param {plarkcore.eth.EthTransactionRequestOptions}  options
      *
      * @returns {Transaction}
      */
     public async createTransaction<Options = plarkcore.eth.EthTransactionRequestOptions>(
         address: Coin.Key.Address,
         value: BigNumber,
-        feeType: Constants.FeeTypes = Constants.FeeTypes.Medium,
+        feeType: plarkcore.FeeType = Constants.FeeTypes.Medium,
         options?: Options,
     ): Promise<Coin.Transaction.Transaction> {
 

@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 
-import { Coin, HD, Constants } from '../../../../';
+import { Coin, HD } from '../../../../';
 import { Entity, Provider } from '../../../';
 import { BIPPrivateProvider } from './bip-private-provider';
 import { EthereumPrivateProvider } from './ethereum-private-provider';
@@ -28,17 +28,17 @@ export interface PrivateProvider {
 
 
     /**
-     * @param {BigNumber}       value
-     * @param {Address}         address
-     * @param {FeeTypes}        feeType
-     * @param {any}             options
+     * @param {BigNumber}           value
+     * @param {Address}             address
+     * @param {plarkcore.FeeType}   feeType
+     * @param {any}                 options
      *
      * @return {Promise<CalculateFeeResponse>}
      */
     calculateFee<Options = any>(
         value: BigNumber,
         address: Coin.Key.Address,
-        feeType: Constants.FeeTypes,
+        feeType: plarkcore.FeeType,
         options?: Options,
     ): Promise<plarkcore.CalculateFeeResponse>;
 
@@ -46,15 +46,15 @@ export interface PrivateProvider {
     /**
      * Method to calculate max value and fee to send
      *
-     * @param {Address}         address
-     * @param {FeeTypes}        feeType
-     * @param {any}             options
+     * @param {Address}             address
+     * @param {plarkcore.FeeType}   feeType
+     * @param {any}                 options
      *
      * @return {Promise<CalculateMaxResponse>}
      */
     calculateMax<Options = any>(
         address: Coin.Key.Address,
-        feeType: Constants.FeeTypes,
+        feeType: plarkcore.FeeType,
         options?: Options,
     ): Promise<plarkcore.CalculateMaxResponse>;
 
@@ -62,17 +62,17 @@ export interface PrivateProvider {
     /**
      * Create transaction to specific address with some value
      *
-     * @param {Address}         address
-     * @param {BigNumber}       value
-     * @param {FeeTypes}        feeType
-     * @param {any}             options
+     * @param {Address}             address
+     * @param {BigNumber}           value
+     * @param {plarkcore.FeeType}   feeType
+     * @param {any}                 options
      *
      * @returns {Promise<Transaction>}
      */
     createTransaction<Options = any>(
         address: Coin.Key.Address,
         value: BigNumber,
-        feeType: Constants.FeeTypes,
+        feeType: plarkcore.FeeType,
         options?: Options,
     ): Promise<Coin.Transaction.Transaction>;
 

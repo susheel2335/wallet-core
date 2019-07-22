@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { Coin, HD, Constants } from '../../../../';
+import { Coin, HD } from '../../../../';
 import * as Entity from '../../../entity';
 import * as Provider from '../../';
 import { SimpleProvider } from '../simple-provider';
@@ -19,7 +19,7 @@ export abstract class AbstractPrivateProvider extends SimpleProvider implements 
     public abstract calculateFee<Options = any>(
         value: BigNumber,
         address: Coin.Key.Address,
-        feeType: Constants.FeeTypes,
+        feeType: plarkcore.FeeType,
         options?: Options,
     ): Promise<plarkcore.CalculateFeeResponse>;
 
@@ -27,15 +27,15 @@ export abstract class AbstractPrivateProvider extends SimpleProvider implements 
     /**
      * Method to calculate max value and fee to send
      *
-     * @param {Address}     address
-     * @param {FeeTypes}    feeType
-     * @param {any}         options
+     * @param {Address}             address
+     * @param {plarkcore.FeeType}   feeType
+     * @param {any}                 options
      *
      * @return {Promise<CalculateMaxResponse>}
      */
     public abstract calculateMax<Options = any>(
         address: Coin.Key.Address,
-        feeType: Constants.FeeTypes,
+        feeType: plarkcore.FeeType,
         options?: Options,
     ): Promise<plarkcore.CalculateMaxResponse>;
 
@@ -43,7 +43,7 @@ export abstract class AbstractPrivateProvider extends SimpleProvider implements 
     public abstract createTransaction<Options = any>(
         address: Coin.Key.Address,
         value: BigNumber,
-        feeType: Constants.FeeTypes,
+        feeType: plarkcore.FeeType,
         options?: Options,
     ): Promise<Coin.Transaction.Transaction>;
 

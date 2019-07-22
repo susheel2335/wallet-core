@@ -20,7 +20,7 @@ class FeeHelper {
         if (this.isFeeExpired()) {
             this.feeCache = {
                 low: await this.resolveFee(12, 'lowFeePerByte'),
-                standard: await this.resolveFee(6, 'defaultFeePerByte'),
+                medium: await this.resolveFee(6, 'defaultFeePerByte'),
                 high: await this.resolveFee(1, 'highFeePerByte'),
             };
 

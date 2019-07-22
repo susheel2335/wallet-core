@@ -9,7 +9,7 @@ declare global {
         type NewBlockCallback = (block: blockchain.CommonBlock) => void;
         type BerryDebug = (message?: any, ...optionalParams: any[]) => void;
 
-        type FeeType = 'low' | 'standard' | 'high';
+        type FeeType = 'low' | 'medium' | 'high';
         type FeeRecord = Record<FeeType, BigNumber>;
         type GasPrice = FeeRecord;
 
@@ -57,7 +57,7 @@ declare global {
         type CalculateFeeResponse = {
             coin: Coin.Unit;
             fee: BigNumber;
-            feeType: Constants.FeeTypes;
+            feeType: plarkcore.FeeType;
 
             [key: string]: any;
         };
@@ -66,7 +66,7 @@ declare global {
             coin: Coin.Unit;
             amount: BigNumber;
             fee: BigNumber;
-            feeType: Constants.FeeTypes;
+            feeType: plarkcore.FeeType;
 
             [key: string]: any;
         };

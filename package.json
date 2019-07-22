@@ -1,6 +1,6 @@
 {
     "name": "@plark/wallet-core",
-    "version": "0.5.11",
+    "version": "0.5.12",
     "description": "Plark Wallet Core for work with common cryptocurrencies like Bitcoin, Ethereum, Dash, Litecoin",
     "keywords": [
         "bitcoin",
@@ -11,8 +11,8 @@
         "segwit"
     ],
     "repository": "https://github.com/plark-app/wallet-core",
-    "homepage": "https://plark.io",
-    "author": "Plark <berry@plark.io>",
+    "homepage": "https://plark.io?ref=npm",
+    "author": "Plark <info@plark.io>",
     "main": "index.js",
     "types": "lib/index.d.ts",
     "license": "LGPL-3.0",

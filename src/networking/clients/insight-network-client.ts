@@ -72,13 +72,13 @@ export default class InsightNetworkClient extends NetworkClient {
 
             return {
                 low: resolveFeePerByte(data, 12, 'lowFeePerByte'),
-                standard: resolveFeePerByte(data, 5, 'defaultFeePerByte'),
+                medium: resolveFeePerByte(data, 5, 'defaultFeePerByte'),
                 high: resolveFeePerByte(data, 1, 'highFeePerByte'),
             };
         } catch (error) {
             return {
                 low: (this.coin as Coin.BIPGenericCoin).lowFeePerByte,
-                standard: (this.coin as Coin.BIPGenericCoin).defaultFeePerByte,
+                medium: (this.coin as Coin.BIPGenericCoin).defaultFeePerByte,
                 high: (this.coin as Coin.BIPGenericCoin).highFeePerByte,
             };
         }
