@@ -3,40 +3,17 @@ import { CoinUtxo } from 'coinselect';
 import * as Coin from '../../coin';
 import HD from '../../hd';
 
+/** @deprecated */
+export type WalletTransaction = plarkcore.blockchain.CommonTransaction;
+
+/** @deprecated */
+export type EtherTransaction = plarkcore.eth.EtherTransaction;
+
 export type WalletAddress = {
     address: string;
     type: HD.BIP44.AddressType;
     index: number;
     account?: number;
-}
-
-/** @deprecated */
-export type WalletTransaction = {
-    txid: string;
-    coin: Coin.Unit;
-    blockHash?: string;
-    blockHeight?: number;
-    // Unix Timestamp
-    blockTime?: number;
-    receiveTime?: number;
-    scheme: Coin.TransactionScheme;
-}
-
-/** @deprecated */
-export type EtherTransaction = WalletTransaction & {
-    type: 'normal' | 'internal';
-    to: string;
-    from: string;
-    value: string;
-    nonce: number;
-    data: string;
-    gasPrice: string;
-    gasLimit: string;
-    gasUsed?: string;
-    receiptStatus?: boolean;
-    r?: string;
-    s?: string;
-    v?: string;
 }
 
 export type WalletData = {

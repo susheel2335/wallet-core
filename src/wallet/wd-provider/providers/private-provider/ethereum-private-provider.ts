@@ -16,7 +16,7 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
     public getTxNonce(fromAddress: Entity.WalletAddress) {
         return filter(
             this.wdProvider.tx.list(),
-            (tx: Entity.EtherTransaction) => tx.from.toLowerCase() === fromAddress.address.toLowerCase(),
+            (tx: plarkcore.eth.EtherTransaction) => tx.from.toLowerCase() === fromAddress.address.toLowerCase(),
         ).length;
     }
 
@@ -144,11 +144,11 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
      * @param {Address}                                     address
      * @param {BigNumber}                                   value
      * @param {plarkcore.FeeType}                           feeType
-     * @param {plarkcore.eth.EthTransactionRequestOptions}  options
+     * @param {plarkcore.eth.ETHTransactionRequestOptions}  options
      *
      * @returns {Transaction}
      */
-    public async createTransaction<Options = plarkcore.eth.EthTransactionRequestOptions>(
+    public async createTransaction<Options = plarkcore.eth.ETHTransactionRequestOptions>(
         address: Coin.Key.Address,
         value: BigNumber,
         feeType: plarkcore.FeeType = Constants.FeeTypes.Medium,

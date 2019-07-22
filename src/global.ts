@@ -77,7 +77,7 @@ declare global {
         };
 
         namespace eth {
-            type EthTransactionRequestOptions = {
+            type ETHTransactionRequestOptions = {
                 data?: Buffer;
                 gasLimit?: BigNumber;
                 gasPrice?: BigNumber;

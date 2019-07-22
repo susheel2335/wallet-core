@@ -81,7 +81,12 @@ export interface TransactionReceipt {
  *
  * @returns {CommonTransaction}
  */
-export function toWalletTx(tx: Transaction, coin: Coin.CoinInterface, blockTime: number = undefined): Wallet.Entity.EtherTransaction {
+export function toWalletTx(
+    tx: Transaction,
+    coin: Coin.CoinInterface,
+    blockTime: number = undefined
+): plarkcore.eth.EtherTransaction {
+
     return {
         coin: coin.getUnit(),
         txid: tx.hash,
@@ -100,7 +105,7 @@ export function toWalletTx(tx: Transaction, coin: Coin.CoinInterface, blockTime:
         r: tx.r,
         s: tx.s,
         v: tx.v,
-    } as Wallet.Entity.EtherTransaction;
+    } as plarkcore.eth.EtherTransaction;
 }
 
 

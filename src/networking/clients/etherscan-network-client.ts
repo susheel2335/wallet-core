@@ -110,9 +110,9 @@ export default class EtherscanNetworkClient extends NetworkClient implements IEt
      * Get Address TXS
      *
      * @param {string} address
-     * @returns {Promise<EtherTransaction[]>}
+     * @returns {Promise<plarkcore.eth.EtherTransaction[]>}
      */
-    public async getAddressTxs(address: string): Promise<Wallet.Entity.EtherTransaction[]> {
+    public async getAddressTxs(address: string): Promise<plarkcore.eth.EtherTransaction[]> {
 
         let response: any;
 
@@ -122,14 +122,14 @@ export default class EtherscanNetworkClient extends NetworkClient implements IEt
             return [];
         }
 
-        const txList: Wallet.Entity.EtherTransaction[] = [];
+        const txList: plarkcore.eth.EtherTransaction[] = [];
 
         forEach(response.result, (tx: Etherscan.Transaction) => {
 
             // @TODO Need review error of transaction
             if (+tx.isError) return;
 
-            const txData: Wallet.Entity.EtherTransaction = {
+            const txData: plarkcore.eth.EtherTransaction = {
                 coin: this.coin.getUnit(),
                 txid: tx.hash,
                 blockHeight: new BigNumber(tx.blockNumber).toNumber(),
@@ -142,7 +142,7 @@ export default class EtherscanNetworkClient extends NetworkClient implements IEt
                 gasLimit: tx.gas,
                 data: tx.input,
                 nonce: tx.nonce,
-            } as Wallet.Entity.EtherTransaction;
+            } as plarkcore.eth.EtherTransaction;
 
             txList.push(txData);
         });

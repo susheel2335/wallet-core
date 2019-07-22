@@ -66,7 +66,7 @@ export default class InfuraNetworkClient extends NetworkClient implements IEther
     }
 
 
-    public async getTx(txid: string): Promise<Wallet.Entity.EtherTransaction | undefined> {
+    public async getTx(txid: string): Promise<plarkcore.eth.EtherTransaction | undefined> {
         const response = await this.sendRequest('eth_getTransactionByHash', [txid]);
 
         const tx: Infura.Transaction = response.result;
@@ -85,7 +85,7 @@ export default class InfuraNetworkClient extends NetworkClient implements IEther
             from: tx.from,
             data: tx.input,
             nonce: new BigNumber(tx.nonce).toNumber(),
-        } as Wallet.Entity.EtherTransaction;
+        } as plarkcore.eth.EtherTransaction;
 
         if (tx.blockNumber) {
             return this.checkAndMapTxReceipt(responseTx);
@@ -118,7 +118,7 @@ export default class InfuraNetworkClient extends NetworkClient implements IEther
     }
 
 
-    public async checkAndMapTxReceipt(tx: Wallet.Entity.EtherTransaction): Promise<Wallet.Entity.EtherTransaction> {
+    public async checkAndMapTxReceipt(tx: plarkcore.eth.EtherTransaction): Promise<plarkcore.eth.EtherTransaction> {
         const txReceipt: Infura.TransactionReceipt | undefined = await this.getTxReceipt(tx.txid);
 
         if (txReceipt) {
@@ -196,9 +196,9 @@ export default class InfuraNetworkClient extends NetworkClient implements IEther
     }
 
 
-    public getAddressTxs(address: string): Promise<Wallet.Entity.EtherTransaction[]> {
+    public getAddressTxs(address: string): Promise<plarkcore.eth.EtherTransaction[]> {
         return etherscanWrap(async () => {
-            const txList: Wallet.Entity.EtherTransaction[] = [];
+            const txList: plarkcore.eth.EtherTransaction[] = [];
 
             try {
                 const response = await this.etherscanClient.account

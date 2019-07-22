@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { Coin, Constants, Wallet } from '../../';
+import { Coin, Constants } from '../../';
 
 namespace etherscan {
     export interface CommonTransaction {
@@ -44,11 +44,12 @@ namespace etherscan {
     }
 
     /**
-     * @param {CoinInterface} coin
-     * @param {Transaction} tx
-     * @returns {EtherTransaction}
+     * @param {CoinInterface}   coin
+     * @param {Transaction}     tx
+     *
+     * @return {plarkcore.eth.EtherTransaction}
      */
-    export function toWalletTx(coin: Coin.CoinInterface, tx: Transaction): Wallet.Entity.EtherTransaction {
+    export function toWalletTx(coin: Coin.CoinInterface, tx: Transaction): plarkcore.eth.EtherTransaction {
         const txResult = {
             type: 'normal',
             coin: coin.getUnit(),
@@ -61,7 +62,7 @@ namespace etherscan {
             from: tx.from,
             data: tx.input,
             nonce: tx.nonce,
-        } as Wallet.Entity.EtherTransaction;
+        } as plarkcore.eth.EtherTransaction;
 
         if (tx.blockNumber) {
             txResult.blockHeight = new BigNumber(tx.blockNumber).toNumber();
@@ -74,7 +75,10 @@ namespace etherscan {
     }
 
 
-    export function internalToWalletTx(coin: Coin.CoinInterface, tx: InternalTransaction): Wallet.Entity.EtherTransaction {
+    export function internalToWalletTx(
+        coin: Coin.CoinInterface,
+        tx: InternalTransaction
+    ): plarkcore.eth.EtherTransaction {
         const txResult = {
             coin: coin.getUnit(),
             type: 'internal',
@@ -85,7 +89,7 @@ namespace etherscan {
             to: tx.to,
             from: tx.from,
             data: tx.input,
-        } as Wallet.Entity.EtherTransaction;
+        } as plarkcore.eth.EtherTransaction;
 
         if (tx.blockNumber) {
             txResult.blockHeight = new BigNumber(tx.blockNumber).toNumber();

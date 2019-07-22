@@ -105,7 +105,7 @@ export default class InfuraTrackerProvider extends TrackerClient<InfuraNetworkCl
     }
 
 
-    protected async fireTxidConfirmation(tx: Wallet.Entity.EtherTransaction): Promise<void> {
+    protected async fireTxidConfirmation(tx: plarkcore.eth.EtherTransaction): Promise<void> {
         try {
             const rtx = await this.networkClient.checkAndMapTxReceipt(tx);
             await super.fireTxidConfirmation(rtx);
