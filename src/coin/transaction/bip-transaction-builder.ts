@@ -52,7 +52,7 @@ export class BIPTransactionBuilder implements TransactionBuilder {
             const utxoMeta = inputData[index];
 
             const keyPair = BitcoinJS.ECPair.fromWIF(keys[index].toString(), this.network);
-            const outputType = BitcoinJS.script.classifyOutput(input.prevOutScript);
+            const outputType = BitcoinJS.script.classifyOutput(input.prevOutScript) as Coin.ScriptType;
 
             switch (outputType) {
                 case Coin.ScriptType.PubKeyHash: {

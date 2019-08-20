@@ -141,7 +141,7 @@ export class BalanceCalculator {
             txBalance.fee = txGas;
 
             if (toAddr) {
-                if (tx.receiptStatus) {
+                if (!confirmed || tx.receiptStatus) {
                     txBalance.receive = txBalance.receive.plus(tx.value);
                     toAddr.receive = toAddr.receive.plus(tx.value);
                 }

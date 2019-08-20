@@ -1,4 +1,3 @@
-
 export enum ScriptType {
     WitnessPubKeyHash = 'witnesspubkeyhash',
     WitnessScriptHash = 'witnessscripthash',
