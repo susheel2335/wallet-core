@@ -1,34 +1,33 @@
 import BigNumber from 'bignumber.js';
-import { Network } from 'bitcoinjs-lib';
-import * as Constants from '../../constants';
+import BitcoinJS from 'bitcoinjs-lib';
 import { Unit } from '../entities';
+import * as Constants from '../../constants';
 import { BIPGenericCoin } from '../bip-generic-coin';
 
-export default class BitcoinTestnet extends BIPGenericCoin {
+export default class BitcoinCashTestnet extends BIPGenericCoin {
 
     public getUnit(): Unit {
-        return Unit.BTCt;
+        return Unit.BCH;
     }
 
     public getName(): string {
-        return 'Bitcoin Testnet';
+        return 'Bitcoin Cash Testnet';
     }
 
     public getHDCoinType(): number {
-        return 1;
+        return 0;
     }
 
-    public networkInfo(): Network {
+    public networkInfo(): BitcoinJS.Network {
         return {
             bip32: {
                 'public': 0x043587cf,
                 'private': 0x04358394,
             },
-            messagePrefix: '\x19Bitcoin Signed Message:\n',
+            messagePrefix: '\x18Bitcoin Cash Signed Message:\n',
             pubKeyHash: 0x6f,
             wif: 0xef,
             scriptHash: 0xc4,
-            bech32: 'tb',
         };
     }
 

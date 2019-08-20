@@ -1,6 +1,9 @@
 export { default as Bitcoin } from './bitcoin';
 export { default as BitcoinTestnet } from './bitcoin-testnet';
 
+export { default as BitcoinCash } from './bitcoin-cash';
+export { default as BitcoinCashTestnet } from './bitcoin-cash-testnet';
+
 export { default as Litecoin }from './litecoin';
 export { default as LitecoinTestnet } from './litecoin-testnet';
 

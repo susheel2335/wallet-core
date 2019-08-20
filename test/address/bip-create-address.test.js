@@ -15,6 +15,14 @@ const coinAddresses = {
         scriptHash: '2N5WWwmHsbyhn8pKUEDZfExD7MFX3jUsNXA',
         bech32: 'tb1q8n65ks9phxydqgh5ramkk9rphr5vjlqywzxpnt'
     },
+    [Coin.Unit.BCH]: {
+        pubKey: '138YZBjQH64shbppyHHRjHPhrBFDNxCdFZ',
+        scriptHash: '33YvApNWoxSZtx3NXVe5SGH1aJVBNJtp7Z',
+    },
+    [Coin.Unit.BCHt]: {
+        pubKey: 'mheVrEpP67W8UiJSgrFoZCc2iAqvFJrhhx',
+        scriptHash: '2Mu78EZJYRQwv6jfvCdFx4DGGnehM9XKdrs',
+    },
     [Coin.Unit.LTC]: {
         pubKey: 'LdvnFp1A49PjJeeTJgmvxwWNkTn9TWwM8M',
         scriptHash: 'MMr9vJqmk2SDXBmAqaDbH2G8GrgzyojewX',

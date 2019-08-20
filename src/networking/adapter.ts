@@ -40,6 +40,17 @@ AdapterMap[Coin.Unit.BTCt] = [
 ];
 
 
+// Bitcoin Cash
+AdapterMap[Coin.Unit.BCH] = [
+    {
+        type: AdapterType.BLOCKBOOK,
+        url: 'https://bch1.trezor.io/api/',
+        wsUrl: 'wss://bch1.trezor.io',
+        version: '0.1.1',
+    },
+];
+
+
 // Litecoin
 AdapterMap[Coin.Unit.LTC] = [
     {

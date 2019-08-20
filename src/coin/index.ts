@@ -15,11 +15,13 @@ export { BIPGenericCoin } from './bip-generic-coin';
 export const coinMap = {};
 
 coinMap[Unit.BTC] = Defined.Bitcoin;
+coinMap[Unit.BCH] = Defined.BitcoinCash;
 coinMap[Unit.ETH] = Defined.Ethereum;
 coinMap[Unit.LTC] = Defined.Litecoin;
 coinMap[Unit.DASH] = Defined.Dash;
 
 coinMap[Unit.BTCt] = Defined.BitcoinTestnet;
+coinMap[Unit.BCHt] = Defined.BitcoinCashTestnet;
 coinMap[Unit.ETHt] = Defined.EthereumRopstenTestnet;
 coinMap[Unit.LTCt] = Defined.LitecoinTestnet;
 coinMap[Unit.DASHt] = Defined.DashTestnet;

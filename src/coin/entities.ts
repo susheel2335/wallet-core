@@ -22,12 +22,14 @@ export enum TransactionScheme {
 
 export enum Unit {
     BTC = 'BTC',
+    BCH = 'BCH',
     LTC = 'LTC',
     ETH = 'ETH',
     DASH = 'DASH',
 
     // Testnet
     BTCt = 'BTCt',
+    BCHt = 'BCHt',
     LTCt = 'LTCt',
     ETHt = 'ETHt',
     DASHt = 'DASHt'
@@ -36,5 +38,3 @@ export enum Unit {
 export type SignInputData = {
     value: number;
 };
-
-
