@@ -74,7 +74,12 @@ export class AddressProvider extends SimpleProvider {
     }
 
 
-    public last(type: HD.BIP44.AddressType, balance?: Entity.WDBalance): Entity.WalletAddress | undefined {
+    public first(type?: HD.BIP44.AddressType): Entity.WalletAddress {
+        return first(this.list(type));
+    }
+
+
+    public last(type: HD.BIP44.AddressType, balance?: Entity.WDBalance): Entity.WalletAddress {
         // @TODO Need to review model and change
         if (this.getCoin() instanceof Coin.Defined.Ethereum) {
             return first(this.list());
@@ -86,12 +91,18 @@ export class AddressProvider extends SimpleProvider {
             balance = this.wdProvider.balance;
         }
 
-        return find(addresses, (addr: Entity.WalletAddress) => {
+        const addr = find(addresses, (addr: Entity.WalletAddress) => {
             const addrBalance = balance.addrBalances[addr.address];
 
             if (!addrBalance) return false;
 
             return addrBalance.receive.isZero() && addrBalance.spend.isZero();
         });
+
+        if (addr) {
+            return addr;
+        }
+
+        return this.first(type);
     }
 }

@@ -2,7 +2,8 @@ import { forEach, map } from 'lodash';
 import BigNumber from 'bignumber.js';
 import Axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 
-import { Coin, Wallet, Constants } from '../../';
+import * as Coin from '../../coin';
+import * as Constants from '../../constants';
 import { Infura, Etherscan } from '../api';
 import { wrapLimiterMethod as infuraWrap } from '../limmiters/infura';
 import { wrapLimiterMethod as etherscanWrap } from '../limmiters/etherscan';
@@ -45,7 +46,7 @@ export default class InfuraNetworkClient extends NetworkClient implements IEther
 
         return infuraWrap(async () => {
             const requestData = {
-                jsonrpc: "2.0",
+                jsonrpc: '2.0',
                 id: 1,
                 method: method,
                 params: params,

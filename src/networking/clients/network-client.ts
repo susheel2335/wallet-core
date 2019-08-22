@@ -1,7 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { forEach, map, findIndex } from 'lodash';
 import * as Coin from '../../coin';
-import * as Wallet from '../../wallet';
 import * as Tracker from './tracker';
 
 export { Tracker };
@@ -19,11 +18,11 @@ export interface INetworkClient extends plarkcore.Destructible {
 
     getBlock(blockHash: string): Promise<plarkcore.blockchain.CommonBlock>;
 
-    getTx(txid: string): Promise<Wallet.Entity.WalletTransaction | undefined>;
+    getTx(txid: string): Promise<plarkcore.blockchain.CommonTransaction | undefined>;
 
-    getAddressTxs(address: string): Promise<Wallet.Entity.WalletTransaction[]>;
+    getAddressTxs(address: string): Promise<plarkcore.blockchain.CommonTransaction[]>;
 
-    getBulkAddrsTxs(addrs: string[]): Promise<Wallet.Entity.WalletTransaction[]>;
+    getBulkAddrsTxs(addrs: string[]): Promise<plarkcore.blockchain.CommonTransaction[]>;
 
     broadCastTransaction(transaction: Coin.Transaction.Transaction): Promise<string>;
 
@@ -56,13 +55,13 @@ export abstract class NetworkClient implements INetworkClient {
         this.options = options;
     }
 
-    public abstract getTx(txid: string): Promise<Wallet.Entity.WalletTransaction | undefined>;
+    public abstract getTx(txid: string): Promise<plarkcore.blockchain.CommonTransaction | undefined>;
 
     public abstract getInfo(): Promise<plarkcore.BlockchainInfo>;
 
     public abstract getBlock(blockHash: string): Promise<plarkcore.blockchain.CommonBlock>;
 
-    public abstract getAddressTxs(address: string): Promise<Wallet.Entity.WalletTransaction[]>;
+    public abstract getAddressTxs(address: string): Promise<plarkcore.blockchain.CommonTransaction[]>;
 
     public abstract broadCastTransaction(transaction: Coin.Transaction.Transaction): Promise<string>;
 
@@ -102,12 +101,12 @@ export abstract class NetworkClient implements INetworkClient {
     }
 
 
-    public async getBulkAddrsTxs(addrs: string[]): Promise<Wallet.Entity.WalletTransaction[]> {
+    public async getBulkAddrsTxs(addrs: string[]): Promise<plarkcore.blockchain.CommonTransaction[]> {
         const promiseMap = map(addrs, (addr: string) => {
             return this.getAddressTxs(addr);
         });
 
-        const txChunks: Wallet.Entity.WalletTransaction[][]
+        const txChunks: plarkcore.blockchain.CommonTransaction[][]
             = await Promise.all(promiseMap);
 
         const txList = [];

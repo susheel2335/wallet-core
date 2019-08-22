@@ -88,7 +88,7 @@ describe('Generate WalletData', () => {
             }
 
 
-            if (cases.calculateMax) {
+            if (cases.calculateMaxAmount) {
                 it(`Can calculate max amount`, async () => {
                     if (!balanceAmount || balanceAmount < 0.001) {
                         return;

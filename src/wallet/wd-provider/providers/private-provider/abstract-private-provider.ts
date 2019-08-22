@@ -1,22 +1,44 @@
 import BigNumber from 'bignumber.js';
-import { Coin, HD } from '../../../../';
+import HD from '../../../../hd';
+import * as Coin from '../../../../coin';
 import * as Entity from '../../../entity';
 import * as Provider from '../../';
 import { SimpleProvider } from '../simple-provider';
 import { PrivateProvider } from './';
 
-export abstract class AbstractPrivateProvider extends SimpleProvider implements PrivateProvider {
-    protected readonly seed: Buffer;
-    protected readonly privateCoin: Coin.Private.MasterNodeInterface;
+export interface PrivateProvider {
+    /**
+     * Method return {Coin.Private.NodeInterface} of specific address from WalletData
+     *
+     * @param {WalletAddress} wdAddress
+     *
+     * @return {NodeInterface}
+     */
+    deriveAddressNode(wdAddress: Entity.WalletAddress): Coin.Private.NodeInterface;
 
-    public constructor(seed: Buffer, wdProvider: Provider.WDProvider) {
-        super(wdProvider);
 
-        this.seed = seed;
-        this.privateCoin = this.wdProvider.coin.makePrivateFromSeed(seed);
-    }
+    /**
+     * Method create and return {Entity.WalletAddress} for current WalletData,
+     * derived by current private coin
+     *
+     * @param {AddressType}     type
+     *
+     * @returns {WalletAddress}
+     */
+    deriveNew(type: HD.BIP44.AddressType): Entity.WalletAddress;
 
-    public abstract calculateFee<Options = any>(
+
+    /**
+     * @param {BigNumber}           value
+     * @param {Address}             address
+     * @param {plarkcore.FeeType}   feeType
+     * @param {any}                 options
+     *
+     * @return {Promise<CalculateFeeResponse>}
+     *
+     * @deprecated
+     */
+    calculateFee<Options = any>(
         value: BigNumber,
         address: Coin.Key.Address,
         feeType: plarkcore.FeeType,
@@ -32,6 +54,71 @@ export abstract class AbstractPrivateProvider extends SimpleProvider implements 
      * @param {any}                 options
      *
      * @return {Promise<CalculateMaxResponse>}
+     *
+     * @deprecated
+     */
+    calculateMax<Options = any>(
+        address: Coin.Key.Address,
+        feeType: plarkcore.FeeType,
+        options?: Options,
+    ): Promise<plarkcore.CalculateMaxResponse>;
+
+
+    /**
+     * Create transaction to specific address with some value
+     *
+     * @param {Address}             address
+     * @param {BigNumber}           value
+     * @param {plarkcore.FeeType}   feeType
+     * @param {any}                 options
+     *
+     * @returns {Promise<Transaction>}
+     */
+    createTransaction<Options = any>(
+        address: Coin.Key.Address,
+        value: BigNumber,
+        feeType: plarkcore.FeeType,
+        options?: Options,
+    ): Promise<Coin.Transaction.Transaction>;
+
+
+    /**
+     * Broadcast transaction to Network
+     *
+     * @param {Transaction}     transaction
+     *
+     * @return {Promise<string>}
+     */
+    broadcastTransaction(transaction: Coin.Transaction.Transaction): Promise<string>;
+}
+
+
+export abstract class AbstractPrivateProvider extends SimpleProvider implements PrivateProvider {
+    protected readonly seed: Buffer;
+    protected readonly privateCoin: Coin.Private.MasterNodeInterface;
+
+    public constructor(seed: Buffer, wdProvider: Provider.WDProvider) {
+        super(wdProvider);
+
+        this.seed = seed;
+        this.privateCoin = this.wdProvider.coin.makePrivateFromSeed(seed);
+    }
+
+    /**
+     * @deprecated
+     * @see FeeProviderInterface
+     */
+    public abstract calculateFee<Options = any>(
+        value: BigNumber,
+        address: Coin.Key.Address,
+        feeType: plarkcore.FeeType,
+        options?: Options,
+    ): Promise<plarkcore.CalculateFeeResponse>;
+
+
+    /**
+     * @deprecated
+     * @see FeeProviderInterface
      */
     public abstract calculateMax<Options = any>(
         address: Coin.Key.Address,

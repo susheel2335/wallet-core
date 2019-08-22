@@ -1,9 +1,9 @@
 import BigNumber from 'bignumber.js';
 import BitcoinJS from 'bitcoinjs-lib';
-import * as Constants from '../constants';
 import * as Key from './key';
 import * as Options from './options';
 import * as Private from './private';
+import * as Constants from '../constants';
 import { BalanceScheme, TransactionScheme, Unit } from './entities';
 import CoinInterface from './coin-interface';
 

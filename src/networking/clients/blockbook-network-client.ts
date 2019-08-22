@@ -49,7 +49,7 @@ export default class BlockbookNetworkClient extends NetworkClient {
     }
 
 
-    public async getFeesPerKB(): Promise<plarkcore.FeeRecord> {
+    public async getFeesPerByte(): Promise<plarkcore.FeeRecord> {
         return this.feeHelper.getFee();
     }
 

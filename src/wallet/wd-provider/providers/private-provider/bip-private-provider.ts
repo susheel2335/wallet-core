@@ -1,12 +1,14 @@
 import { forEach, filter } from 'lodash';
 import BigNumber from 'bignumber.js';
 import BitcoinJS from 'bitcoinjs-lib';
-import { Coin, Constants, HD } from '../../../../';
+import coinSelect, { CoinSelectResult, coinSplit } from 'coinselect';
+import HD from '../../../../hd';
+import * as Coin from '../../../../coin';
+import * as Constants from '../../../../constants';
 import { calculateBalance, Entity } from '../../../';
 import { InsightNetworkClient, BlockbookNetworkClient } from '../../../../networking/clients';
 import { AbstractPrivateProvider } from './abstract-private-provider';
 
-import coinSelect, { CoinSelectResult, coinSplit } from 'coinselect';
 
 export class BIPPrivateProvider extends AbstractPrivateProvider {
     protected getCoin(): Coin.BIPGenericCoin {
@@ -18,7 +20,7 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
         let networkClient = this.wdProvider.getNetworkProvider().getClient(0);
 
         if (networkClient instanceof InsightNetworkClient || networkClient instanceof BlockbookNetworkClient) {
-            const fees: plarkcore.FeeRecord = await networkClient.getFeesPerKB();
+            const fees: plarkcore.FeeRecord = await networkClient.getFeesPerByte();
             let responseFee: BigNumber = fees.medium;
 
             switch (feeType) {
@@ -81,7 +83,10 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
         return pureChangeAddr;
     }
 
-
+    /**
+     * @deprecated
+     * @see FeeProviderInterface
+     */
     public async calculateFee<Options = any>(
         value: BigNumber,
         address: Coin.Key.Address,
@@ -96,20 +101,14 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
         return {
             fee: new BigNumber(fee.toFixed(8)).div(Constants.SATOSHI_PER_COIN),
             coin: this.getCoin().getUnit(),
-            feeType: feeType,
             inputCount: inputs.length,
             outputCount: outputs.length,
         };
     }
 
     /**
-     * Method to calculate max value and fee to send
-     *
-     * @param {Address}             address
-     * @param {plarkcore.FeeType}   feeType
-     * @param {any}                 options
-     *
-     * @return {Promise<CalculateMaxResponse>}
+     * @deprecated
+     * @see FeeProviderInterface
      */
     public async calculateMax<Options = any>(
         address: Coin.Key.Address,
@@ -146,7 +145,6 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
             fee: feeNum,
             amount: balanceNum.minus(feeNum),
             coin: this.getCoin().getUnit(),
-            feeType: feeType,
             balance: balanceNum.toString(),
         };
     }

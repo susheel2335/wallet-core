@@ -1,7 +1,9 @@
 import { forEach } from 'lodash';
 import BitcoinJS from 'bitcoinjs-lib';
 import BigNumber from 'bignumber.js';
-import { Coin, Constants, Utils } from '../../';
+import * as Coin from '../../coin';
+import * as Constants from '../../constants';
+import { Utils } from '../../utils';
 
 namespace blockcypher {
     export type Network = {

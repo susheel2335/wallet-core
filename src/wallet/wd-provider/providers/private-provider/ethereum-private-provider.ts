@@ -1,7 +1,7 @@
 import { filter, get } from 'lodash';
 import BigNumber from 'bignumber.js';
-import * as Constants from '../../../../constants';
 import * as Coin from '../../../../coin';
+import * as Constants from '../../../../constants';
 import * as Networking from '../../../../networking';
 import { Entity, calculateBalance } from '../../../';
 import { AbstractPrivateProvider } from './abstract-private-provider';
@@ -77,11 +77,8 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
     }
 
     /**
-     * @param {BigNumber}           value
-     * @param {Address}             address
-     * @param {plarkcore.FeeType}   feeType
-     *
-     * @returns {Promise<CalculateFeeResponse>}
+     * @deprecated
+     * @see FeeProviderInterface
      */
     public async calculateFee(
         value: BigNumber,
@@ -103,13 +100,8 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
     }
 
     /**
-     * Method to calculate max value and fee to send
-     *
-     * @param {Address}             address
-     * @param {plarkcore.FeeType}   feeType
-     * @param {any}                 options
-     *
-     * @return {Promise<CalculateMaxResponse>}
+     * @deprecated
+     * @see FeeProviderInterface
      */
     public async calculateMax<Options = any>(
         address: Coin.Key.Address,

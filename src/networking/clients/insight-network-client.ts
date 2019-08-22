@@ -56,7 +56,7 @@ export default class InsightNetworkClient extends NetworkClient {
     /**
      * @return {Promise<plarkcore.FeeRecord>}
      */
-    public async getFeesPerKB(): Promise<plarkcore.FeeRecord> {
+    public async getFeesPerByte(): Promise<plarkcore.FeeRecord> {
         const resolveFeePerByte = (data, index, defaultFeeProp: string): BigNumber => {
             if (data[index] > 0) {
                 return new BigNumber(data[index]).div(1024).decimalPlaces(8);

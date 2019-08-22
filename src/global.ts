@@ -54,11 +54,16 @@ declare global {
             network: string;
         };
 
+
+        type FeeOptions = {
+            feeType: FeeType;
+
+            [key: string]: any;
+        };
+
         type CalculateFeeResponse = {
             coin: Coin.Unit;
             fee: BigNumber;
-            feeType: plarkcore.FeeType;
-
             [key: string]: any;
         };
 
@@ -66,8 +71,6 @@ declare global {
             coin: Coin.Unit;
             amount: BigNumber;
             fee: BigNumber;
-            feeType: plarkcore.FeeType;
-
             [key: string]: any;
         };
 
@@ -107,6 +110,11 @@ declare global {
                 s?: string;
                 v?: string;
             }
+
+            type EthFeeOptions = FeeOptions & {
+                gasPrice: BigNumber;
+                gasLimit: BigNumber;
+            };
         }
 
         /**
@@ -138,6 +146,10 @@ declare global {
                 version: number;
                 lockTime: number;
             }
+
+            type BIPFeeOptions = FeeOptions & {
+                feeRate: BigNumber;
+            };
         }
 
         /**
