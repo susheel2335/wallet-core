@@ -35,7 +35,7 @@ const coinCases = {
     },
     [Coin.Unit.ETHt]: {
         defaultGasPrice: '8.0',
-        defaultMaxAmount: false,
+        defaultMaxAmount: false
     },
 };
 

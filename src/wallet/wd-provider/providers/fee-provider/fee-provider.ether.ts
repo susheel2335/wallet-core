@@ -91,7 +91,7 @@ export default class EtherFeeProvider
         const { gasPrice, gasLimit } = options;
 
         const balance = new BigNumber(calculateBalance(this.wdProvider.balance));
-        const fee = gasLimit.times(gasPrice);
+        const fee = gasLimit.times(gasPrice.div(Constants.GWEI_PER_COIN));
         const amount = balance.minus(fee);
 
         if (amount.isLessThan(0)) {
