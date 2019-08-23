@@ -2,11 +2,13 @@ import { forEach, filter } from 'lodash';
 import BigNumber from 'bignumber.js';
 import BitcoinJS from 'bitcoinjs-lib';
 import coinSelect, { CoinSelectResult, coinSplit } from 'coinselect';
+import Exceptions from '../../../../exceptions';
 import HD from '../../../../hd';
 import * as Coin from '../../../../coin';
 import * as Constants from '../../../../constants';
 import { calculateBalance, Entity } from '../../../';
 import { InsightNetworkClient, BlockbookNetworkClient } from '../../../../networking/clients';
+import BIPFeeProvider from '../fee-provider/fee-provider.bip';
 import { AbstractPrivateProvider } from './abstract-private-provider';
 
 
@@ -134,11 +136,11 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
         const balanceNum = new BigNumber(calculateBalance(this.wdProvider.balance));
 
         if (!inputs || inputs.length === 0) {
-            throw new Error('Insufficient funds');
+            throw new Exceptions.InsufficientFundsException();
         }
 
         if (feeNum.isGreaterThanOrEqualTo(balanceNum)) {
-            throw new Error('Insufficient funds');
+            throw new Exceptions.InsufficientFundsException();
         }
 
         return {
@@ -149,7 +151,10 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
         };
     }
 
-
+    /**
+     * @deprecated
+     * @see syncCreateTransaction
+     */
     public async createTransaction<O = any>(
         address: Coin.Key.Address,
         value: BigNumber,
@@ -173,7 +178,7 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
         let { inputs = [], outputs = [], fee = 0 } = coinSelectResponse;
 
         if (!inputs || inputs.length === 0) {
-            throw new Error('Insufficient funds');
+            throw new Exceptions.InsufficientFundsException();
         }
 
         forEach(inputs, (inp: Entity.UnspentTXOutput) => {
@@ -189,6 +194,60 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
             inputData.push({
                 value: inp.value,
             });
+        });
+
+        forEach(outputs, (out) => {
+            let curAddress = out.address || undefined;
+            if (!curAddress) {
+                curAddress = this.getPureChangeAddress(balance).address;
+            }
+
+            txBuilder.addOutput(
+                coin.getKeyFormat().parseAddress(curAddress),
+                new BigNumber(out.value).div(Constants.SATOSHI_PER_COIN),
+            );
+        });
+
+        return txBuilder.buildSigned(txPrivateKeys, inputData);
+    }
+
+
+    public syncCreateTransaction(
+        address: Coin.Key.Address,
+        value: BigNumber,
+        feeOptions: plarkcore.bip.BIPFeeOptions,
+    ): Coin.Transaction.Transaction {
+        const balance = this.wdProvider.balance;
+
+        const coin = this.wdProvider.coin as Coin.BIPGenericCoin;
+        const txPrivateKeys: Coin.Key.Private[] = [];
+        const inputData: Coin.SignInputData[] = [];
+        const txBuilder = new Coin.Transaction.BIPTransactionBuilder(this.wdProvider.coin);
+
+        const coinSelectResponse: CoinSelectResult = (this.wdProvider.fee as BIPFeeProvider).calculateOptimalInputs(
+            balance,
+            address.toString(),
+            value,
+            feeOptions,
+        );
+
+        let { inputs = [], outputs = [], fee = 0 } = coinSelectResponse;
+
+        if (!inputs || inputs.length === 0) {
+            throw new Exceptions.InsufficientFundsException();
+        }
+
+        forEach(inputs, (inp: Entity.UnspentTXOutput) => {
+            const address = inp.addresses[0];
+
+            const walletAddress = this.wdProvider.address.get(address);
+            if (!walletAddress) {
+                throw new Error(`Address '${inp.addresses[0]}' not found in WalletData`);
+            }
+
+            txBuilder.addInput(inp.txid, inp.vout, undefined, Buffer.from(inp.prevScript, 'hex'));
+            txPrivateKeys.push(this.deriveAddressNode(walletAddress).getPrivateKey());
+            inputData.push({ value: inp.value });
         });
 
         forEach(outputs, (out) => {

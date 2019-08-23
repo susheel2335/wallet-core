@@ -30,6 +30,8 @@ export const WEI_PER_COIN = new BigNumber(1E18);
 export const KWEI_PER_COIN = new BigNumber(1E15);
 export const MWEI_PER_COIN = new BigNumber(1E12);
 export const GWEI_PER_COIN = new BigNumber(1E9);
+export const WEI_PER_GWEI = WEI_PER_COIN.div(GWEI_PER_COIN);
 
 
 export const MIN_GAS_LIMIT = new BigNumber(54000);
+export const ADDRESS_GAS_LIMIT = new BigNumber(21000);

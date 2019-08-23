@@ -3,9 +3,9 @@ import BigNumber from 'bignumber.js';
 import BitcoinJS from 'bitcoinjs-lib';
 import * as Coin from '../coin';
 import * as Constants from '../constants';
+import Exceptions from '../exceptions';
 import * as Entity from './entity';
 import { INetworkProvider } from '../networking';
-import { BalanceException } from './exceptions';
 import { WDProvider } from './wd-provider';
 
 export function calculateBalance(balance: Entity.WDBalance, withUnconfirmed = false): number {
@@ -26,7 +26,7 @@ export function calculateTxBalance(balance: Entity.WDBalance, txid: string): num
     const txBalance: Entity.Balance = balance.txBalances[txid];
 
     if (!txBalance) {
-        throw new BalanceException(`Transaction with TXID '${txid}' not found`);
+        throw new Exceptions.BalanceException(`Transaction with TXID '${txid}' not found`);
     }
 
     return txBalance.receive.minus(txBalance.spend).toNumber();

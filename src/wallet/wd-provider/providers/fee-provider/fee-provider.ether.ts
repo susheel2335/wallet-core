@@ -1,6 +1,8 @@
 import BigNumber from 'bignumber.js';
 import * as Constants from '../../../../constants';
+import Exceptions from '../../../../exceptions';
 import * as Networking from '../../../../networking';
+import { calculateBalance } from '../../../helper';
 import FeeProviderInterface, { AbstractFeeProvider } from './fee-provider.interface';
 
 type IEthereumNetworkClient = Networking.Clients.IEthereumNetworkClient;
@@ -49,21 +51,19 @@ export default class EtherFeeProvider
 
 
     public getFeeOptions(feeType: plarkcore.FeeType, record?: plarkcore.FeeRecord): plarkcore.eth.EthFeeOptions {
-        const standardGasPrice = new BigNumber(4).div(Constants.WEI_PER_COIN);
-        const defaultGasPrice = {
-            low: standardGasPrice,
-            medium: standardGasPrice.times(2),
-            high: standardGasPrice.times(4),
-        };
-
         if (!record) {
-            record = defaultGasPrice;
+            const standardGasPrice = new BigNumber(4);
+            record = {
+                low: standardGasPrice,
+                medium: standardGasPrice.times(2),
+                high: standardGasPrice.times(4),
+            };
         }
 
         return {
             feeType: feeType,
             gasPrice: record[feeType],
-            gasLimit: Constants.MIN_GAS_LIMIT,
+            gasLimit: Constants.ADDRESS_GAS_LIMIT,
         };
     }
 
@@ -73,7 +73,14 @@ export default class EtherFeeProvider
         options: plarkcore.eth.EthFeeOptions,
         address?: string,
     ): plarkcore.CalculateFeeResponse {
-        return undefined;
+        const { gasPrice, gasLimit } = options;
+
+        return {
+            fee: gasLimit.times(gasPrice.div(Constants.GWEI_PER_COIN)),
+            coin: this.getCoin().getUnit(),
+            gasLimit: gasLimit.toString(),
+            gasPrice: gasPrice.toString(),
+        };
     }
 
 
@@ -81,6 +88,23 @@ export default class EtherFeeProvider
         options: plarkcore.eth.EthFeeOptions,
         address?: string,
     ): plarkcore.CalculateMaxResponse {
-        return undefined;
+        const { gasPrice, gasLimit } = options;
+
+        const balance = new BigNumber(calculateBalance(this.wdProvider.balance));
+        const fee = gasLimit.times(gasPrice);
+        const amount = balance.minus(fee);
+
+        if (amount.isLessThanOrEqualTo(0)) {
+            throw new Exceptions.InsufficientFundsException();
+        }
+
+        return {
+            fee,
+            amount,
+            coin: this.getCoin().getUnit(),
+            gasLimit: gasLimit.toString(),
+            gasPrice: gasPrice.toString(),
+            balance: balance.toNumber(),
+        };
     }
 }

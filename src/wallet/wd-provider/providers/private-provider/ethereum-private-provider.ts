@@ -1,5 +1,7 @@
 import { filter, get } from 'lodash';
 import BigNumber from 'bignumber.js';
+import Exceptions from '../../../../exceptions';
+import { Utils } from '../../../../utils';
 import * as Coin from '../../../../coin';
 import * as Constants from '../../../../constants';
 import * as Networking from '../../../../networking';
@@ -24,6 +26,8 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
      * @param {plarkcore.eth.EstimateGasRequestOptions} options
      *
      * @returns {Promise<BigNumber>}
+     *
+     * @deprecated
      */
     public async getGasLimit(options: plarkcore.eth.EstimateGasRequestOptions): Promise<BigNumber> {
         let { value, to, from, data, gas, gasPrice } = options;
@@ -55,6 +59,8 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
      * @param {plarkcore.FeeType} feeType
      *
      * @returns {Promise<BigNumber>}
+     *
+     * @deprecated
      */
     public async getGasPrice(feeType: plarkcore.FeeType = Constants.FeeTypes.Medium): Promise<BigNumber> {
         const networkClient = this.wdProvider.getNetworkProvider().getClient(0);
@@ -118,7 +124,7 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
         const amount = balance.minus(fee);
 
         if (amount.isLessThanOrEqualTo(0)) {
-            throw new Error('Insufficient funds');
+            throw new Exceptions.InsufficientFundsException();
         }
 
         return {
@@ -164,7 +170,7 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
             .minus(addressBalance.unconfirmed);
 
         if (currentBalance.isLessThan(value)) {
-            throw new Error('Insufficient funds');
+            throw new Exceptions.InsufficientFundsException();
         }
 
         let txBuilder = new Coin.Transaction.EthereumTransactionBuilder(coin);

@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import { CoinInterface } from '../../../../coin';
 import { WDProvider } from '../../';
 
 export default interface FeeProviderInterface<F = plarkcore.FeeOptions> {
@@ -42,5 +43,9 @@ export abstract class AbstractFeeProvider {
      */
     public constructor(wdProvider: WDProvider) {
         this.wdProvider = wdProvider;
+    }
+
+    protected getCoin(): CoinInterface {
+        return this.wdProvider.coin;
     }
 }

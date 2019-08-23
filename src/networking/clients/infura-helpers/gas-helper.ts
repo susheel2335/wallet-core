@@ -51,7 +51,7 @@ export default class GasHelper {
      * @return {plarkcore.GasPrice}
      */
     protected async fetchGasPrice(): Promise<plarkcore.GasPrice> {
-        const standardGasPrice = new BigNumber(4).div(Constants.WEI_PER_COIN);
+        const standardGasPrice = new BigNumber(4);
         const defaultGasPrice = {
             low: standardGasPrice,
             medium: standardGasPrice.times(2),
@@ -60,7 +60,7 @@ export default class GasHelper {
 
         try {
             const data = await this.client.sendRequest('eth_gasPrice');
-            const gasPrices = new BigNumber(data.result).div(Constants.GWEI_PER_COIN);
+            const gasPrices = new BigNumber(data.result).div(Constants.WEI_PER_GWEI);
 
             if (!gasPrices) {
                 return defaultGasPrice;

@@ -2,6 +2,7 @@ import BigNumber from 'bignumber.js';
 import * as EthereumJsUtil from 'ethereumjs-util';
 import crp from './crypto';
 
+
 export namespace Utils {
     export import Crypto = crp;
 

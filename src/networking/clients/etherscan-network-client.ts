@@ -77,7 +77,7 @@ export default class EtherscanNetworkClient extends NetworkClient implements IEt
     public async getGasPrice(): Promise<plarkcore.GasPrice> {
         const res = await this.etherscanClient.proxy.eth_gasPrice();
 
-        const estimateGasPrice = new BigNumber(res.result).div(Constants.WEI_PER_COIN);
+        const estimateGasPrice = new BigNumber(res.result).div(Constants.WEI_PER_GWEI);
 
         return {
             low: estimateGasPrice.div(2),

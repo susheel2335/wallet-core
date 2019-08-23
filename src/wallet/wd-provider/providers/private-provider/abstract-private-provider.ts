@@ -70,16 +70,33 @@ export interface PrivateProvider {
      * @param {Address}             address
      * @param {BigNumber}           value
      * @param {plarkcore.FeeType}   feeType
-     * @param {any}                 options
      *
      * @returns {Promise<Transaction>}
+     *
+     * @deprecated
      */
-    createTransaction<Options = any>(
+    createTransaction(
         address: Coin.Key.Address,
         value: BigNumber,
         feeType: plarkcore.FeeType,
-        options?: Options,
     ): Promise<Coin.Transaction.Transaction>;
+
+    /**
+     * Sync create transaction to specific address with some value
+     *
+     * @param {Address}                 address
+     * @param {BigNumber}               value
+     * @param {plarkcore.FeeOptions}   feeOptions
+     * @param {any}                     options
+     *
+     * @returns {Transaction}
+     */
+    syncCreateTransaction<Options = any>(
+        address: Coin.Key.Address,
+        value: BigNumber,
+        feeOptions: plarkcore.FeeOptions,
+        options?: Options,
+    ): Coin.Transaction.Transaction;
 
 
     /**
@@ -103,6 +120,7 @@ export abstract class AbstractPrivateProvider extends SimpleProvider implements 
         this.seed = seed;
         this.privateCoin = this.wdProvider.coin.makePrivateFromSeed(seed);
     }
+
 
     /**
      * @deprecated
@@ -133,6 +151,13 @@ export abstract class AbstractPrivateProvider extends SimpleProvider implements 
         feeType: plarkcore.FeeType,
         options?: Options,
     ): Promise<Coin.Transaction.Transaction>;
+
+    public abstract syncCreateTransaction<Options = any>(
+        address: Coin.Key.Address,
+        value: BigNumber,
+        feeOptions: plarkcore.FeeOptions,
+        options?: Options,
+    ): Coin.Transaction.Transaction;
 
 
     public deriveAddressNode(wdAddress: Entity.WalletAddress): Coin.Private.NodeInterface {
