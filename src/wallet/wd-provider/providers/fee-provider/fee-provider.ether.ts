@@ -94,7 +94,7 @@ export default class EtherFeeProvider
         const fee = gasLimit.times(gasPrice);
         const amount = balance.minus(fee);
 
-        if (amount.isLessThanOrEqualTo(0)) {
+        if (amount.isLessThan(0)) {
             throw new Exceptions.InsufficientFundsException();
         }
 
