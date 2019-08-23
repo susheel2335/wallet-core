@@ -1,7 +1,6 @@
 import { filter, get } from 'lodash';
 import BigNumber from 'bignumber.js';
 import Exceptions from '../../../../exceptions';
-import { Utils } from '../../../../utils';
 import * as Coin from '../../../../coin';
 import * as Constants from '../../../../constants';
 import * as Networking from '../../../../networking';
@@ -192,6 +191,54 @@ export class EthereumPrivateProvider extends AbstractPrivateProvider {
         if (!gasLimit || gasLimit.isLessThanOrEqualTo(0)) {
             gasLimit = await this.getGasLimit({ to: address, value: value, data: transactionData });
         }
+
+        txBuilder.gasPrice = gasPrice.div(Constants.GWEI_PER_COIN);
+        txBuilder.gasLimit = gasLimit.toNumber();
+
+        return txBuilder.buildSigned(privateKeys);
+    }
+
+
+    /**
+     * @param {Address}                     address
+     * @param {BigNumber}                   value
+     * @param {plarkcore.eth.EthFeeOptions} feeOptions
+     *
+     * @returns {Transaction}
+     */
+    public syncCreateTransaction(
+        address: Coin.Key.Address,
+        value: BigNumber,
+        feeOptions: plarkcore.eth.EthFeeOptions,
+    ): Coin.Transaction.Transaction {
+
+        const { gasPrice, gasLimit } = feeOptions;
+
+        if (!gasPrice || !gasLimit) {
+            throw new Error('Invalid Fee options');
+        }
+
+        let coin = this.wdProvider.coin as Coin.Defined.Ethereum;
+        let balance = this.wdProvider.balance;
+
+        let [addressFrom] = this.wdProvider.address.list();
+
+        const privateNodeFrom = this.deriveAddressNode(addressFrom);
+        const addressBalance = balance.addrBalances[addressFrom.address];
+
+        const currentBalance = addressBalance.receive
+            .minus(addressBalance.spend)
+            .minus(addressBalance.unconfirmed);
+
+        if (currentBalance.isLessThan(value)) {
+            throw new Exceptions.InsufficientFundsException();
+        }
+
+        let txBuilder = new Coin.Transaction.EthereumTransactionBuilder(coin);
+        txBuilder.to = address;
+        txBuilder.value = value;
+        txBuilder.nonce = this.getTxNonce(addressFrom);
+        let privateKeys: Coin.Key.Private[] = [privateNodeFrom.getPrivateKey()];
 
         txBuilder.gasPrice = gasPrice.div(Constants.GWEI_PER_COIN);
         txBuilder.gasLimit = gasLimit.toNumber();
