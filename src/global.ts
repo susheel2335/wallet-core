@@ -148,6 +148,7 @@ declare global {
             }
 
             type BIPFeeOptions = FeeOptions & {
+                // Fee rate for KB
                 feeRate: BigNumber;
             };
         }

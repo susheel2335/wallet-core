@@ -55,10 +55,11 @@ export default class InsightNetworkClient extends NetworkClient {
     /**
      * @return {Promise<plarkcore.FeeRecord>}
      */
-    public async getFeesPerByte(): Promise<plarkcore.FeeRecord> {
-        const resolveFeePerByte = (data, index, defaultFeeProp: string): BigNumber => {
-            if (data[index] > 0) {
-                return new BigNumber(data[index]).div(1024).decimalPlaces(8);
+    public async getFeesPerKB(): Promise<plarkcore.FeeRecord> {
+        const resolveFeePerKB = (data, index, defaultFeeProp: string): BigNumber => {
+            const value = new BigNumber(data[index]);
+            if (value.isPositive() && !value.isZero()) {
+                return value;
             }
 
             return this.coin[defaultFeeProp];
@@ -70,15 +71,15 @@ export default class InsightNetworkClient extends NetworkClient {
             );
 
             return {
-                low: resolveFeePerByte(data, 12, 'lowFeePerByte'),
-                medium: resolveFeePerByte(data, 5, 'defaultFeePerByte'),
-                high: resolveFeePerByte(data, 1, 'highFeePerByte'),
+                low: resolveFeePerKB(data, 12, 'lowFeePerKB'),
+                medium: resolveFeePerKB(data, 5, 'defaultFeePerKB'),
+                high: resolveFeePerKB(data, 1, 'highFeePerKB'),
             };
         } catch (error) {
             return {
-                low: (this.coin as Coin.BIPGenericCoin).lowFeePerByte,
-                medium: (this.coin as Coin.BIPGenericCoin).defaultFeePerByte,
-                high: (this.coin as Coin.BIPGenericCoin).highFeePerByte,
+                low: (this.coin as Coin.BIPGenericCoin).lowFeePerKB,
+                medium: (this.coin as Coin.BIPGenericCoin).defaultFeePerKB,
+                high: (this.coin as Coin.BIPGenericCoin).highFeePerKB,
             };
         }
     }
@@ -88,12 +89,12 @@ export default class InsightNetworkClient extends NetworkClient {
         const coin = this.getCoin() as Coin.BIPGenericCoin;
 
         try {
-            return await this.getFeesPerByte();
+            return await this.getFeesPerKB();
         } catch (e) {
             return {
-                low: coin.lowFeePerByte,
-                medium: coin.defaultFeePerByte,
-                high: coin.highFeePerByte,
+                low: coin.lowFeePerKB,
+                medium: coin.defaultFeePerKB,
+                high: coin.highFeePerKB,
             };
         }
     }

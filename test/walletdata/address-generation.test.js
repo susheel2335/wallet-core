@@ -73,14 +73,16 @@ describe('Generate WalletData', () => {
 
 
             if (cases.calculateFee) {
-                it(`Can calculate fee`, async () => {
+                it(`Can calculate fee`, () => {
                     const address = wdProvider.address.last(HD.BIP44.AddressType.CHANGE);
                     let toAddress = coin.getKeyFormat().parseAddress(address.address);
 
-                    const feeResponse = await wdProvider.getPrivate(seed).calculateFee(
+                    const feeOptions = wdProvider.fee.getFeeOptions(Constants.FeeTypes.Medium);
+
+                    const feeResponse = wdProvider.fee.calculateFee(
                         new BigNumber(0.01),
-                        toAddress,
-                        Constants.FeeTypes.Medium
+                        feeOptions,
+                        toAddress.toString(),
                     );
 
                     assert.strictEqual(typeof feeResponse, 'object');
@@ -89,7 +91,7 @@ describe('Generate WalletData', () => {
 
 
             if (cases.calculateMaxAmount) {
-                it(`Can calculate max amount`, async () => {
+                it(`Can calculate max amount`, () => {
                     if (!balanceAmount || balanceAmount < 0.001) {
                         return;
                     }
@@ -97,9 +99,11 @@ describe('Generate WalletData', () => {
                     const address = wdProvider.address.last(HD.BIP44.AddressType.CHANGE);
                     let toAddress = coin.getKeyFormat().parseAddress(address.address);
 
-                    const maxAmountResponse = await wdProvider.getPrivate(seed).calculateMax(
-                        toAddress,
-                        Constants.FeeTypes.Medium
+                    const feeOptions = wdProvider.fee.getFeeOptions(Constants.FeeTypes.Medium);
+
+                    const maxAmountResponse = wdProvider.fee.calculateMax(
+                        feeOptions,
+                        toAddress.toString(),
                     );
 
                     assert.strictEqual(typeof maxAmountResponse, 'object');
@@ -111,14 +115,16 @@ describe('Generate WalletData', () => {
             }
 
             if (cases.generateTransaction) {
-                it(`Can generate Transaction`, async () => {
+                it(`Can generate Transaction`, () => {
                     const address = wdProvider.address.last(HD.BIP44.AddressType.CHANGE);
                     let toAddress = coin.getKeyFormat().parseAddress(address.address);
 
-                    const tx = await wdProvider.getPrivate(seed).createTransaction(
+                    const feeOptions = wdProvider.fee.getFeeOptions(Constants.FeeTypes.Medium);
+
+                    const tx = wdProvider.getPrivate(seed).syncCreateTransaction(
                         toAddress,
                         new BigNumber(0.0001),
-                        Constants.FeeTypes.Medium
+                        feeOptions
                     );
 
                     assert.strictEqual(typeof tx, 'object');

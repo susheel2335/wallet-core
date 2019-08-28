@@ -18,11 +18,11 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
     }
 
 
-    protected async getFee(coin: Coin.BIPGenericCoin, feeType: plarkcore.FeeType): Promise<number> {
+    protected async getFeePerByte(coin: Coin.BIPGenericCoin, feeType: plarkcore.FeeType): Promise<number> {
         let networkClient = this.wdProvider.getNetworkProvider().getClient(0);
 
         if (networkClient instanceof InsightNetworkClient || networkClient instanceof BlockbookNetworkClient) {
-            const fees: plarkcore.FeeRecord = await networkClient.getFeesPerByte();
+            const fees: plarkcore.FeeRecord = await networkClient.fetchFeeRecord();
             let responseFee: BigNumber = fees.medium;
 
             switch (feeType) {
@@ -35,14 +35,14 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
                     break;
             }
 
-            if (responseFee.isLessThan(coin.minFeePerByte)) {
-                responseFee = coin.minFeePerByte;
+            if (responseFee.isLessThan(coin.minFeePerKB)) {
+                responseFee = coin.minFeePerKB;
             }
 
-            return responseFee.times(Constants.SATOSHI_PER_COIN).toNumber();
+            return responseFee.div(1024).times(Constants.SATOSHI_PER_COIN).toNumber();
         }
 
-        return coin.defaultFeePerByte.times(Constants.SATOSHI_PER_COIN).toNumber();
+        return coin.defaultFeePerKB.div(1024).times(Constants.SATOSHI_PER_COIN).toNumber();
     }
 
     /**
@@ -69,7 +69,7 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
             value: value.times(Constants.SATOSHI_PER_COIN).toNumber(),
         }];
 
-        const feeRate = await this.getFee(coin, feeType);
+        const feeRate = await this.getFeePerByte(coin, feeType);
 
         return coinSelect(possibleInputs, targetOutput, feeRate);
     }
@@ -129,7 +129,7 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
             script: BitcoinJS.address.toOutputScript(address.toString(), this.getCoin().networkInfo()),
         }];
 
-        const feeRate = await this.getFee(coin, feeType);
+        const feeRate = await this.getFeePerByte(coin, feeType);
         const { inputs = [], outputs = [], fee = 0 } = coinSplit(possibleInputs, targetOutput, feeRate);
 
         const feeNum = new BigNumber(fee.toFixed(8)).div(Constants.SATOSHI_PER_COIN);

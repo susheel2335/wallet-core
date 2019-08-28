@@ -31,11 +31,11 @@ export default class Dash extends BIPGenericCoin {
         };
     }
 
-    public get defaultFeePerByte(): BigNumber {
-        return new BigNumber(8).div(Constants.SATOSHI_PER_COIN);
+    public get defaultFeePerKB(): BigNumber {
+        return new BigNumber(8).times(1024).div(Constants.SATOSHI_PER_COIN);
     }
 
-    public get minFeePerByte(): BigNumber {
-        return new BigNumber(1).div(Constants.SATOSHI_PER_COIN);
+    public get minFeePerKB(): BigNumber {
+        return new BigNumber(1).times(1024).div(Constants.SATOSHI_PER_COIN);
     }
 }

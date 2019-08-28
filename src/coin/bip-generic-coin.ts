@@ -54,15 +54,15 @@ export abstract class BIPGenericCoin implements CoinInterface {
         return Private.BasicMasterNode.fromSeedBuffer(seed, this);
     }
 
-    public get lowFeePerByte(): BigNumber {
-        return this.defaultFeePerByte.div(2);
+    public get lowFeePerKB(): BigNumber {
+        return this.defaultFeePerKB.div(2);
     }
 
-    public get highFeePerByte(): BigNumber {
-        return this.defaultFeePerByte.times(4);
+    public get highFeePerKB(): BigNumber {
+        return this.defaultFeePerKB.times(4);
     }
 
-    public get minFeePerByte(): BigNumber {
+    public get minFeePerKB(): BigNumber {
         return new BigNumber(1).div(Constants.SATOSHI_PER_COIN);
     }
 
@@ -78,5 +78,5 @@ export abstract class BIPGenericCoin implements CoinInterface {
 
     public abstract networkInfo(): BitcoinJS.Network;
 
-    public abstract get defaultFeePerByte(): BigNumber;
+    public abstract get defaultFeePerKB(): BigNumber;
 }

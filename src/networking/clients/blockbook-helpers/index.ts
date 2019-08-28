@@ -19,9 +19,9 @@ class FeeHelper {
     public async getFee(): Promise<plarkcore.FeeRecord> {
         if (this.isFeeExpired()) {
             this.feeCache = {
-                low: await this.resolveFee(8, 'lowFeePerByte'),
-                medium: await this.resolveFee(6, 'defaultFeePerByte'),
-                high: await this.resolveFee(1, 'highFeePerByte'),
+                low: await this.resolveFee(12, 'lowFeePerKB'),
+                medium: await this.resolveFee(6, 'defaultFeePerKB'),
+                high: await this.resolveFee(1, 'highFeePerKB'),
             };
 
             this.feeTimeout = new Date().getTime();
@@ -37,7 +37,7 @@ class FeeHelper {
             const value = new BigNumber(fee);
 
             if (value.isGreaterThan(0)) {
-                return value.div(1024).decimalPlaces(8);
+                return value;
             }
         } catch (error) {
         }

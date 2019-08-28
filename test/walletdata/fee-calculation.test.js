@@ -6,27 +6,27 @@ import {seed} from '../fixtures/seed';
 
 const coinCases = {
     [Coin.Unit.BTC]: {
-        defaultFeeRate: '0.00000008',
+        defaultFeeRate: '0.00008192',
         defaultMaxAmount: false,
     },
     [Coin.Unit.BTCt]: {
-        defaultFeeRate: '0.00000008',
+        defaultFeeRate: '0.00008192',
         defaultMaxAmount: '1.58079389',
     },
     [Coin.Unit.LTC]: {
-        defaultFeeRate: '0.00000200',
+        defaultFeeRate: '0.00204800',
         defaultMaxAmount: false,
     },
     [Coin.Unit.LTCt]: {
-        defaultFeeRate: '0.00000200',
+        defaultFeeRate: '0.00204800',
         defaultMaxAmount: false,
     },
     [Coin.Unit.DASH]: {
-        defaultFeeRate: '0.00000008',
+        defaultFeeRate: '0.00008192',
         defaultMaxAmount: false,
     },
     [Coin.Unit.DASHt]: {
-        defaultFeeRate: '0.00000008',
+        defaultFeeRate: '0.00008192',
         defaultMaxAmount: false,
     },
     [Coin.Unit.ETH]: {

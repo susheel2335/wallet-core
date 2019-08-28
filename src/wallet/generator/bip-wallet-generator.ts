@@ -39,7 +39,7 @@ export class BIPWalletGenerator extends WDGenerator {
     }
 
 
-    public async extractAddrsTxs(addrs: string[]): Promise<Wallet.Entity.WalletTransaction[]> {
+    public async extractAddrsTxs(addrs: string[]): Promise<plarkcore.blockchain.CommonTransaction[]> {
         const networkProvider = this.wdProvider.getNetworkProvider();
 
         return networkProvider.getBulkAddrTxs(addrs);
@@ -49,7 +49,7 @@ export class BIPWalletGenerator extends WDGenerator {
     public async bulkAddrGenerate(addressType: HD.BIP44.AddressType): Promise<void> {
         const addrs: string[] = await this.deriveAddresses(Constants.MIN_ADDRESS_COUNT, addressType);
 
-        const txs: Wallet.Entity.WalletTransaction[] = await this.extractAddrsTxs(addrs);
+        const txs: plarkcore.blockchain.CommonTransaction[] = await this.extractAddrsTxs(addrs);
         this.fillAddrsTxs(txs);
 
         const pureAddrCount = this.wdProvider.address.pureAddrCount(addressType);

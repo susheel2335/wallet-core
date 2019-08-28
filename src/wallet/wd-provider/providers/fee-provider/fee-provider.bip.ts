@@ -1,4 +1,4 @@
-import { forEach, filter } from 'lodash';
+import { filter } from 'lodash';
 import BigNumber from 'bignumber.js';
 import BitcoinJS from 'bitcoinjs-lib';
 import coinSelect, { CoinSelectResult, coinSplit } from 'coinselect';
@@ -6,11 +6,13 @@ import * as Coin from '../../../../coin';
 import * as Constants from '../../../../constants';
 import Exceptions from '../../../../exceptions';
 import HD from '../../../../hd';
-import { calculateBalance, Entity } from '../../../index';
+import { calculateBalance, Entity } from '../../../';
 import FeeProviderInterface, { AbstractFeeProvider } from './fee-provider.interface';
 
 function fee2Sat(feeRate: BigNumber): number {
-    return feeRate.times(Constants.SATOSHI_PER_COIN).toNumber();
+    const resp = feeRate.times(Constants.SATOSHI_PER_COIN).toNumber();
+
+    return resp < 1 ? 1 : resp;
 }
 
 export default class BIPFeeProvider extends AbstractFeeProvider implements FeeProviderInterface<plarkcore.bip.BIPFeeOptions> {
@@ -19,15 +21,15 @@ export default class BIPFeeProvider extends AbstractFeeProvider implements FeePr
 
         if (!record) {
             record = {
-                low: coin.lowFeePerByte,
-                medium: coin.defaultFeePerByte,
-                high: coin.highFeePerByte,
+                low: coin.lowFeePerKB,
+                medium: coin.defaultFeePerKB,
+                high: coin.highFeePerKB,
             };
         }
 
         let feeRate = record[feeType];
-        if (feeRate.isLessThan(coin.minFeePerByte)) {
-            feeRate = coin.defaultFeePerByte;
+        if (feeRate.isLessThan(coin.minFeePerKB)) {
+            feeRate = coin.defaultFeePerKB;
         }
 
         return {
@@ -35,7 +37,6 @@ export default class BIPFeeProvider extends AbstractFeeProvider implements FeePr
             feeRate: feeRate,
         };
     }
-
 
 
     public calculateFee(
@@ -61,7 +62,6 @@ export default class BIPFeeProvider extends AbstractFeeProvider implements FeePr
     }
 
 
-
     public calculateMaxAmount(
         options: plarkcore.bip.BIPFeeOptions,
         address?: string,
@@ -81,8 +81,10 @@ export default class BIPFeeProvider extends AbstractFeeProvider implements FeePr
             script: BitcoinJS.address.toOutputScript(address, coin.networkInfo()),
         }];
 
+        const feePerByte = options.feeRate.div(1024);
+
         const { inputs = [], outputs = [], fee = 0 }
-            = coinSplit(possibleInputs, targetOutput, fee2Sat(options.feeRate));
+            = coinSplit(possibleInputs, targetOutput, fee2Sat(feePerByte));
 
         const feeNum = new BigNumber(fee.toFixed(8)).div(Constants.SATOSHI_PER_COIN);
         const balanceNum = new BigNumber(calculateBalance(this.wdProvider.balance));
@@ -105,12 +107,11 @@ export default class BIPFeeProvider extends AbstractFeeProvider implements FeePr
     }
 
 
-
     /**
      * @param {WDBalance}                       balance
      * @param {string}                          address
      * @param {BigNumber}                       value
-     * @param {plarkcore.bip.BIPFeeOptions}     options
+     * @param {plarkcore.bip.BIPFeeOptions}     feeOptions
      *
      * @return {CoinSelectResult}
      */
@@ -118,7 +119,7 @@ export default class BIPFeeProvider extends AbstractFeeProvider implements FeePr
         balance: Entity.WDBalance,
         address: string,
         value: BigNumber,
-        options: plarkcore.bip.BIPFeeOptions,
+        feeOptions: plarkcore.bip.BIPFeeOptions,
     ): CoinSelectResult {
         const coin = this.getCoin() as Coin.BIPGenericCoin;
 
@@ -128,9 +129,11 @@ export default class BIPFeeProvider extends AbstractFeeProvider implements FeePr
         const targetOutput = [{
             address: address,
             script: BitcoinJS.address.toOutputScript(address, coin.networkInfo()),
-            value: fee2Sat(value),
+            value: value.times(Constants.SATOSHI_PER_COIN).toNumber(),
         }];
 
-        return coinSelect(possibleInputs, targetOutput, fee2Sat(options.feeRate));
+        const feePerByte = feeOptions.feeRate.div(1024);
+
+        return coinSelect(possibleInputs, targetOutput, fee2Sat(feePerByte));
     }
 }
