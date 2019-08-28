@@ -1,7 +1,7 @@
 import { forEach, orderBy } from 'lodash';
 import Axios, { AxiosInstance } from 'axios';
 import * as Coin from '../../coin';
-import * as Wallet from '../../wallet';
+import Exceptions from '../../exceptions';
 import { Blockcypher } from '../api';
 import { wrapLimiterMethod } from '../limmiters/blockcypher';
 import { NetworkClient } from './network-client';
@@ -19,7 +19,7 @@ export class BlockcypherBIPNetworkClient extends NetworkClient {
     }
 
 
-    public getTx(txid: string): Promise<Wallet.Entity.WalletTransaction | undefined> {
+    public getTx(txid: string): Promise<plarkcore.blockchain.CommonTransaction | undefined> {
         return wrapLimiterMethod(async () => {
             try {
                 const response = await this.client.get('/txs/' + txid);
@@ -88,5 +88,9 @@ export class BlockcypherBIPNetworkClient extends NetworkClient {
 
             return txList;
         });
+    }
+
+    public fetchFeeRecord(): Promise<plarkcore.FeeRecord> {
+        throw new Exceptions.NetworkException("Method 'fetchFeeRecord' has not implemented yet");
     }
 }

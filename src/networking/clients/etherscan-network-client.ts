@@ -1,7 +1,8 @@
 import { forEach } from 'lodash';
 import BigNumber from 'bignumber.js';
 import EtherscanApi, { EtherscanApiClient } from 'etherscan-api';
-import { Coin, Wallet, Constants } from '../../';
+import * as Coin from '../../coin';
+import * as Constants from '../../constants';
 import { Etherscan } from '../api';
 import { NetworkClient, IEthereumNetworkClient } from './network-client';
 
@@ -75,17 +76,30 @@ export default class EtherscanNetworkClient extends NetworkClient implements IEt
      * @returns {Promise<plarkcore.GasPrice>}
      */
     public async getGasPrice(): Promise<plarkcore.GasPrice> {
-        const res = await this.etherscanClient.proxy.eth_gasPrice();
+        try {
+            const res = await this.etherscanClient.proxy.eth_gasPrice();
 
-        const estimateGasPrice = new BigNumber(res.result).div(Constants.WEI_PER_GWEI);
+            const estimateGasPrice = new BigNumber(res.result).div(Constants.WEI_PER_GWEI);
 
-        return {
-            low: estimateGasPrice.div(2),
-            medium: estimateGasPrice,
-            high: estimateGasPrice.times(5),
-        } as plarkcore.GasPrice;
+            return {
+                low: estimateGasPrice.div(2),
+                medium: estimateGasPrice,
+                high: estimateGasPrice.times(5),
+            } as plarkcore.GasPrice;
+        } catch (e) {
+            const standardGasPrice = new BigNumber(4);
+
+            return {
+                low: standardGasPrice,
+                medium: standardGasPrice.times(2),
+                high: standardGasPrice.times(4),
+            };
+        }
     }
 
+    public async fetchFeeRecord(): Promise<plarkcore.FeeRecord> {
+        return this.getGasPrice();
+    }
 
     public estimateGas(options: plarkcore.eth.EstimateGasRequestOptions): Promise<BigNumber> {
         throw new Error('Can not get Value');

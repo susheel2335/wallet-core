@@ -1,8 +1,9 @@
 import BigNumber from 'bignumber.js';
-import { get } from 'lodash';
-import { Constants, Utils } from '../../../';
-import InfuraNetworkClient from '../infura-network-client';
 import { crypto } from 'bitcoinjs-lib';
+import { get } from 'lodash';
+import * as Constants from '../../../Constants';
+import { Utils } from '../../../utils';
+import InfuraNetworkClient from '../infura-network-client';
 
 /**
  * GasHelper is a provider of check and cache Gas Price and Gas estimation

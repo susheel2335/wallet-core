@@ -11,13 +11,6 @@ export default class EtherFeeProvider
     extends AbstractFeeProvider
     implements FeeProviderInterface<plarkcore.eth.EthFeeOptions> {
 
-
-    public async fetchFeeRecord(): Promise<plarkcore.FeeRecord> {
-        const networkClient = this.wdProvider.getNetworkProvider().getClient(0);
-
-        return await (networkClient as IEthereumNetworkClient).getGasPrice();
-    }
-
     /**
      * @param {plarkcore.eth.EstimateGasRequestOptions} options
      *
@@ -63,7 +56,7 @@ export default class EtherFeeProvider
         return {
             feeType: feeType,
             gasPrice: record[feeType],
-            gasLimit: Constants.ADDRESS_GAS_LIMIT,
+            gasLimit: Constants.MIN_GAS_LIMIT,
         };
     }
 

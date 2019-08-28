@@ -53,6 +53,9 @@ export default class BlockbookNetworkClient extends NetworkClient {
         return this.feeHelper.getFee();
     }
 
+    public async fetchFeeRecord(): Promise<plarkcore.FeeRecord> {
+        return this.feeHelper.getFee();
+    }
 
     public async getInfo(): Promise<plarkcore.BlockchainInfo> {
         const info = await this.getWSClient().send('getInfo');

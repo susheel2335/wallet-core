@@ -19,7 +19,7 @@ class FeeHelper {
     public async getFee(): Promise<plarkcore.FeeRecord> {
         if (this.isFeeExpired()) {
             this.feeCache = {
-                low: await this.resolveFee(12, 'lowFeePerByte'),
+                low: await this.resolveFee(8, 'lowFeePerByte'),
                 medium: await this.resolveFee(6, 'defaultFeePerByte'),
                 high: await this.resolveFee(1, 'highFeePerByte'),
             };

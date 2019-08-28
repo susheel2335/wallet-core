@@ -1,10 +1,9 @@
+import Axios, { AxiosInstance, AxiosResponse } from 'axios';
+import { forEach, orderBy } from 'lodash';
 import BigNumber from 'bignumber.js';
 import Bottleneck from 'bottleneck';
-import { forEach, orderBy } from 'lodash';
-import Axios, { AxiosInstance, AxiosResponse } from 'axios';
 import * as Coin from '../../coin';
 import { Insight } from '../api';
-
 import { NetworkClient } from './network-client';
 import { InsightTrackerProvider } from './tracker';
 
@@ -84,6 +83,22 @@ export default class InsightNetworkClient extends NetworkClient {
         }
     }
 
+
+    public async fetchFeeRecord(): Promise<plarkcore.FeeRecord> {
+        const coin = this.getCoin() as Coin.BIPGenericCoin;
+
+        try {
+            return await this.getFeesPerByte();
+        } catch (e) {
+            return {
+                low: coin.lowFeePerByte,
+                medium: coin.defaultFeePerByte,
+                high: coin.highFeePerByte,
+            };
+        }
+    }
+
+
     public async getInfo(): Promise<plarkcore.BlockchainInfo> {
         const info = await this.sendRequest<Insight.BlockchainInfo>('/status');
 
@@ -139,7 +154,7 @@ export default class InsightNetworkClient extends NetworkClient {
 
 
     public createTracker(): plarkcore.ITrackerClient {
-        return new InsightTrackerProvider(this)
+        return new InsightTrackerProvider(this);
     }
 
 

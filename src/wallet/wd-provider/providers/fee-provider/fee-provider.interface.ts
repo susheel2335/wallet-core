@@ -48,4 +48,10 @@ export abstract class AbstractFeeProvider {
     protected getCoin(): CoinInterface {
         return this.wdProvider.coin;
     }
+
+    public async fetchFeeRecord(): Promise<plarkcore.FeeRecord> {
+        const networkClient = this.wdProvider.getNetworkProvider().getClient(0);
+
+        return networkClient.fetchFeeRecord();
+    }
 }

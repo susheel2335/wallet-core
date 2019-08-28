@@ -1,7 +1,6 @@
 import { forEach, map } from 'lodash';
 import BigNumber from 'bignumber.js';
 import Axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
-
 import * as Coin from '../../coin';
 import * as Constants from '../../constants';
 import { Infura, Etherscan } from '../api';
@@ -180,6 +179,9 @@ export default class InfuraNetworkClient extends NetworkClient implements IEther
         return this.gasHelper.getGasPrice();
     }
 
+    public async fetchFeeRecord(): Promise<plarkcore.FeeRecord> {
+        return this.gasHelper.getGasPrice();
+    }
 
     public async estimateGas(options: plarkcore.eth.EstimateGasRequestOptions): Promise<BigNumber> {
         return this.gasHelper.estimateGas(options);

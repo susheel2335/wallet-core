@@ -1,10 +1,8 @@
+import Axios, { CancelTokenSource } from 'axios';
 import { forEach } from 'lodash';
-
-import { Wallet } from '../../../';
 import { Infura } from '../../api';
 import { InfuraNetworkClient } from '../';
 import { TrackerClient } from './tracker-client';
-import Axios, { CancelTokenSource } from 'axios';
 
 const NEW_BLOCK_CHECK_TIMEOUT = 20000;
 const RECONNECT_TIMEOUT = 40000;

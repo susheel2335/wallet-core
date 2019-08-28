@@ -1,6 +1,7 @@
 import { map, find } from 'lodash';
 import { EventEmitter } from 'events';
-import { Wallet, Debug } from '../../../';
+import * as Wallet from '../../../wallet';
+import * as Debug from '../../../debugger';
 import { INetworkClient } from '../';
 
 export enum TrackerEvent {

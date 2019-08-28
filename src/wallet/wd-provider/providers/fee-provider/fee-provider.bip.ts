@@ -14,29 +14,6 @@ function fee2Sat(feeRate: BigNumber): number {
 }
 
 export default class BIPFeeProvider extends AbstractFeeProvider implements FeeProviderInterface<plarkcore.bip.BIPFeeOptions> {
-
-    public async fetchFeeRecord(): Promise<plarkcore.FeeRecord> {
-        const coin = this.getCoin() as Coin.BIPGenericCoin;
-        let networkClient = this.wdProvider.getNetworkProvider().getClient(0);
-
-        try {
-            if ('getFeesPerByte' in networkClient && typeof networkClient['getFeesPerByte'] === 'function') {
-                const promise = networkClient['getFeesPerByte']() as plarkcore.FeeRecord;
-
-                return await Promise.resolve(promise);
-            }
-        } catch (e) {
-        }
-
-        return {
-            low: coin.lowFeePerByte,
-            medium: coin.defaultFeePerByte,
-            high: coin.highFeePerByte,
-        };
-    }
-
-
-
     public getFeeOptions(feeType: plarkcore.FeeType, record?: plarkcore.FeeRecord): plarkcore.bip.BIPFeeOptions {
         const coin = this.getCoin() as Coin.BIPGenericCoin;
 

@@ -19,15 +19,17 @@ export interface INetworkProvider extends plarkcore.Destructible {
 
     broadCastTransaction(transaction: Coin.Transaction.Transaction): Promise<string>;
 
-    getAddressTxs(address: string): Promise<Wallet.Entity.WalletTransaction[]>;
+    getAddressTxs(address: string): Promise<plarkcore.blockchain.CommonTransaction[]>;
 
-    getTx(txid: string): Promise<Wallet.Entity.WalletTransaction | undefined>;
+    getTx(txid: string): Promise<plarkcore.blockchain.CommonTransaction | undefined>;
 
-    getBulkAddrTxs(address: string[]): Promise<Wallet.Entity.WalletTransaction[]>;
+    getBulkAddrTxs(address: string[]): Promise<plarkcore.blockchain.CommonTransaction[]>;
 
     getLastBlock(): Promise<plarkcore.blockchain.CommonBlock>;
 
     createTracker(index?: number): plarkcore.ITrackerClient;
+
+    fetchFeeRecord(): Promise<plarkcore.FeeRecord>;
 
     destruct(): void;
 
@@ -77,7 +79,7 @@ export class NetworkProvider implements INetworkProvider {
     }
 
 
-    public getAddressTxs(address: string): Promise<Wallet.Entity.WalletTransaction[]> {
+    public getAddressTxs(address: string): Promise<plarkcore.blockchain.CommonTransaction[]> {
         return this.__callMethod(
             'getAddressTxs',
             [address],
@@ -85,7 +87,7 @@ export class NetworkProvider implements INetworkProvider {
     }
 
 
-    public getBulkAddrTxs(addrs: string[]): Promise<Wallet.Entity.WalletTransaction[]> {
+    public getBulkAddrTxs(addrs: string[]): Promise<plarkcore.blockchain.CommonTransaction[]> {
         return this.__callMethod(
             'getBulkAddrsTxs',
             [addrs],
@@ -93,11 +95,16 @@ export class NetworkProvider implements INetworkProvider {
     }
 
 
-    public getTx(txid: string): Promise<Wallet.Entity.WalletTransaction | undefined> {
+    public getTx(txid: string): Promise<plarkcore.blockchain.CommonTransaction | undefined> {
         return this.__callMethod(
             'getTx',
             [txid],
         );
+    }
+
+
+    public fetchFeeRecord(): Promise<plarkcore.FeeRecord> {
+        return this.__callMethod('fetchFeeRecord', []);
     }
 
 
