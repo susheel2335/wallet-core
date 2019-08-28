@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { crypto } from 'bitcoinjs-lib';
 import { get } from 'lodash';
-import * as Constants from '../../../Constants';
+import * as Constants from '../../../constants';
 import { Utils } from '../../../utils';
 import InfuraNetworkClient from '../infura-network-client';
 
