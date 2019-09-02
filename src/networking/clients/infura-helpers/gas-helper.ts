@@ -68,9 +68,9 @@ export default class GasHelper {
             }
 
             return {
-                low: gasPrices.div(2),
-                medium: gasPrices,
-                high: gasPrices.times(4),
+                low: gasPrices,
+                medium: gasPrices.times(2),
+                high: gasPrices.times(3),
             } as plarkcore.GasPrice;
         } catch (error) {
             return defaultGasPrice;

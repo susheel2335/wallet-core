@@ -82,8 +82,8 @@ export default class EtherscanNetworkClient extends NetworkClient implements IEt
             const estimateGasPrice = new BigNumber(res.result).div(Constants.WEI_PER_GWEI);
 
             return {
-                low: estimateGasPrice.div(2),
-                medium: estimateGasPrice,
+                low: estimateGasPrice,
+                medium: estimateGasPrice.times(2),
                 high: estimateGasPrice.times(5),
             } as plarkcore.GasPrice;
         } catch (e) {

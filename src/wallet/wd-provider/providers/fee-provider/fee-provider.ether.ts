@@ -46,6 +46,7 @@ export default class EtherFeeProvider
     public getFeeOptions(feeType: plarkcore.FeeType, record?: plarkcore.FeeRecord): plarkcore.eth.EthFeeOptions {
         if (!record) {
             const standardGasPrice = new BigNumber(4);
+
             record = {
                 low: standardGasPrice,
                 medium: standardGasPrice.times(2),
