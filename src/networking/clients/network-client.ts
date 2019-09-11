@@ -26,7 +26,7 @@ export interface INetworkClient extends plarkcore.Destructible {
 
     getBulkAddrsTxs(addrs: string[]): Promise<plarkcore.blockchain.CommonTransaction[]>;
 
-    broadCastTransaction(transaction: Coin.Transaction.Transaction): Promise<string>;
+    broadcastTransaction(transaction: Coin.Transaction.Transaction): Promise<string>;
 
     createTracker(): plarkcore.ITrackerClient;
 
@@ -67,7 +67,7 @@ export abstract class NetworkClient implements INetworkClient {
 
     public abstract getAddressTxs(address: string): Promise<plarkcore.blockchain.CommonTransaction[]>;
 
-    public abstract broadCastTransaction(transaction: Coin.Transaction.Transaction): Promise<string>;
+    public abstract broadcastTransaction(transaction: Coin.Transaction.Transaction): Promise<string>;
 
     public getCoin(): Coin.CoinInterface {
         return this.coin;

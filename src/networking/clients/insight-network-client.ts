@@ -125,7 +125,7 @@ export default class InsightNetworkClient extends NetworkClient {
     }
 
 
-    public async broadCastTransaction(transaction: Coin.Transaction.Transaction): Promise<string> {
+    public async broadcastTransaction(transaction: Coin.Transaction.Transaction): Promise<string> {
         const data = await this.sendRequest<any>('/tx/send', {
             rawtx: transaction.toBuffer().toString('hex'),
         });

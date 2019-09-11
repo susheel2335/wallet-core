@@ -60,7 +60,7 @@ export class BlockcypherBIPNetworkClient extends NetworkClient {
     /**
      * @param transaction
      */
-    public broadCastTransaction(transaction: Coin.Transaction.Transaction): Promise<string> {
+    public broadcastTransaction(transaction: Coin.Transaction.Transaction): Promise<string> {
         return wrapLimiterMethod(async () => {
             const response = await this.client.post('/txs/push', {
                 tx: transaction.toBuffer().toString('hex'),

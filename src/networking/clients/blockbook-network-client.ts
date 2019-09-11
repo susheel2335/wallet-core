@@ -115,7 +115,7 @@ export default class BlockbookNetworkClient extends NetworkClient {
     }
 
 
-    public broadCastTransaction(transaction: Coin.Transaction.Transaction): Promise<string> {
+    public broadcastTransaction(transaction: Coin.Transaction.Transaction): Promise<string> {
         return this.txHelper.sendTransaction(transaction.toBuffer().toString('hex'));
     }
 

@@ -112,7 +112,7 @@ export default class EtherscanNetworkClient extends NetworkClient implements IEt
      * @param {Transaction} transaction
      * @returns {Promise<string>}
      */
-    public async broadCastTransaction(transaction: Coin.Transaction.Transaction): Promise<string> {
+    public async broadcastTransaction(transaction: Coin.Transaction.Transaction): Promise<string> {
         const response = await this.etherscanClient.proxy
             .eth_sendRawTransaction(transaction.toBuffer().toString('hex'));
 

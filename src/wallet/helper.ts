@@ -41,7 +41,6 @@ export function coinTxToWalletTx(
     coinTx: Coin.Transaction.Transaction,
     coin: Coin.CoinInterface,
 ): plarkcore.blockchain.CommonTransaction {
-
     if (false === coinTx.isSigned) {
         throw new Error('Transaction must be signed');
     }

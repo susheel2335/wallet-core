@@ -188,11 +188,15 @@ export default class InfuraNetworkClient extends NetworkClient implements IEther
     }
 
 
-    public async broadCastTransaction(transaction: Coin.Transaction.Transaction): Promise<string> {
+    public async broadcastTransaction(transaction: Coin.Transaction.Transaction): Promise<string> {
         const data = await this.sendRequest('eth_sendRawTransaction', [transaction.toBuffer()]);
 
         if (data.error) {
             throw new Error(data.error.message);
+        }
+
+        if (!data.result) {
+            throw new Error('Infura did not return TXID');
         }
 
         return data.result as string;

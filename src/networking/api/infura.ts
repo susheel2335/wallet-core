@@ -2,7 +2,6 @@ import BigNumber from 'bignumber.js';
 import { map, forEach } from 'lodash';
 import { Utils } from '../../utils';
 import * as Coin from '../../coin';
-import * as Wallet from '../../wallet';
 import * as Constants from '../../constants';
 
 
