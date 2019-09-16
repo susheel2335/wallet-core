@@ -1,7 +1,6 @@
 import { forEach } from 'lodash';
 import * as Debug from '../debugger';
 import * as Coin from '../coin';
-import * as Wallet from '../wallet';
 import * as Clients from './clients';
 import * as Adapter from './adapter';
 import { createClient } from './client-helper';
@@ -17,7 +16,7 @@ export interface INetworkProvider extends plarkcore.Destructible {
 
     getClient(index?: number): Clients.INetworkClient;
 
-    broadCastTransaction(transaction: Coin.Transaction.Transaction): Promise<string>;
+    broadcastTransaction(transaction: Coin.Transaction.Transaction): Promise<string>;
 
     getAddressTxs(address: string): Promise<plarkcore.blockchain.CommonTransaction[]>;
 
@@ -113,8 +112,8 @@ export class NetworkProvider implements INetworkProvider {
     }
 
 
-    public broadCastTransaction(transaction: Coin.Transaction.Transaction): Promise<string> {
-        return this.__callMethod<string>('broadCastTransaction', [transaction]);
+    public broadcastTransaction(transaction: Coin.Transaction.Transaction): Promise<string> {
+        return this.__callMethod<string>('broadcastTransaction', [transaction]);
     }
 
 

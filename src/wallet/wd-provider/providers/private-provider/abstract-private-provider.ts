@@ -185,6 +185,6 @@ export abstract class AbstractPrivateProvider extends SimpleProvider implements 
             throw new Error('Transaction must be signet!');
         }
 
-        return this.wdProvider.getNetworkProvider().broadCastTransaction(transaction);
+        return this.wdProvider.getNetworkProvider().broadcastTransaction(transaction);
     }
 }
