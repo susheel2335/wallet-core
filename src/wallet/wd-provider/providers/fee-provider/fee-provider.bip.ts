@@ -2,18 +2,13 @@ import { filter } from 'lodash';
 import BigNumber from 'bignumber.js';
 import BitcoinJS from 'bitcoinjs-lib';
 import coinSelect, { CoinSelectResult, coinSplit } from 'coinselect';
+import { Utils } from '../../../../utils';
 import * as Coin from '../../../../coin';
 import * as Constants from '../../../../constants';
 import Exceptions from '../../../../exceptions';
 import HD from '../../../../hd';
 import { calculateBalance, Entity } from '../../../';
 import FeeProviderInterface, { AbstractFeeProvider } from './fee-provider.interface';
-
-function fee2Sat(feeRate: BigNumber): number {
-    const resp = feeRate.times(Constants.SATOSHI_PER_COIN).toNumber();
-
-    return resp < 1 ? 1 : resp;
-}
 
 export default class BIPFeeProvider extends AbstractFeeProvider implements FeeProviderInterface<plarkcore.bip.BIPFeeOptions> {
     public getFeeOptions(feeType: plarkcore.FeeType, record?: plarkcore.FeeRecord): plarkcore.bip.BIPFeeOptions {
@@ -84,7 +79,7 @@ export default class BIPFeeProvider extends AbstractFeeProvider implements FeePr
         const feePerByte = options.feeRate.div(1024);
 
         const { inputs = [], outputs = [], fee = 0 }
-            = coinSplit(possibleInputs, targetOutput, fee2Sat(feePerByte));
+            = coinSplit(possibleInputs, targetOutput, Utils.fee2Sat(feePerByte));
 
         const feeNum = new BigNumber(fee.toFixed(8)).div(Constants.SATOSHI_PER_COIN);
         const balanceNum = new BigNumber(calculateBalance(this.wdProvider.balance));
@@ -134,6 +129,6 @@ export default class BIPFeeProvider extends AbstractFeeProvider implements FeePr
 
         const feePerByte = feeOptions.feeRate.div(1024);
 
-        return coinSelect(possibleInputs, targetOutput, fee2Sat(feePerByte));
+        return coinSelect(possibleInputs, targetOutput, Utils.fee2Sat(feePerByte));
     }
 }

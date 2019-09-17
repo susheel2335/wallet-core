@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
 import * as EthereumJsUtil from 'ethereumjs-util';
+import * as Constants from '../constants';
 import crp from './crypto';
 
 
@@ -54,10 +55,12 @@ export namespace Utils {
         return EthereumJsUtil.addHexPrefix(hex);
     }
 
+
     export function padHexToEven(a: string): string {
         if (a.length % 2) a = '0' + a;
         return a;
     }
+
 
     export function hexToBuffer(hex: string): Buffer {
         if (!isHexValid(hex, undefined, 2)) {
@@ -71,15 +74,16 @@ export namespace Utils {
         return Buffer.from(hex.toLowerCase(), 'hex');
     }
 
+
     export function validateAmountValue(value: BigNumber, minValue: BigNumber, allowZero: boolean = true) {
         if (value.isNegative()) {
-            throw new RangeError("Value cannot be negative");
+            throw new RangeError('Value cannot be negative');
         }
         if (value.decimalPlaces() > minValue.decimalPlaces()) {
             throw new RangeError(`Value (${value}) has more decimals than min value (${minValue})`);
         }
         if (!allowZero && value.isZero()) {
-            throw new RangeError("Value cannot be zero");
+            throw new RangeError('Value cannot be zero');
         }
         return value;
     }
@@ -87,7 +91,7 @@ export namespace Utils {
 
     export function bigNumberToBuffer(value: BigNumber): Buffer {
         if (!value.isInteger()) {
-            throw new Error("Value must be integer");
+            throw new Error('Value must be integer');
         }
 
         return hexToBuffer(padHexToEven(value.toString(16)));
@@ -101,7 +105,7 @@ export namespace Utils {
      * @param {number | BigNumber} number
      */
     export function numberToHex(number: number | BigNumber): string {
-        return "0x" + (new BigNumber(number).toString(16));
+        return '0x' + (new BigNumber(number).toString(16));
     }
 
     /**
@@ -109,6 +113,15 @@ export namespace Utils {
      */
     export function hexToBigNumber(hexNumber: string): BigNumber {
         return new BigNumber(hexNumber);
+    }
+
+    export function fee2Sat(feeRate: BigNumber): number {
+        const resp = feeRate
+            .times(Constants.SATOSHI_PER_COIN)
+            .integerValue(BigNumber.ROUND_UP)
+            .toNumber();
+
+        return resp < 1 ? 1 : resp;
     }
 }
 
