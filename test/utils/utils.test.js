@@ -1,4 +1,5 @@
 import assert from 'assert';
+import BigNumber from 'bignumber.js';
 import * as plark from '../../';
 
 describe('Utils tests', () => {
@@ -10,15 +11,13 @@ describe('Utils tests', () => {
     describe('Method hexToBuffer', () => {
         it('Empty', () => {
             assert.ok(
-                new Buffer('')
-                    .equals(Utils.hexToBuffer('0x'))
+                new Buffer('').equals(Utils.hexToBuffer('0x'))
             );
         });
 
         it('Equals control string', () => {
             assert.ok(
-                new Buffer(bufferControlString)
-                    .equals(Utils.hexToBuffer('0x' + controlHex))
+                new Buffer(bufferControlString).equals(Utils.hexToBuffer('0x' + controlHex))
             );
         });
     });
@@ -32,39 +31,59 @@ describe('Utils tests', () => {
             assert.strictEqual(Utils.addHexPrefix(new Buffer('')), '0x');
         });
 
-        it('FF string value', (done, reject) => {
-            if ('0x' + controlHex !== Utils.addHexPrefix(controlHex)) {
-                throw new Error('Can not use it!');
-            }
-
-            done();
+        it('FF string value', () => {
+            assert.strictEqual(
+                Utils.addHexPrefix(controlHex),
+                '0x' + controlHex,
+                'Can not use it!'
+            );
         });
 
-        it('FF value from Buffer', (done, reject) => {
+        it('FF value from Buffer', () => {
             const buffer = new Buffer(bufferControlString);
-            if ('0x' + controlHex !== Utils.addHexPrefix(buffer)) {
-                throw new Error('Can not use it!');
-            }
 
-            done();
+            assert.strictEqual(
+                Utils.addHexPrefix(buffer),
+                '0x' + controlHex,
+                'Can not use it!'
+            );
         });
     });
 
     describe('Method isHexValid', () => {
-        it('Empty', (done, reject) => {
-            if (false === Utils.isHexValid('', null, 0)) {
-                throw new Error('Empty HEX - is a HEX too');
-            }
-
-            done();
+        it('Empty', () => {
+            assert.ok(
+                Utils.isHexValid('', null, 0),
+                'Empty HEX – is a HEX too'
+            );
         });
 
-        it('Only 0x prefix', (done, reject) => {
-            if (false === Utils.isHexValid('0x', null, 1)) {
-                throw new Error('Prefix 0x is a HEX, but empty HEX');
-            }
+        it('Only 0x prefix', () => {
+            assert.ok(
+                Utils.isHexValid('0x', null, 1),
+                'Prefix 0x is a HEX, but empty HEX'
+            );
+        });
+    });
 
-            done();
+
+    describe('Method fee2Sat', () => {
+        it('1024 per KB', () => {
+            const initialValue = new BigNumber(0.00001024).div(1024);
+
+            assert.strictEqual(Utils.fee2Sat(initialValue), 1);
+        });
+
+        it('128 per KB', () => {
+            const initialValue = new BigNumber(0.00000128).div(1024);
+
+            assert.strictEqual(Utils.fee2Sat(initialValue), 1);
+        });
+
+        it('2047 per KB', () => {
+            const initialValue = new BigNumber(0.00002047).div(1024);
+
+            assert.strictEqual(Utils.fee2Sat(initialValue), 2);
         });
     });
 });
