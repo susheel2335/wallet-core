@@ -20,7 +20,6 @@ export type Network = {
     }
 };
 
-
 export type BlockchainInfo = {
     info: {
         version: number;
@@ -151,10 +150,7 @@ export function toWalletTx(tx: Transaction, coin: Coin.CoinInterface): plarkcore
         const type = BitcoinJS.script.classifyOutput(buffer) as Coin.ScriptType;
         let address;
         try {
-            address = BitcoinJS.address.fromOutputScript(
-                buffer,
-                (coin as Coin.BIPGenericCoin).networkInfo(),
-            );
+            address = (coin as Coin.BIPGenericCoin).fromOutputScript(buffer);
         } catch (e) {
         }
 

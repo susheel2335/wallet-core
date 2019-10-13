@@ -12,6 +12,7 @@ const coinCases = {
         calculateMax: true,
     },
     [Coin.Unit.LTC]: {},
+    [Coin.Unit.BCH]: {},
     [Coin.Unit.LTCt]: {
         calculateFee: true,
         calculateMax: true,

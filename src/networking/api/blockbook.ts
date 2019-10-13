@@ -27,7 +27,6 @@ namespace blockbook {
         script: string;
     };
 
-
     export type Transaction = {
         blockTimestamp: number;
         feeSatoshis: number;
@@ -41,7 +40,6 @@ namespace blockbook {
         outputs: Output[];
         version: number;
     };
-
 
     export type ExtendedTransaction = {
         addresses: Record<string, {
@@ -76,7 +74,6 @@ namespace blockbook {
         txs: any[];
     };
 
-
     export function toWalletTx(tx: Transaction, coin: Coin.CoinInterface): plarkcore.bip.BIPTransaction {
         const txData: plarkcore.bip.BIPTransaction = {
             coin: coin.getUnit(),
@@ -90,7 +87,6 @@ namespace blockbook {
             outputs: [],
         } as plarkcore.bip.BIPTransaction;
 
-
         forEach(tx.inputs, (vin: Input) => {
             if (!vin.txid) return;
 
@@ -103,17 +99,13 @@ namespace blockbook {
             });
         });
 
-
         forEach(tx.outputs, (vout: Output) => {
             const buffer = Utils.hexToBuffer(vout.script);
 
             const type = BitcoinJS.script.classifyOutput(buffer) as Coin.ScriptType;
             let address;
             try {
-                address = BitcoinJS.address.fromOutputScript(
-                    buffer,
-                    (coin as Coin.BIPGenericCoin).networkInfo(),
-                );
+                address = (coin as Coin.BIPGenericCoin).fromOutputScript(buffer);
             } catch (e) {
             }
 
