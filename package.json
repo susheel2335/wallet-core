@@ -27,9 +27,8 @@
         "coverage": "nyc --check-coverage --branches 90 --functions 90 --lines 90 mocha ./test"
     },
     "dependencies": {
-        "@types/bchaddrjs": "^0.4.0",
         "axios": "0.19.0",
-        "bchaddrjs": "^0.4.4",
+        "bchaddrjs": "0.4.4",
         "bignumber.js": "9.0.0",
         "bip32": "1.0.2",
         "bip39": "2.5.0",
@@ -48,6 +47,7 @@
         "wif": "2.0.6"
     },
     "devDependencies": {
+        "@types/bchaddrjs": "0.4.0",
         "@types/bip32": "1.0.2",
         "@types/bip39": "2.4.2",
         "@types/bitcoinjs-lib": "3.4.0",
