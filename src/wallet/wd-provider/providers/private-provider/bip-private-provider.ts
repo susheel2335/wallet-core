@@ -226,7 +226,7 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
 
         const coinSelectResponse: CoinSelectResult = (this.wdProvider.fee as BIPFeeProvider).calculateOptimalInputs(
             balance,
-            address.toString(),
+            address.toString({ forceLegacy: true }),
             value,
             feeOptions,
         );
