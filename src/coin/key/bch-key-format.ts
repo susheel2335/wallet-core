@@ -29,6 +29,8 @@ export class BCHKeyFormat extends BIPKeyFormat {
     public formatAddress(address: Address, options?: any): string {
         const addrString = super.formatAddress(address, options);
 
-        return bchaddr.toCashAddress(addrString);
+        return options.forceLegacy
+            ? addrString
+            : bchaddr.toCashAddress(addrString);
     }
 }

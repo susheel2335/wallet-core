@@ -102,7 +102,10 @@ export class BIPTransactionBuilder implements TransactionBuilder {
     public addOutput(address: Key.Address, value: BigNumber): number {
         Utils.validateAmountValue(value, this.coin.minValue, false);
 
-        return this.txBuilder.addOutput(address.toString(), value.times(Constants.SATOSHI_PER_COIN).toNumber());
+        return this.txBuilder.addOutput(
+            address.toString({ forceLegacy: true }),
+            value.times(Constants.SATOSHI_PER_COIN).toNumber(),
+        );
     }
 
     public setLockTime(locktime: number): void {

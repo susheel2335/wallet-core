@@ -1,6 +1,7 @@
 import { filter, find, first, sumBy } from 'lodash';
-import HD from '../../../hd';
+import bchaddr from 'bchaddrjs';
 import * as Coin from '../../../coin';
+import HD from '../../../hd';
 import * as Entity from '../../entity';
 import { SimpleProvider } from './simple-provider';
 
@@ -49,6 +50,11 @@ export class AddressProvider extends SimpleProvider {
 
 
     public get(address: string): Entity.WalletAddress | undefined {
+        const coinUnit = this.getCoin().getUnit();
+        if (coinUnit === Coin.Unit.BCH || coinUnit === Coin.Unit.BCHt) {
+            address = bchaddr.toCashAddress(address);
+        }
+
         return find(this.getWalletData().addresses, { address: address });
     }
 
