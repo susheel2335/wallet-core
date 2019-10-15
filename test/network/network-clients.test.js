@@ -7,7 +7,7 @@ const coins = [
     Coin.Unit.LTC,
     Coin.Unit.LTCt,
     Coin.Unit.DASH,
-    Coin.Unit.DASHt,
+    // Coin.Unit.DASHt,
     Coin.Unit.ETH,
     Coin.Unit.ETHt,
 ];

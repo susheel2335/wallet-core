@@ -115,7 +115,7 @@ const provideTransaction = (txInfo) => {
 
         txInfo.utxos.map((utxo) => {
             const addressNode = privateCoin.deriveAddress(...utxo.address);
-            const addressString = addressNode.getPublicKey().toAddress(utxo.addressFormat).toString();
+            const addressString = addressNode.getPublicKey().toAddress(utxo.addressFormat).toString({ forceLegacy: true });
             const prevOutScript = BitcoinJS.address.toOutputScript(addressString, coin.networkInfo());
 
             transactionBuilder.addInput(

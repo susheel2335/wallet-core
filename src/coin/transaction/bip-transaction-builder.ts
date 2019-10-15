@@ -43,6 +43,8 @@ export class BIPTransactionBuilder implements TransactionBuilder {
             throw new Error('No key metadata');
         }
 
+        let hashType = BitcoinJS.Transaction.SIGHASH_ALL;
+
         for (let index in keys) {
             const input = this.txBuilder.inputs[index];
             const utxoMeta = inputData[index];
@@ -52,14 +54,14 @@ export class BIPTransactionBuilder implements TransactionBuilder {
 
             switch (outputType) {
                 case Coin.ScriptType.PubKeyHash: {
-                    this.txBuilder.sign(Number(index), keyPair);
+                    this.txBuilder.sign(Number(index), keyPair, undefined, hashType);
                     break;
                 }
 
                 case Coin.ScriptType.ScriptHash: {
                     const redeemScript = Key.getRedeemScript(keyPair.getPublicKeyBuffer());
 
-                    this.txBuilder.sign(Number(index), keyPair, redeemScript, undefined, utxoMeta.value);
+                    this.txBuilder.sign(Number(index), keyPair, redeemScript, hashType, utxoMeta.value);
                     break;
                 }
 
@@ -68,7 +70,7 @@ export class BIPTransactionBuilder implements TransactionBuilder {
                         Number(index),
                         keyPair,
                         undefined,
-                        undefined,
+                        hashType,
                         utxoMeta.value,
                     );
 
@@ -89,7 +91,6 @@ export class BIPTransactionBuilder implements TransactionBuilder {
 
     public reset() {
         this.txBuilder = this.createTxBuilder();
-        this.setVersion(this.coin.getNVersion());
     }
 
     public addInput(tx: string | BIPTransaction, vout: number, sequence?: number, prevOutScript?: Buffer): number {

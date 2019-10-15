@@ -162,8 +162,12 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
         options?: O,
     ): Promise<Coin.Transaction.Transaction> {
         const balance = this.wdProvider.balance;
-
         const coin = this.wdProvider.coin as Coin.BIPGenericCoin;
+
+        if (coin.getUnit() === Coin.Unit.BCH || coin.getUnit() === Coin.Unit.BCHt) {
+            throw new Error('Sending Bitcoin Cash transaction does not support yet!')
+        }
+
         const txPrivateKeys: Coin.Key.Private[] = [];
         const inputData: Coin.SignInputData[] = [];
         const txBuilder = new Coin.Transaction.BIPTransactionBuilder(this.wdProvider.coin);

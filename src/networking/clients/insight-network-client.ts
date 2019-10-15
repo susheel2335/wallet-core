@@ -168,9 +168,11 @@ export default class InsightNetworkClient extends NetworkClient {
             this.trackerClient.destruct();
         }
 
-        this.limiter.stop({
-            dropWaitingJobs: true,
-        });
+        this.limiter
+            .stop({ dropWaitingJobs: true })
+            .catch(error => {
+
+            });
 
         delete this.client;
     }
