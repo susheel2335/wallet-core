@@ -1,6 +1,5 @@
 import { filter } from 'lodash';
 import BigNumber from 'bignumber.js';
-import BitcoinJS from 'bitcoinjs-lib';
 import coinSelect, { CoinSelectResult, coinSplit } from 'coinselect';
 import { Utils } from '../../../../utils';
 import * as Coin from '../../../../coin';

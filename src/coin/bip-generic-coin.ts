@@ -91,6 +91,10 @@ export abstract class BIPGenericCoin implements CoinInterface {
         return BitcoinJS.address.fromOutputScript(data, this.networkInfo());
     }
 
+    public getNVersion(): number {
+        return 1;
+    }
+
     public abstract getUnit(): Unit;
 
     public abstract getName(): string;

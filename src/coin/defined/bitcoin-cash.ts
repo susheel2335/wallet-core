@@ -33,6 +33,10 @@ export default class BitcoinCash extends BIPGenericCoin {
         };
     }
 
+    public getNVersion(): number {
+        return 2;
+    }
+
     public get defaultFeePerKB(): BigNumber {
         return new BigNumber(8).times(1024).div(Constants.SATOSHI_PER_COIN);
     }

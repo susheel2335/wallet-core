@@ -89,6 +89,7 @@ export class BIPTransactionBuilder implements TransactionBuilder {
 
     public reset() {
         this.txBuilder = this.createTxBuilder();
+        this.setVersion(this.coin.getNVersion());
     }
 
     public addInput(tx: string | BIPTransaction, vout: number, sequence?: number, prevOutScript?: Buffer): number {
