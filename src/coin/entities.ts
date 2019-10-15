@@ -11,13 +11,19 @@ export enum ScriptType {
 }
 
 export enum BalanceScheme {
-    UTXO,                           // Bitcoin model
-    ADDRESS_BALANCE                 // Ethereum model
+    // Bitcoin model
+    UTXO,
+
+    // Ethereum model
+    ADDRESS_BALANCE
 }
 
 export enum TransactionScheme {
-    INPUTS_OUTPUTS,                 // Bitcoin model
-    FROM_TO                         // Ethereum model
+    // Bitcoin model
+    INPUTS_OUTPUTS,
+
+    // Ethereum model
+    FROM_TO
 }
 
 export enum Unit {

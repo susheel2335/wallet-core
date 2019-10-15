@@ -15,7 +15,6 @@ export class BIPTransactionBuilder implements TransactionBuilder {
     protected readonly coin: BIPGenericCoin;
     protected readonly network: BitcoinJS.Network;
 
-
     public constructor(coin: Coin.CoinInterface) {
         if (!(coin instanceof BIPGenericCoin)) {
             throw TypeError('Only BIPGenericCoin supported');
@@ -26,11 +25,9 @@ export class BIPTransactionBuilder implements TransactionBuilder {
         this.reset();
     }
 
-
     public get scheme(): Coin.TransactionScheme {
         return Coin.TransactionScheme.INPUTS_OUTPUTS;
     }
-
 
     protected createTxBuilder(maximumFeeRate: number = 0.00025): BitcoinJS.TransactionBuilder {
         return new BitcoinJS.TransactionBuilder(
@@ -40,7 +37,6 @@ export class BIPTransactionBuilder implements TransactionBuilder {
             new BigNumber(maximumFeeRate).times(Constants.SATOSHI_PER_COIN).toNumber(),
         );
     }
-
 
     public buildSigned(keys: Key.Private[], inputData: Coin.SignInputData[]): BIPTransaction {
         if (!inputData) {
@@ -68,7 +64,14 @@ export class BIPTransactionBuilder implements TransactionBuilder {
                 }
 
                 case Coin.ScriptType.WitnessPubKeyHash: {
-                    this.txBuilder.sign(Number(index), keyPair, undefined, undefined, utxoMeta.value);
+                    this.txBuilder.sign(
+                        Number(index),
+                        keyPair,
+                        undefined,
+                        undefined,
+                        utxoMeta.value,
+                    );
+
                     break;
                 }
 
@@ -80,16 +83,13 @@ export class BIPTransactionBuilder implements TransactionBuilder {
         return new BIPTransaction(this.coin, this.txBuilder.build());
     }
 
-
     public buildUnsigned(): BIPTransaction {
         return new BIPTransaction(this.coin, this.txBuilder.buildIncomplete());
     }
 
-
     public reset() {
         this.txBuilder = this.createTxBuilder();
     }
-
 
     public addInput(tx: string | BIPTransaction, vout: number, sequence?: number, prevOutScript?: Buffer): number {
         if (tx instanceof BIPTransaction) {
@@ -99,23 +99,19 @@ export class BIPTransactionBuilder implements TransactionBuilder {
         return this.txBuilder.addInput(tx, vout, sequence, prevOutScript);
     }
 
-
     public addOutput(address: Key.Address, value: BigNumber): number {
         Utils.validateAmountValue(value, this.coin.minValue, false);
 
         return this.txBuilder.addOutput(address.toString(), value.times(Constants.SATOSHI_PER_COIN).toNumber());
     }
 
-
     public setLockTime(locktime: number): void {
         this.txBuilder.setLockTime(locktime);
     }
 
-
     public setVersion(version: number): void {
         this.txBuilder.setVersion(version);
     }
-
 
     public static fromBuffer(coin: Coin.CoinInterface, txBuffer: Buffer): BIPTransaction {
         return new BIPTransaction(coin, txBuffer);

@@ -65,7 +65,7 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
 
         const targetOutput = [{
             address: address,
-            script: BitcoinJS.address.toOutputScript(address, this.getCoin().networkInfo()),
+            script: this.getCoin().toOutputScript(address),
             value: value.times(Constants.SATOSHI_PER_COIN).toNumber(),
         }];
 
@@ -126,7 +126,7 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
 
         const targetOutput = [{
             address: address.toString(),
-            script: BitcoinJS.address.toOutputScript(address.toString(), this.getCoin().networkInfo()),
+            script: this.getCoin().toOutputScript(address),
         }];
 
         const feeRate = await this.getFeePerByte(coin, feeType);

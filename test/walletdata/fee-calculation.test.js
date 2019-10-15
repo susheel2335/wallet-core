@@ -1,8 +1,8 @@
 import assert from 'assert';
 import BigNumber from 'bignumber.js';
-import {map} from 'lodash';
-import {Coin, HD, Wallet, Networking, Constants, Exceptions} from '../../';
-import {seed} from '../fixtures/seed';
+import { map } from 'lodash';
+import { Coin, HD, Wallet, Networking, Constants, Exceptions } from '../../';
+import { seed } from '../fixtures/seed';
 
 const coinCases = {
     [Coin.Unit.BTC]: {
@@ -12,6 +12,10 @@ const coinCases = {
     [Coin.Unit.BTCt]: {
         defaultFeeRate: '0.00008192',
         defaultMaxAmount: '1.58079389',
+    },
+    [Coin.Unit.BCH]: {
+        defaultFeeRate: '0.00008192',
+        defaultMaxAmount: false,
     },
     [Coin.Unit.LTC]: {
         defaultFeeRate: '0.00204800',
@@ -35,7 +39,7 @@ const coinCases = {
     },
     [Coin.Unit.ETHt]: {
         defaultGasPrice: '8.0',
-        defaultMaxAmount: false
+        defaultMaxAmount: false,
     },
 };
 
@@ -50,7 +54,7 @@ describe('Fee Calculation', () => {
             let wdProvider;
             let balanceAmount;
 
-            before(async function () {
+            before(async function() {
                 this.timeout(15000);
 
                 networkProvider = Networking.createNetworkProvider(coin);
@@ -64,7 +68,7 @@ describe('Fee Calculation', () => {
                 }
             });
 
-            after(function () {
+            after(function() {
                 if (wdProvider) {
                     wdProvider.destruct();
                 }
@@ -73,7 +77,6 @@ describe('Fee Calculation', () => {
                     networkProvider.destruct();
                 }
             });
-
 
             it(`Can get Default Fee options`, () => {
                 const mediumFee = wdProvider.fee.getFeeOptions(Constants.FeeTypes.Medium);
@@ -91,7 +94,6 @@ describe('Fee Calculation', () => {
                 }
             });
 
-
             it(`Can get network Fee options`, async () => {
                 const feeRecord = await wdProvider.fee.fetchFeeRecord();
                 const mediumFee = wdProvider.fee.getFeeOptions(Constants.FeeTypes.Medium, feeRecord);
@@ -108,7 +110,6 @@ describe('Fee Calculation', () => {
                 }
             });
 
-
             it(`Can calculate Default Fee`, async () => {
                 const mediumFeeOptions = wdProvider.fee.getFeeOptions(Constants.FeeTypes.Medium);
                 const txFeeResponse = wdProvider.fee.calculateFee(new BigNumber(0.001), mediumFeeOptions);
@@ -117,7 +118,6 @@ describe('Fee Calculation', () => {
                 assert.ok(BigNumber.isBigNumber(txFeeResponse.fee), 'fee is not BigNumber');
                 assert.strictEqual(txFeeResponse.coin, coin.getUnit());
             });
-
 
             it(`Can calculate actual Fee`, async () => {
                 const feeRecord = await wdProvider.fee.fetchFeeRecord();
@@ -128,7 +128,6 @@ describe('Fee Calculation', () => {
                 assert.ok(BigNumber.isBigNumber(txFeeResponse.fee), 'fee is not BigNumber');
                 assert.strictEqual(txFeeResponse.coin, coin.getUnit());
             });
-
 
             it(`Can calculate Default Max fee`, async () => {
                 const mediumFeeOptions = wdProvider.fee.getFeeOptions(Constants.FeeTypes.Medium);
@@ -143,7 +142,7 @@ describe('Fee Calculation', () => {
 
                     console.log({
                         fee: maxAmountResponse.fee.toFixed(8),
-                        amount: maxAmountResponse.amount.toFixed(8)
+                        amount: maxAmountResponse.amount.toFixed(8),
                     });
                 } catch (error) {
                     if (cases.defaultMaxAmount) {

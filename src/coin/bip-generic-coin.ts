@@ -7,7 +7,6 @@ import * as Constants from '../constants';
 import { BalanceScheme, TransactionScheme, Unit } from './entities';
 import CoinInterface from './coin-interface';
 
-
 export abstract class BIPGenericCoin implements CoinInterface {
 
     public readonly minValue: BigNumber = new BigNumber(1).div(Constants.SATOSHI_PER_COIN);
@@ -23,11 +22,21 @@ export abstract class BIPGenericCoin implements CoinInterface {
 
         this.options = options;
 
-        this.hdKeyFormat = new Key.BIPKeyFormat(this.networkInfo(), options);
+        this.hdKeyFormat = this.buildHDKeyFormat();
+    }
+
+    protected buildHDKeyFormat(): Key.BIPKeyFormat {
+        return new Key.BIPKeyFormat(this.networkInfo(), this.options);
     }
 
     public getOptions(): Options.BIPCoinOptions {
         return this.options;
+    }
+
+    public getScheme(): string {
+        return this.getName()
+                   .replace(/\S/g, '')
+                   .toLowerCase();
     }
 
     public getBalanceScheme(): BalanceScheme {
@@ -68,6 +77,18 @@ export abstract class BIPGenericCoin implements CoinInterface {
 
     public isSegWitAvailable(): boolean {
         return this.networkInfo().bech32 !== undefined;
+    }
+
+    public toOutputScript(address: string | Key.Address): Buffer {
+        if (address instanceof Key.Address) {
+            address = address.toString();
+        }
+
+        return BitcoinJS.address.toOutputScript(address, this.networkInfo());
+    }
+
+    public fromOutputScript(data: Buffer): string {
+        return BitcoinJS.address.fromOutputScript(data, this.networkInfo());
     }
 
     public abstract getUnit(): Unit;

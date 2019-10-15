@@ -8,30 +8,30 @@ const coinAddresses = {
     [Coin.Unit.BTC]: {
         pubKey: '138YZBjQH64shbppyHHRjHPhrBFDNxCdFZ',
         scriptHash: '33YvApNWoxSZtx3NXVe5SGH1aJVBNJtp7Z',
-        bech32: 'bc1qzawczpe0z57ysap0z8j28mulkg2qmlqmvcd4kt'
+        bech32: 'bc1qzawczpe0z57ysap0z8j28mulkg2qmlqmvcd4kt',
     },
     [Coin.Unit.BTCt]: {
         pubKey: 'mm5GgtNrzXKE7y8LZhtdvX6uhuTmWL12eZ',
         scriptHash: '2N5WWwmHsbyhn8pKUEDZfExD7MFX3jUsNXA',
-        bech32: 'tb1q8n65ks9phxydqgh5ramkk9rphr5vjlqywzxpnt'
+        bech32: 'tb1q8n65ks9phxydqgh5ramkk9rphr5vjlqywzxpnt',
     },
     [Coin.Unit.BCH]: {
-        pubKey: '138YZBjQH64shbppyHHRjHPhrBFDNxCdFZ',
-        scriptHash: '33YvApNWoxSZtx3NXVe5SGH1aJVBNJtp7Z',
+        pubKey: 'bitcoincash:qqt4mqg89u2ncjr59ug7fgl0n7epgr0urv78tmfs5w',
+        scriptHash: 'bitcoincash:pq2xs8h2zat7fa8392q5xxcu5jr20yt89q8kj9jklp',
     },
     [Coin.Unit.BCHt]: {
-        pubKey: 'mheVrEpP67W8UiJSgrFoZCc2iAqvFJrhhx',
-        scriptHash: '2Mu78EZJYRQwv6jfvCdFx4DGGnehM9XKdrs',
+        pubKey: 'bchtest:qqt4mqg89u2ncjr59ug7fgl0n7epgr0urv640ut8nj',
+        scriptHash: 'bchtest:pq2xs8h2zat7fa8392q5xxcu5jr20yt89qrykzspca',
     },
     [Coin.Unit.LTC]: {
         pubKey: 'LdvnFp1A49PjJeeTJgmvxwWNkTn9TWwM8M',
         scriptHash: 'MMr9vJqmk2SDXBmAqaDbH2G8GrgzyojewX',
-        bech32: 'ltc1qe540w904ffscvdgwg2j8ydzx8sw0ehjz7cxn4w'
+        bech32: 'ltc1qe540w904ffscvdgwg2j8ydzx8sw0ehjz7cxn4w',
     },
     [Coin.Unit.LTCt]: {
         pubKey: 'mzDnHenJnWavpxRur7m1WqewQF1aDCFDMQ',
         scriptHash: '2N7CDgAMqQN68vU7pQpr85KzzAWJigsW2mn',
-        bech32: 'tltc1qe540w904ffscvdgwg2j8ydzx8sw0ehjzf296xy'
+        bech32: 'tltc1qe540w904ffscvdgwg2j8ydzx8sw0ehjzf296xy',
     },
     [Coin.Unit.DASH]: {
         pubKey: 'XsjHjeDCR9zSQxi4x5uUdLUXqpzqAk3nZb',
@@ -40,15 +40,15 @@ const coinAddresses = {
     [Coin.Unit.DASHt]: {
         pubKey: 'ydMtkbHdrheWkhdcWwDsfMtt87VCjnedJm',
         scriptHash: '8eeLbHsvMiQyt99XiFT7eZ6gcg8T19pMYU',
-    }
+    },
 };
 
-function checkAddressOutputScript(address, network) {
+function checkAddressOutputScript(coin, address) {
     assert.doesNotThrow(
         () => {
-            BitcoinJS.address.toOutputScript(address, network);
+            coin.toOutputScript(address);
         },
-        `Can not create OutputScript for address: ${address}`
+        `Can not create OutputScript for address: ${address}`,
     );
 }
 
@@ -68,7 +68,7 @@ describe('Create address', () => {
             });
 
             it(`Can create outputScript for pubKey address`, () => {
-                checkAddressOutputScript(pubKeyAddress, coin.networkInfo());
+                checkAddressOutputScript(coin, pubKeyAddress);
             });
 
             if (coinCases.scriptHash) {
@@ -78,7 +78,7 @@ describe('Create address', () => {
                 });
 
                 it(`Can create outputScript for scriptHash address`, () => {
-                    checkAddressOutputScript(scriptHashAddress, coin.networkInfo());
+                    checkAddressOutputScript(coin, scriptHashAddress);
                 });
             }
 
@@ -89,7 +89,7 @@ describe('Create address', () => {
                 });
 
                 it(`Can create outputScript for Bech32 SegWit address`, () => {
-                    checkAddressOutputScript(witnessAddress, coin.networkInfo());
+                    checkAddressOutputScript(coin, witnessAddress);
                 });
             }
         });

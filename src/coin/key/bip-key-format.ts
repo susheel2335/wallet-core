@@ -17,12 +17,10 @@ export class BIPKeyFormat implements FormatInterface {
     private readonly network: BitcoinJS.Network;
     private readonly options: BIPCoinOptions;
 
-
     public constructor(network: BitcoinJS.Network, options: BIPCoinOptions) {
         this.network = network;
         this.options = options;
     }
-
 
     public isValidAddress(address: string): boolean {
         try {
@@ -33,11 +31,9 @@ export class BIPKeyFormat implements FormatInterface {
         }
     }
 
-
     public isValidPublicKey(publicKey: string): boolean {
         return Utils.isHexValid(publicKey, 33, 0);
     }
-
 
     public isValidPrivateKey(privateKey: string): boolean {
         try {
@@ -47,7 +43,6 @@ export class BIPKeyFormat implements FormatInterface {
             return false;
         }
     }
-
 
     public parseAddress(address: string): Address {
         let addr: ParsedAddressData = undefined;
@@ -88,7 +83,6 @@ export class BIPKeyFormat implements FormatInterface {
         );
     }
 
-
     public parsePublicKey(publicKey: string): Public {
         if (!this.isValidPublicKey(publicKey)) {
             throw new TypeError(`Public key ${publicKey} is not valid`);
@@ -98,7 +92,6 @@ export class BIPKeyFormat implements FormatInterface {
 
         return new Public(buf, this);
     }
-
 
     public parsePrivateKey(privateKey: string): Private {
         let wif: any;
@@ -114,7 +107,6 @@ export class BIPKeyFormat implements FormatInterface {
 
         return new Private(wif.privateKey, this);
     }
-
 
     public publicToAddress(publicKey: Public, format: AddressFormat = AddressFormat.P2PKH): Address {
         let data;
@@ -156,9 +148,7 @@ export class BIPKeyFormat implements FormatInterface {
         return new Address(format, data, this);
     }
 
-
     public formatAddress(address: Address, options?: any): string {
-
         switch (address.getFormat()) {
             case AddressFormat.P2PKH:
                 return BitcoinJS.address.toBase58Check(address.getData(), this.network.pubKeyHash);
@@ -175,11 +165,9 @@ export class BIPKeyFormat implements FormatInterface {
         }
     }
 
-
     public formatPublicKey(buffer: Buffer, options?: any): string {
         return buffer.toString('hex');
     }
-
 
     public formatPrivateKey(buffer: Buffer, options?: any): string {
         let compressed = options && options.compressed ? options.compressed : true;

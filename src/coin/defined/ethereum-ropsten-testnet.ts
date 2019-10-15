@@ -14,10 +14,6 @@ export default class EthereumRopstenTestnet extends Ethereum {
     }
 
     public getName(): string {
-        return 'EthereumRopstenTestnet';
-    }
-
-    public getHDCoinType(): number {
-        return 60;
+        return 'Ethereum Ropsten Testnet';
     }
 }

@@ -73,7 +73,7 @@ export default class BIPFeeProvider extends AbstractFeeProvider implements FeePr
 
         const targetOutput = [{
             address: address,
-            script: BitcoinJS.address.toOutputScript(address, coin.networkInfo()),
+            script: coin.toOutputScript(address)
         }];
 
         const feePerByte = options.feeRate.div(1024);
@@ -123,7 +123,7 @@ export default class BIPFeeProvider extends AbstractFeeProvider implements FeePr
 
         const targetOutput = [{
             address: address,
-            script: BitcoinJS.address.toOutputScript(address, coin.networkInfo()),
+            script: coin.toOutputScript(address),
             value: value.times(Constants.SATOSHI_PER_COIN).toNumber(),
         }];
 

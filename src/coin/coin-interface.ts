@@ -15,6 +15,8 @@ export default interface CoinInterface {
 
     getName(): string;
 
+    getScheme(): string;
+
     /**
      * Returns coin type according to SLIP-0044.
      *

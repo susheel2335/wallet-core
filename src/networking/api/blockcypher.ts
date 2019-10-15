@@ -157,10 +157,7 @@ namespace blockcypher {
 
             let address;
             try {
-                address = BitcoinJS.address.fromOutputScript(
-                    buffer,
-                    (coin as Coin.BIPGenericCoin).networkInfo(),
-                );
+                address = (coin as Coin.BIPGenericCoin).fromOutputScript(buffer);
             } catch (e) {
             }
 

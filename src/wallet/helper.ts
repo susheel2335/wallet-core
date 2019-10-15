@@ -93,7 +93,7 @@ function mapBIPTransaction(
     walletTransaction.outputs = map(coinTx.outputs, (output: BitcoinJS.Out) => {
         let address;
         try {
-            address = BitcoinJS.address.fromOutputScript(output.script, coin.networkInfo());
+            address = coin.fromOutputScript(output.script);
         } catch (e) {
         }
 

@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { CoinInterface } from '../';
+import CoinInterface from '../coin-interface';
 import { BalanceScheme, TransactionScheme, Unit } from '../entities';
 import { FormatInterface, EthereumKeyFormat } from '../key';
 import * as Options from '../options';
@@ -59,5 +59,11 @@ export default class Ethereum implements CoinInterface {
 
     public getKeyFormat(): FormatInterface {
         return new EthereumKeyFormat;
+    }
+
+    public getScheme(): string {
+        return this.getName()
+                   .replace(/\S/g, '')
+                   .toLowerCase();
     }
 }
