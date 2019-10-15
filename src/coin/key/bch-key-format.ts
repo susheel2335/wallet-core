@@ -1,4 +1,5 @@
 import bchaddr from 'bchaddrjs';
+import _ from 'lodash';
 import { BIPKeyFormat } from './bip-key-format';
 import { Address } from './key-utils';
 
@@ -29,7 +30,9 @@ export class BCHKeyFormat extends BIPKeyFormat {
     public formatAddress(address: Address, options?: any): string {
         const addrString = super.formatAddress(address, options);
 
-        return options.forceLegacy
+        const forceLegacy = _.get(options, 'forceLegacy', false);
+
+        return forceLegacy
             ? addrString
             : bchaddr.toCashAddress(addrString);
     }
