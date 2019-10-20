@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { BITBOX, TransactionBuilder } from 'bitbox-sdk';
+import { BITBOX, TransactionBuilder } from '@plark/bitbox-sdk';
 import { Utils } from '../../utils';
 import * as Constants from '../../constants';
 import CoinInterface from '../coin-interface';
@@ -56,7 +56,10 @@ export class BCHTransactionBuilder extends BIPTransactionBuilder {
     public reset() {
         let bitbox = new BITBOX();
 
-        this.txBuilder = new bitbox.TransactionBuilder('mainnet');
+        this.txBuilder = new bitbox.TransactionBuilder(
+            'mainnet',
+            new BigNumber(0.00025).times(Constants.SATOSHI_PER_COIN).toNumber(),
+        );
     }
 
     public addInput(tx: string | BIPTransaction, vout: number, sequence?: number, prevOutScript?: Buffer): void {

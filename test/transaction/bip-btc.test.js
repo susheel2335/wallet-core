@@ -26,7 +26,7 @@ describe('Create and sign Bitcoin transaction', () => {
 
 
     it('Can create P2PKH to P2PKH', () => {
-        const transactionBuilder = new Coin.Transaction.BIPTransactionBuilder(coin);
+        const transactionBuilder = Coin.Transaction.createTransactionBuilder(coin);
         const privateKeys = [];
         const inputData = [];
 
@@ -55,7 +55,7 @@ describe('Create and sign Bitcoin transaction', () => {
 
 
     it('Can create P2PKH, P2SH to P2PKH, P2WPH', () => {
-        const transactionBuilder = new Coin.Transaction.BIPTransactionBuilder(coin);
+        const transactionBuilder = Coin.Transaction.createTransactionBuilder(coin);
         const privateKeys = [];
         const inputData = [];
 

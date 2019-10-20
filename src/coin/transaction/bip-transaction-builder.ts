@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import * as Key from '../key';
 import { BIPGenericCoin } from '../bip-generic-coin';
 import CoinInterface from '../coin-interface';
-import { TransactionScheme, ScriptType, SignInputData } from '../entities';
+import { TransactionScheme, SignInputData } from '../entities';
 import { TransactionBuilder } from './tx-builder';
 import { BIPTransaction } from './bip-transaction';
 
@@ -35,7 +35,7 @@ export abstract class BIPTransactionBuilder implements TransactionBuilder {
 
     public abstract addOutput(address: Key.Address, value: BigNumber): void;
 
-    public abstract setLockTime(locktime: number): void;
+    public abstract setLockTime(lockTime: number): void;
 
     public abstract setVersion(version: number): void;
 

@@ -33,7 +33,7 @@
         "bignumber.js": "9.0.0",
         "bip32": "1.0.2",
         "bip39": "2.5.0",
-        "bitbox-sdk": "^8.10.1",
+        "@plark/bitbox-sdk": "8.10.3",
         "bitcoinjs-lib": "3.3.2",
         "bluebird": "3.5.5",
         "bottleneck": "2.19.5",
