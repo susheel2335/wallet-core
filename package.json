@@ -1,6 +1,6 @@
 {
     "name": "@plark/wallet-core",
-    "version": "0.6.15",
+    "version": "0.6.16",
     "description": "Plark Wallet Core for work with common cryptocurrencies like Bitcoin, Ethereum, Dash, Litecoin",
     "keywords": [
         "bitcoin",
@@ -27,13 +27,13 @@
         "coverage": "nyc --check-coverage --branches 90 --functions 90 --lines 90 mocha ./test"
     },
     "dependencies": {
+        "@plark/bitbox-sdk": "8.10.3",
         "add": "2.0.6",
         "axios": "0.19.0",
         "bchaddrjs": "0.4.4",
         "bignumber.js": "9.0.0",
         "bip32": "1.0.2",
         "bip39": "2.5.0",
-        "@plark/bitbox-sdk": "8.10.3",
         "bitcoinjs-lib": "3.3.2",
         "bluebird": "3.5.5",
         "bottleneck": "2.19.5",
