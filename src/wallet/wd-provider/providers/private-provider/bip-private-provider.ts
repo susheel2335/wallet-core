@@ -1,6 +1,5 @@
 import { forEach, filter } from 'lodash';
 import BigNumber from 'bignumber.js';
-import BitcoinJS from 'bitcoinjs-lib';
 import coinSelect, { CoinSelectResult, coinSplit } from 'coinselect';
 import Exceptions from '../../../../exceptions';
 import HD from '../../../../hd';
