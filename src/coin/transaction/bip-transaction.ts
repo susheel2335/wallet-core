@@ -11,7 +11,7 @@ export class BIPTransaction implements Transaction {
 
     public constructor(coin: CoinInterface, btcTx: BitcoinJS.Transaction | Buffer) {
         if (!(coin instanceof BIPGenericCoin)) {
-            throw TypeError("Only BIPGenericCoin supported");
+            throw TypeError('Only BIPGenericCoin supported');
         }
 
         this.coin = coin as BIPGenericCoin;

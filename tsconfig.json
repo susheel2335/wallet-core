@@ -27,6 +27,8 @@
     },
     "include": [
         "src/**/*",
+        "src/**/*.ts",
+        "src/**/.*.ts",
         "./node_modules/types-ethereumjs-util/index.d.ts"
     ],
     "exclude": [
