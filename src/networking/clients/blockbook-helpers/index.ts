@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { union, get } from 'lodash';
 import { blockbook } from '../../api';
-import BlockbookNetworkClient from '../blockbook-network-client';
+import { BlockbookNetworkClient } from '../blockbook-network-client';
 import WSClient from './ws-client';
 
 /**
