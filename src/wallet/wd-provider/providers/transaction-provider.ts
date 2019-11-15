@@ -3,7 +3,6 @@ import { SimpleProvider } from './simple-provider';
 import bc = plarkcore.blockchain;
 
 export class TransactionProvider extends SimpleProvider {
-
     public add(tx: bc.CommonTransaction): void {
         if (tx.coin !== this.getCoin().getUnit()) {
             throw new Error('Impossible adding transaction!');

@@ -12,7 +12,7 @@ import { GasHelper } from './infura-helpers';
 
 const EtherscanApi = require('etherscan-api');
 
-export default class InfuraNetworkClient extends NetworkClient implements IEthereumNetworkClient {
+export class InfuraNetworkClient extends NetworkClient implements IEthereumNetworkClient {
     protected client: AxiosInstance;
     protected etherscanClient;
     protected trackerClient: InfuraTrackerProvider;

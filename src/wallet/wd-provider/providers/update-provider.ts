@@ -19,9 +19,9 @@ export class UpdateProvider extends SimpleProvider {
         const networkProvider = this.wdProvider.getNetworkProvider();
         const rawAddrs = map(addrs, (addr) => addr.address);
 
-        const txs: Wallet.Entity.WalletTransaction[] = await networkProvider.getBulkAddrTxs(rawAddrs);
+        const txs: plarkcore.blockchain.CommonTransaction[] = await networkProvider.getBulkAddrTxs(rawAddrs);
 
-        forEach(txs, (tx: Wallet.Entity.WalletTransaction) => {
+        forEach(txs, (tx: plarkcore.blockchain.CommonTransaction) => {
             this.wdProvider.tx.add(tx);
         });
     }

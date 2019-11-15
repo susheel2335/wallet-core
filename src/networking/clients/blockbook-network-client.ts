@@ -7,7 +7,7 @@ import { BlockbookTrackerProvider } from './tracker';
 import { FeeHelper, WSClient, TransactionHelper } from './blockbook-helpers';
 
 
-export default class BlockbookNetworkClient extends NetworkClient {
+export class BlockbookNetworkClient extends NetworkClient {
     protected client: AxiosInstance;
 
     protected feeHelper: FeeHelper;

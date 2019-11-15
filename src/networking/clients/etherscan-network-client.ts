@@ -7,7 +7,7 @@ import { Etherscan } from '../api';
 import { NetworkClient, IEthereumNetworkClient } from './network-client';
 
 
-export default class EtherscanNetworkClient extends NetworkClient implements IEthereumNetworkClient {
+export class EtherscanNetworkClient extends NetworkClient implements IEthereumNetworkClient {
     protected etherscanClient: EtherscanApiClient;
 
     /**

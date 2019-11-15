@@ -29,7 +29,7 @@ async function onWdCreated(wdProvider: Wallet.Provider.WDProvider, coinInfo: Coi
 
     const extractTx = async (txid: string) => {
         console.log('Extracting ' + txid + ' ... ');
-        const tx: Wallet.Entity.WalletTransaction | undefined
+        const tx: plarkcore.blockchain.CommonTransaction | undefined
             = await networkProvider.getTx(txid);
 
         if (!tx) {

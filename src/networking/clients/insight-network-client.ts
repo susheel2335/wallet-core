@@ -7,7 +7,7 @@ import { Insight } from '../api';
 import { NetworkClient } from './network-client';
 import { InsightTrackerProvider } from './tracker';
 
-export default class InsightNetworkClient extends NetworkClient {
+export class InsightNetworkClient extends NetworkClient {
     protected client: AxiosInstance;
     protected limiter: Bottleneck;
 

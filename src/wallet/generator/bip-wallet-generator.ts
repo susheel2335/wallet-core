@@ -38,10 +38,13 @@ export class BIPWalletGenerator extends WDGenerator {
         return Promise.all(addrsPromises);
     }
 
-
+    /**
+     * @param {string[]} addrs
+     *
+     * @return {Promise<plarkcore.blockchain.CommonTransaction[]>}
+     */
     public async extractAddrsTxs(addrs: string[]): Promise<plarkcore.blockchain.CommonTransaction[]> {
         const networkProvider = this.wdProvider.getNetworkProvider();
-
         return networkProvider.getBulkAddrTxs(addrs);
     }
 
@@ -49,8 +52,11 @@ export class BIPWalletGenerator extends WDGenerator {
     public async bulkAddrGenerate(addressType: HD.BIP44.AddressType): Promise<void> {
         const addrs: string[] = await this.deriveAddresses(Constants.MIN_ADDRESS_COUNT, addressType);
 
-        const txs: plarkcore.blockchain.CommonTransaction[] = await this.extractAddrsTxs(addrs);
-        this.fillAddrsTxs(txs);
+        try {
+            const txs: plarkcore.blockchain.CommonTransaction[] = await this.extractAddrsTxs(addrs);
+            this.fillAddrsTxs(txs);
+        } catch (error) {
+        }
 
         const pureAddrCount = this.wdProvider.address.pureAddrCount(addressType);
         if (pureAddrCount < Constants.MIN_ADDRESS_COUNT) {
