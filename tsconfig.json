@@ -19,6 +19,7 @@
             "src/definitions",
             "node_modules/@types"
         ],
+        "types": [],
         "lib": [
             "es5",
             "es6",
@@ -27,6 +28,8 @@
     },
     "include": [
         "src/**/*",
+        "src/**/*.ts",
+        "src/**/.*.ts",
         "./node_modules/types-ethereumjs-util/index.d.ts"
     ],
     "exclude": [

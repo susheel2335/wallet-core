@@ -11,15 +11,47 @@ const transactions = [
         utxos: [{
             txid: '902547cf257f3b276c97a568a78e1bccd2521eec087eb6c89c4fa2aea6bf4384',
             vout: 0,
-            value: 2125358843,
+            value: 20020000,
             address: [HD.BIP44.AddressType.CHANGE, 0],
             addressFormat: Coin.Key.AddressFormat.P2PKH
         }],
         outputs: [{
             address: '1P2nDouUVFKSdrqCGrBSd3UYRaNr4kaKoh',
-            value: 0.1
+            value: 0.2
         }],
-        txid: '0d92bd4bcea3b981133b5c81558a672da7cee0cf5372af205a8aea56e0c06263',
+        txid: '7d85f4ed9ea60da6a46c575c906819cbaead20306d382247eb4d288c62621ef1',
+    },
+    {
+        description: 'P2PKH to P2PKH',
+        coin: Coin.Unit.BCH,
+        utxos: [{
+            txid: '902547cf257f3b276c97a568a78e1bccd2521eec087eb6c89c4fa2aea6bf4384',
+            vout: 0,
+            value: 20020000,
+            address: [HD.BIP44.AddressType.CHANGE, 0],
+            addressFormat: Coin.Key.AddressFormat.P2PKH
+        }],
+        outputs: [{
+            address: 'bitcoincash:qrdka2205f4hyukutc2g0s6lykperc8nsu5u2ddpqf',
+            value: 0.2
+        }],
+        txid: 'aff142e5aadd3efbbebfcff9d6f72f8b960e50c47061b026923e29a4ee4fdbad',
+    },
+    {
+        description: 'P2SH to P2SH',
+        coin: Coin.Unit.BCH,
+        utxos: [{
+            txid: '902547cf257f3b276c97a568a78e1bccd2521eec087eb6c89c4fa2aea6bf4384',
+            vout: 0,
+            value: 20020000,
+            address: [HD.BIP44.AddressType.CHANGE, 0],
+            addressFormat: Coin.Key.AddressFormat.P2SH
+        }],
+        outputs: [{
+            address: 'bitcoincash:pzqmjwk8929jtqt7ac7szjuawtswmxhtu5xxm64upf',
+            value: 0.2
+        }],
+        txid: '0acd7f71a7a744af7c83829563927f4b197a860e847cc1d8eeafa8cb5a6d77f2',
     },
     {
         description: 'P2PKH, P2SH to P2PKH, P2WPH',
@@ -109,14 +141,17 @@ const provideTransaction = (txInfo) => {
         const coin = Coin.makeCoin(txInfo.coin);
         const privateCoin = coin.makePrivateFromSeed(seed);
 
-        const transactionBuilder = new Coin.Transaction.BIPTransactionBuilder(coin);
+        const transactionBuilder = Coin.Transaction.createTransactionBuilder(coin);
         const privateKeys = [];
         const inputData = [];
 
         txInfo.utxos.map((utxo) => {
             const addressNode = privateCoin.deriveAddress(...utxo.address);
-            const addressString = addressNode.getPublicKey().toAddress(utxo.addressFormat).toString({ forceLegacy: true });
-            const prevOutScript = BitcoinJS.address.toOutputScript(addressString, coin.networkInfo());
+            const addressString
+                = addressNode.getPublicKey().toAddress(utxo.addressFormat).toString({ forceLegacy: true });
+
+            const prevOutScript
+                = BitcoinJS.address.toOutputScript(addressString, coin.networkInfo());
 
             transactionBuilder.addInput(
                 utxo.txid,

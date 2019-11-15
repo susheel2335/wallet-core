@@ -1,6 +1,5 @@
 import { forEach, filter } from 'lodash';
 import BigNumber from 'bignumber.js';
-import BitcoinJS from 'bitcoinjs-lib';
 import coinSelect, { CoinSelectResult, coinSplit } from 'coinselect';
 import Exceptions from '../../../../exceptions';
 import HD from '../../../../hd';
@@ -11,12 +10,10 @@ import { InsightNetworkClient, BlockbookNetworkClient } from '../../../../networ
 import BIPFeeProvider from '../fee-provider/fee-provider.bip';
 import { AbstractPrivateProvider } from './abstract-private-provider';
 
-
 export class BIPPrivateProvider extends AbstractPrivateProvider {
     protected getCoin(): Coin.BIPGenericCoin {
         return super.getCoin() as Coin.BIPGenericCoin;
     }
-
 
     protected async getFeePerByte(coin: Coin.BIPGenericCoin, feeType: plarkcore.FeeType): Promise<number> {
         let networkClient = this.wdProvider.getNetworkProvider().getClient(0);
@@ -63,17 +60,17 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
         const possibleInputs: Entity.UnspentTXOutput[]
             = filter(balance.utxo, { confirmed: true }) as any[];
 
-        const targetOutput = [{
-            address: address,
-            script: this.getCoin().toOutputScript(address),
-            value: value.times(Constants.SATOSHI_PER_COIN).toNumber(),
-        }];
+        const targetOutput = [
+            {
+                address: address,
+                script: this.getCoin().toOutputScript(address),
+                value: value.times(Constants.SATOSHI_PER_COIN).toNumber(),
+            }];
 
         const feeRate = await this.getFeePerByte(coin, feeType);
 
         return coinSelect(possibleInputs, targetOutput, feeRate);
     }
-
 
     public getPureChangeAddress(balance?: Entity.WDBalance): Entity.WalletAddress {
         let pureChangeAddr = this.wdProvider.address.last(HD.BIP44.AddressType.CHANGE, balance);
@@ -124,10 +121,11 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
         const possibleInputs: Entity.UnspentTXOutput[]
             = filter(balance.utxo, { confirmed: true }) as any[];
 
-        const targetOutput = [{
-            address: address.toString(),
-            script: this.getCoin().toOutputScript(address),
-        }];
+        const targetOutput = [
+            {
+                address: address.toString(),
+                script: this.getCoin().toOutputScript(address),
+            }];
 
         const feeRate = await this.getFeePerByte(coin, feeType);
         const { inputs = [], outputs = [], fee = 0 } = coinSplit(possibleInputs, targetOutput, feeRate);
@@ -170,7 +168,7 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
 
         const txPrivateKeys: Coin.Key.Private[] = [];
         const inputData: Coin.SignInputData[] = [];
-        const txBuilder = new Coin.Transaction.BIPTransactionBuilder(this.wdProvider.coin);
+        const txBuilder = Coin.Transaction.createTransactionBuilder(this.wdProvider.coin);
 
         const coinSelectResponse: CoinSelectResult = await this.calculateOptimalInputs(
             balance,
@@ -215,7 +213,6 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
         return txBuilder.buildSigned(txPrivateKeys, inputData);
     }
 
-
     public syncCreateTransaction(
         address: Coin.Key.Address,
         value: BigNumber,
@@ -226,7 +223,7 @@ export class BIPPrivateProvider extends AbstractPrivateProvider {
         const coin = this.wdProvider.coin as Coin.BIPGenericCoin;
         const txPrivateKeys: Coin.Key.Private[] = [];
         const inputData: Coin.SignInputData[] = [];
-        const txBuilder = new Coin.Transaction.BIPTransactionBuilder(this.wdProvider.coin);
+        const txBuilder = Coin.Transaction.createTransactionBuilder(this.wdProvider.coin);
 
         const coinSelectResponse: CoinSelectResult = (this.wdProvider.fee as BIPFeeProvider).calculateOptimalInputs(
             balance,

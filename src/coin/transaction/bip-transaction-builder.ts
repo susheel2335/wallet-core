@@ -1,21 +1,17 @@
 import BitcoinJS from 'bitcoinjs-lib';
 import BigNumber from 'bignumber.js';
-
-import { Utils } from 'utils';
-import * as Constants from '../../constants';
-import * as Coin from '../';
 import * as Key from '../key';
 import { BIPGenericCoin } from '../bip-generic-coin';
+import CoinInterface from '../coin-interface';
+import { TransactionScheme, SignInputData } from '../entities';
 import { TransactionBuilder } from './tx-builder';
 import { BIPTransaction } from './bip-transaction';
 
-export class BIPTransactionBuilder implements TransactionBuilder {
-
-    protected txBuilder: BitcoinJS.TransactionBuilder;
+export abstract class BIPTransactionBuilder implements TransactionBuilder {
     protected readonly coin: BIPGenericCoin;
     protected readonly network: BitcoinJS.Network;
 
-    public constructor(coin: Coin.CoinInterface) {
+    public constructor(coin: CoinInterface) {
         if (!(coin instanceof BIPGenericCoin)) {
             throw TypeError('Only BIPGenericCoin supported');
         }
@@ -25,100 +21,25 @@ export class BIPTransactionBuilder implements TransactionBuilder {
         this.reset();
     }
 
-    public get scheme(): Coin.TransactionScheme {
-        return Coin.TransactionScheme.INPUTS_OUTPUTS;
+    public get scheme(): TransactionScheme {
+        return TransactionScheme.INPUTS_OUTPUTS;
     }
 
-    protected createTxBuilder(maximumFeeRate: number = 0.00025): BitcoinJS.TransactionBuilder {
-        return new BitcoinJS.TransactionBuilder(
-            this.network,
+    public abstract buildSigned(keys: Key.Private[], inputData: SignInputData[]): BIPTransaction;
 
-            /* @TODO Temporary added until update model of fee calculate */
-            new BigNumber(maximumFeeRate).times(Constants.SATOSHI_PER_COIN).toNumber(),
-        );
-    }
+    public abstract buildUnsigned(): BIPTransaction;
 
-    public buildSigned(keys: Key.Private[], inputData: Coin.SignInputData[]): BIPTransaction {
-        if (!inputData) {
-            throw new Error('No key metadata');
-        }
+    public abstract reset(): void;
 
-        let hashType = BitcoinJS.Transaction.SIGHASH_ALL;
+    public abstract addInput(tx: string | BIPTransaction, vout: number, sequence?: number, prevOutScript?: Buffer): void;
 
-        for (let index in keys) {
-            const input = this.txBuilder.inputs[index];
-            const utxoMeta = inputData[index];
+    public abstract addOutput(address: Key.Address, value: BigNumber): void;
 
-            const keyPair = BitcoinJS.ECPair.fromWIF(keys[index].toString(), this.network);
-            const outputType = BitcoinJS.script.classifyOutput(input.prevOutScript) as Coin.ScriptType;
+    public abstract setLockTime(lockTime: number): void;
 
-            switch (outputType) {
-                case Coin.ScriptType.PubKeyHash: {
-                    this.txBuilder.sign(Number(index), keyPair, undefined, hashType);
-                    break;
-                }
+    public abstract setVersion(version: number): void;
 
-                case Coin.ScriptType.ScriptHash: {
-                    const redeemScript = Key.getRedeemScript(keyPair.getPublicKeyBuffer());
-
-                    this.txBuilder.sign(Number(index), keyPair, redeemScript, hashType, utxoMeta.value);
-                    break;
-                }
-
-                case Coin.ScriptType.WitnessPubKeyHash: {
-                    this.txBuilder.sign(
-                        Number(index),
-                        keyPair,
-                        undefined,
-                        hashType,
-                        utxoMeta.value,
-                    );
-
-                    break;
-                }
-
-                default:
-                    throw new Error(`Can not sign '${outputType}' output`);
-            }
-        }
-
-        return new BIPTransaction(this.coin, this.txBuilder.build());
-    }
-
-    public buildUnsigned(): BIPTransaction {
-        return new BIPTransaction(this.coin, this.txBuilder.buildIncomplete());
-    }
-
-    public reset() {
-        this.txBuilder = this.createTxBuilder();
-    }
-
-    public addInput(tx: string | BIPTransaction, vout: number, sequence?: number, prevOutScript?: Buffer): number {
-        if (tx instanceof BIPTransaction) {
-            tx = tx.hash.toString('hex');
-        }
-
-        return this.txBuilder.addInput(tx, vout, sequence, prevOutScript);
-    }
-
-    public addOutput(address: Key.Address, value: BigNumber): number {
-        Utils.validateAmountValue(value, this.coin.minValue, false);
-
-        return this.txBuilder.addOutput(
-            address.toString({ forceLegacy: true }),
-            value.times(Constants.SATOSHI_PER_COIN).toNumber(),
-        );
-    }
-
-    public setLockTime(locktime: number): void {
-        this.txBuilder.setLockTime(locktime);
-    }
-
-    public setVersion(version: number): void {
-        this.txBuilder.setVersion(version);
-    }
-
-    public static fromBuffer(coin: Coin.CoinInterface, txBuffer: Buffer): BIPTransaction {
+    public static fromBuffer(coin: CoinInterface, txBuffer: Buffer): BIPTransaction {
         return new BIPTransaction(coin, txBuffer);
     }
 }
