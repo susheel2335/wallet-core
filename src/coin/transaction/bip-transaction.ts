@@ -1,11 +1,10 @@
 import BitcoinJS from 'bitcoinjs-lib';
-import { CoinInterface, TransactionScheme } from '../';
-
 import { Transaction } from './transaction';
+import CoinInterface from '../coin-interface';
+import { TransactionScheme } from '../entities';
 import { BIPGenericCoin } from '../bip-generic-coin';
 
 export class BIPTransaction implements Transaction {
-
     private readonly coin: BIPGenericCoin;
     private readonly btcTx: BitcoinJS.Transaction;
 

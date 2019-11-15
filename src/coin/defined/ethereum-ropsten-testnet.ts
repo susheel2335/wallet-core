@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import * as Constants from '../../constants';
-import * as Coin from '../../coin';
+import { Unit } from '../entities';
 import Ethereum from './ethereum';
 
 
@@ -9,8 +9,8 @@ export default class EthereumRopstenTestnet extends Ethereum {
 
     public readonly chainId: number = 3;
 
-    public getUnit(): Coin.Unit {
-        return Coin.Unit.ETHt;
+    public getUnit(): Unit {
+        return Unit.ETHt;
     }
 
     public getName(): string {

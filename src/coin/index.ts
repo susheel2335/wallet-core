@@ -1,14 +1,13 @@
-import { ScriptType, Unit, BalanceScheme, TransactionScheme, SignInputData } from './entities';
-
 import * as Key from './key';
 import * as Defined from './defined';
 import * as Private from './private';
 import * as Options from './options';
 import * as Transaction from './transaction';
 import CoinInterface from './coin-interface';
+import { Unit } from './entities';
 
+export * from './entities';
 export { Key, Defined, Private, Options, Transaction, CoinInterface };
-export { ScriptType, Unit, BalanceScheme, TransactionScheme, SignInputData };
 export { parseAddressByCoin } from './helper';
 export { BIPGenericCoin } from './bip-generic-coin';
 

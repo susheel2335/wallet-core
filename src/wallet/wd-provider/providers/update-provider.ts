@@ -1,15 +1,15 @@
-import { map, forEach, chunk } from 'lodash';
 import queue from 'queue';
+import { map, forEach, chunk } from 'lodash';
+import * as Wallet from '../../../wallet';
 import { create } from '../../../debugger';
-import { Provider } from '../../';
-import { Wallet } from '../../../';
+import { WDProvider } from '../../wd-provider';
 import { SimpleProvider } from './simple-provider';
 
 export class UpdateProvider extends SimpleProvider {
 
     protected debug: any;
 
-    public constructor(wdProvider: Provider.WDProvider) {
+    public constructor(wdProvider: WDProvider) {
         super(wdProvider);
 
         this.debug = create(`${this.getCoin().getUnit()}_UPDATER`);
@@ -26,8 +26,7 @@ export class UpdateProvider extends SimpleProvider {
         });
     }
 
-
-    public update(): Promise<Provider.WDProvider> {
+    public update(): Promise<WDProvider> {
         const mapChunkIterator = (addrs: Wallet.Entity.WalletAddress[]) => {
             return async (done) => {
                 try {

@@ -1,4 +1,6 @@
-import { Unit, makeCoin, Key } from './';
+import { makeCoin } from './';
+import { Unit } from './entities';
+import * as Key from './key'
 
 /**
  * Method parse your crypto address and return it

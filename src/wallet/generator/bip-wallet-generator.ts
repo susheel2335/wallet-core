@@ -21,8 +21,10 @@ export class BIPWalletGenerator extends WDGenerator {
     }
 
 
-    public deriveAddresses(addressCount: number,
-                           addressType: HD.BIP44.AddressType): Promise<string[]> {
+    public deriveAddresses(
+        addressCount: number,
+        addressType: HD.BIP44.AddressType,
+    ): Promise<string[]> {
 
         const privateProvider = this.wdProvider.getPrivate(this.seed);
         const addrsPromises: Promise<string>[] = [];

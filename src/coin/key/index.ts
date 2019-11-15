@@ -1,4 +1,4 @@
-export { BIPKeyFormat } from './bip-key-format';
-export { BCHKeyFormat } from './bch-key-format';
-export { EthereumKeyFormat } from './ethereum-key-format';
-export { AddressFormat, Address, FormatInterface, Private, Public, getRedeemScript } from './key-utils';
+export * from './bip-key-format';
+export * from './bch-key-format';
+export * from './ethereum-key-format';
+export * from './key-utils';
